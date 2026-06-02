@@ -161,14 +161,28 @@ function PATCH(){
   setInterval(newRefresh, 5 * 60 * 1000);
 }
 
+function gateMsg(inner){ const g = document.getElementById('gate'); if(g) g.innerHTML = '<div class="card">' + inner + '</div>'; }
 async function boot(){
-  const gate = document.getElementById('gate');
-  if(gate) gate.innerHTML = '<div class="card"><div class="sub">Loading…</div></div>';
-  const res = await fetch('./index.html?t=' + Date.now(), { cache:'no-store' });
-  let html = await res.text();
-  const inject = '<scr' + 'ipt>(' + PATCH.toString() + ')();</scr' + 'ipt>';
-  html = html.replace('</body>', inject + '</body>');
-  document.open(); document.write(html); document.close();
+  if(location.protocol === 'file:'){
+    gateMsg('<h1>Open the hosted page</h1><div class="sub">This build must run from the web, not a local file.</div>'
+      + '<p style="font-family:var(--sans);font-size:14px;margin-top:14px;"><a href="https://vidp.yashmoitra.com/dev.html">vidp.yashmoitra.com/dev.html</a></p>');
+    return;
+  }
+  gateMsg('<div class="sub">Loading…</div>');
+  try{
+    const res = await Promise.race([
+      fetch('./index.html?t=' + Date.now(), { cache:'no-store' }),
+      new Promise((_, rej) => setTimeout(() => rej(new Error('timeout fetching app')), 12000)),
+    ]);
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    let html = await res.text();
+    const inject = '<scr' + 'ipt>(' + PATCH.toString() + ')();</scr' + 'ipt>';
+    html = html.replace('</body>', inject + '</body>');
+    document.open(); document.write(html); document.close();
+  }catch(e){
+    gateMsg('<h1>Couldn’t load the app</h1><div class="sub">' + String(e) + '</div>'
+      + '<p style="font-family:var(--sans);font-size:13px;margin-top:14px;">Open the hosted page: <a href="https://vidp.yashmoitra.com/dev.html">vidp.yashmoitra.com/dev.html</a></p>');
+  }
 }
 
 // Remember first successful login on this device.
