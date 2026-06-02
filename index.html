@@ -343,9 +343,10 @@ const METAR_SOURCES = [
   () => 'https://tgftp.nws.noaa.gov/data/observations/metar/stations/' + STATION + '.TXT',
 ];
 
+function acSignal(ms){ const c = new AbortController(); setTimeout(() => c.abort(), ms); return c.signal; }
 async function tryGetText(url){
   for(const wrap of GET_PROXIES){
-    try{ const r = await fetch(wrap(url), {cache:'no-store'}); if(r.ok){ const t = (await r.text()).trim(); if(t) return t; } }
+    try{ const r = await fetch(wrap(url), {cache:'no-store', signal: acSignal(8000)}); if(r.ok){ const t = (await r.text()).trim(); if(t) return t; } }
     catch(e){}
   }
   return null;
@@ -372,7 +373,7 @@ async function proxyPostJson(url, body){
   let err;
   for(const wrap of POST_PROXIES){
     try{
-      const r = await fetch(wrap(url), {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body});
+      const r = await fetch(wrap(url), {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body, signal: acSignal(9000)});
       if(r.ok){ const j = JSON.parse(await r.text()); if(j && Array.isArray(j.notamList)) return j; }
       err = 'HTTP '+r.status;
     }catch(e){ err = e; }
@@ -406,17 +407,24 @@ async function refresh(){
   const btn = document.getElementById('refreshBtn');
   btn.disabled = true;
   setStatus('', 'Fetching live…');
-  const [mRes, nRes] = await Promise.allSettled([liveMetar(), liveNotams()]);
+  // Reliable BASE: the same-origin server snapshot always carries a METAR + the full NOTAM list,
+  // so the page is never empty. Retry once on a transient miss.
+  let snap = await loadSnapshot(); if(!snap) snap = await loadSnapshot();
   const data = { fetchedAt: new Date().toISOString(), source: {} };
-  if(mRes.status === 'fulfilled' && mRes.value){ data.metar = mRes.value; data.source.metar = 'live'; }
-  if(nRes.status === 'fulfilled'){ data.notams = nRes.value; data.source.notams = 'live'; }
-  if(!data.metar || !data.notams){
-    const snap = await loadSnapshot();
-    if(snap){
-      data.snapshotAt = snap.generatedAt;
-      if(!data.metar && snap.metar){ data.metar = snap.metar; data.source.metar = 'snapshot'; }
-      if(!data.notams){ data.notams = snap.notams || []; data.source.notams = 'snapshot'; }
-    }
+  if(snap){
+    data.snapshotAt = snap.generatedAt;
+    if(snap.metar){ data.metar = snap.metar; data.source.metar = 'snapshot'; }
+    data.notams = snap.notams || [];
+    if(data.notams.length) data.source.notams = 'snapshot';
+  } else { data.notams = []; }
+  // Live UPGRADES only — a failed or empty live result must never downgrade the base.
+  const [mRes, nRes] = await Promise.allSettled([liveMetar(), liveNotams()]);
+  if(mRes.status === 'fulfilled' && mRes.value){
+    if(!data.metar || (parseMetarObs(mRes.value) || 0) >= (parseMetarObs(data.metar) || 0)){ data.metar = mRes.value; data.source.metar = 'live'; }
+  }
+  if(nRes.status === 'fulfilled' && Array.isArray(nRes.value) && nRes.value.length > 0
+     && nRes.value.length >= (data.notams ? data.notams.length : 0)){
+    data.notams = nRes.value; data.source.notams = 'live';
   }
   data.notams = data.notams || [];
   LAST = data;
@@ -472,14 +480,12 @@ function updateChecks(){
   const fAge = fetched ? Math.max(0, Math.round((nowMs-fetched.getTime())/60000)) : null;
   const snap = LAST.snapshotAt ? new Date(LAST.snapshotAt) : null;
   const sAge = snap ? Math.max(0, Math.round((nowMs-snap.getTime())/60000)) : null;
-  if(src.metar==='live' && src.notams==='live'){
-    setStatus('ok', 'Live — fetched ' + relTime(fAge) + (fetched ? ' (' + fmt(fetched,'UTC').t + 'Z)' : ''));
-  } else if(src.metar==='live' || src.notams==='live'){
-    setStatus('warn', 'Partial live — ' + (src.metar!=='live'?'METAR':'NOTAMs') + ' from server snapshot' + (snap?' ('+relTime(sAge)+')':'') + '. Refresh to retry.');
-  } else if(src.metar || src.notams){
-    setStatus('warn', 'Live fetch failed — showing server snapshot' + (snap?' from '+relTime(sAge):'') + '. Refresh to retry.');
+  if(src.metar==='live'){
+    setStatus('ok', 'Live — METAR fetched ' + relTime(fAge) + (fetched ? ' (' + fmt(fetched,'UTC').t + 'Z)' : ''));
+  } else if(src.metar==='snapshot'){
+    setStatus('warn', 'METAR from server snapshot' + (snap?' ('+relTime(sAge)+')':'') + ' — live blocked; click Refresh to retry.');
   } else {
-    setStatus('err', 'No data available — live fetch failed and no snapshot found. Refresh to retry.');
+    setStatus('err', 'No METAR available — click Refresh to retry.');
   }
   const el = document.getElementById('metarCheck');
   const obs = parseMetarObs(LAST.metar);
