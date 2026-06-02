@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>VIDP — restricted</title>
+<title>VIDP - restricted</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/aaaakshat/cm-web-fonts@latest/fonts.css" />
 <style>
   :root{--serif:"Computer Modern Serif",Georgia,serif;--sans:"Computer Modern Sans","Helvetica Neue",Arial,sans-serif;--accent:#1a3a6b;}
@@ -22,7 +22,7 @@
 <body>
 <div id="gate">
   <div class="card">
-    <h1>VIDP — METAR &amp; NOTAMs</h1>
+    <h1>VIDP - METAR &amp; NOTAMs</h1>
     <div class="sub">Restricted. Enter password to continue.</div>
     <form onsubmit="tryUnlock();return false;">
       <input id="pw" type="password" inputmode="numeric" placeholder="••••••" autocomplete="off" autofocus />
@@ -122,7 +122,7 @@ function PATCH(){
       document.body.appendChild(f); }
     const live = data.source && data.source.metar === 'live';
     const znow = new Date().toISOString().slice(11,19);
-    const obs = (data.metar && data.metar.match(/\d{6}Z/)) ? data.metar.match(/\d{6}Z/)[0] : '—';
+    const obs = (data.metar && data.metar.match(/\d{6}Z/)) ? data.metar.match(/\d{6}Z/)[0] : '-';
     f.style.background = live ? '#0a7d34' : '#9a6b00';
     f.textContent = '✓ Refreshed ' + znow + 'Z · METAR ' + obs + ' (' + (data.source.metar || '?') + (live?'':' · proxies blocked, using snapshot') + ')';
     f.style.opacity = '1'; clearTimeout(f._t); f._t = setTimeout(() => { f.style.opacity = '0'; }, 4500);
@@ -159,7 +159,7 @@ function PATCH(){
   }
 
   // Status reflects the METAR (what "refresh" is about). NOTAMs from the ~10-min snapshot
-  // is a normal, fine state — never flag it as a problem. Only warn if the METAR itself is stale.
+  // is a normal, fine state - never flag it as a problem. Only warn if the METAR itself is stale.
   updateChecks = function(){
     if(!LAST) return;
     const now = Date.now(), src = LAST.source || {};
@@ -168,18 +168,18 @@ function PATCH(){
     const snap = LAST.snapshotAt ? new Date(LAST.snapshotAt) : null;
     const sAge = snap ? Math.max(0, Math.round((now - snap.getTime())/60000)) : null;
     if(src.metar === 'live'){
-      setStatus('ok', 'Live — METAR fetched ' + relTime(fAge) + (fetched ? ' (' + fmt(fetched,'UTC').t + 'Z)' : ''));
+      setStatus('ok', 'Live - METAR fetched ' + relTime(fAge) + (fetched ? ' (' + fmt(fetched,'UTC').t + 'Z)' : ''));
     } else if(src.metar === 'snapshot'){
-      setStatus('warn', 'METAR from server snapshot' + (snap ? ' (' + relTime(sAge) + ')' : '') + ' — live blocked; click Refresh to retry.');
+      setStatus('warn', 'METAR from server snapshot' + (snap ? ' (' + relTime(sAge) + ')' : '') + ' - live blocked; click Refresh to retry.');
     } else {
-      setStatus('err', 'No METAR available — click Refresh to retry.');
+      setStatus('err', 'No METAR available - click Refresh to retry.');
     }
     const el = document.getElementById('metarCheck'); if(!el) return;
     let obs = null; try{ obs = parseMetarObs(LAST.metar); }catch(e){}
     if(!obs){ el.className = 'metar-check'; el.innerHTML = ''; return; }
     const age = Math.max(0, Math.round((now - obs)/60000)), obsZ = fmt(new Date(obs),'UTC').t;
     let cls = 'metar-check', note = 'within expected ' + METAR_INTERVAL_MIN + '-min cycle';
-    if(age >= METAR_BAD_AFTER){ cls = 'metar-check bad'; note = 'stale — a full ' + METAR_INTERVAL_MIN + '-min cycle passed with no newer report'; }
+    if(age >= METAR_BAD_AFTER){ cls = 'metar-check bad'; note = 'stale - a full ' + METAR_INTERVAL_MIN + '-min cycle passed with no newer report'; }
     else if(age >= METAR_STALE_AFTER){ cls = 'metar-check stale'; note = 'older than the expected ' + METAR_INTERVAL_MIN + '-min cadence'; }
     el.className = cls; el.innerHTML = '<span class="ico"></span>Observed ' + obsZ + 'Z · ' + relTime(age) + ' · ' + note;
   };

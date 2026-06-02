@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>VIDP — METAR &amp; NOTAMs</title>
+<title>VIDP - METAR &amp; NOTAMs</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/aaaakshat/cm-web-fonts@latest/fonts.css" />
 <style>
@@ -85,7 +85,7 @@
   .sb-head h3{font-family:var(--sans);font-size:16px;margin:0;font-weight:700;}
   .sb-close{border:none;background:none;font-size:22px;line-height:1;padding:2px 8px;color:var(--muted);}
   .tabs{display:flex;border-bottom:1px solid var(--line);}
-  .tabs button{flex:1;border:none;border-bottom:2px solid transparent;border-radius:0;padding:10px 4px;font-size:12.5px;color:var(--muted);}
+  .tabs button{flex:1;border:none;border-bottom:2px solid transparent;border-radius:0;padding:10px 2px;font-size:11.5px;color:var(--muted);}
   .tabs button.active{color:var(--ink);border-bottom-color:var(--accent);font-weight:700;}
   .sb-body{padding:14px 16px;overflow-y:auto;flex:1;}
   .field input{width:100%;font-family:var(--sans);font-size:15px;padding:9px 11px;border:1px solid var(--line);border-radius:5px;margin-bottom:6px;}
@@ -98,6 +98,8 @@
   .codes{display:inline-flex;gap:10px;font-family:var(--mono);}
   .codes b{color:var(--accent);}
   .count{font-family:var(--sans);font-size:12px;color:var(--muted);margin:4px 0 10px;}
+  .res .grp{font-family:var(--sans);font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--accent);font-weight:700;margin:15px 0 4px;}
+  .res .grp:first-child{margin-top:2px;}
   mark{background:#fff3b0;color:inherit;padding:0 1px;}
   .loading{color:var(--muted);font-style:italic;font-family:var(--sans);font-size:13px;}
   @media (max-width:760px){
@@ -114,12 +116,12 @@
 <div class="wrap">
   <header class="top">
     <div>
-      <h1>VIDP — Delhi (IGI)</h1>
+      <h1>VIDP - Delhi (IGI)</h1>
       <div class="sub">Latest METAR &amp; active NOTAMs · Indira Gandhi Intl</div>
     </div>
     <div class="clocks">
-      <div class="clock"><div class="lbl">Zulu (UTC)</div><div class="t" id="zTime">--:--:--</div><div class="d" id="zDate">—</div></div>
-      <div class="clock"><div class="lbl">IST</div><div class="t" id="iTime">--:--:--</div><div class="d" id="iDate">—</div></div>
+      <div class="clock"><div class="lbl">Zulu (UTC)</div><div class="t" id="zTime">--:--:--</div><div class="d" id="zDate">-</div></div>
+      <div class="clock"><div class="lbl">IST</div><div class="t" id="iTime">--:--:--</div><div class="d" id="iDate">-</div></div>
     </div>
   </header>
 
@@ -155,9 +157,10 @@
     <button class="sb-close" onclick="closeSidebar()" title="Collapse">×</button>
   </div>
   <div class="tabs">
-    <button id="tab-abbr" class="active" onclick="showTab('abbr')">Abbreviations</button>
-    <button id="tab-airline" onclick="showTab('airline')">Airline codes</button>
-    <button id="tab-airport" onclick="showTab('airport')">Airport codes</button>
+    <button id="tab-abbr" class="active" onclick="showTab('abbr')">Abbr.</button>
+    <button id="tab-metar" onclick="showTab('metar')">METAR</button>
+    <button id="tab-airline" onclick="showTab('airline')">Airlines</button>
+    <button id="tab-airport" onclick="showTab('airport')">Airports</button>
   </div>
   <div class="sb-body">
     <div id="pane-abbr">
@@ -177,6 +180,12 @@
       <div class="hint">Look up by airport name, city, or by IATA / ICAO code.</div>
       <div class="count" id="airportCount"></div>
       <div class="res" id="airportRes"></div>
+    </div>
+    <div id="pane-metar" style="display:none;">
+      <div class="field"><input id="metarSearch" placeholder="Search a METAR code or its meaning…" oninput="renderMetarCodes()" autocomplete="off" /></div>
+      <div class="hint">Every short form used in a METAR / SPECI, grouped. Weather is built by chaining intensity + descriptor + phenomenon (e.g. +SHRA, FZFG, VCTS, TSRA).</div>
+      <div class="count" id="metarCount"></div>
+      <div class="res" id="metarRes"></div>
     </div>
   </div>
 </aside>
@@ -238,13 +247,13 @@ function decodeWeather(tok){
   return inten + out.join(' ') + (vc?' in the vicinity':'');
 }
 function decodeToken(tok, idx){
-  const C={METAR:'Routine aviation weather report',SPECI:'Special report (issued on significant change)',COR:'Corrected report',AUTO:'Fully automated report (no human intervention)',NOSIG:'No significant change expected in the next 2 hours',CAVOK:'Ceiling & Visibility OK — visibility ≥10 km, no cloud below 5000 ft / no CB, no significant weather',NSC:'No significant cloud',NCD:'No cloud detected',SKC:'Sky clear',CLR:'Sky clear (no cloud below 12000 ft)',NSW:'No significant weather',RMK:'Remarks follow',BECMG:'Becoming — a gradual change',TEMPO:'Temporarily — fluctuating change'};
+  const C={METAR:'Routine aviation weather report',SPECI:'Special report (issued on significant change)',COR:'Corrected report',AUTO:'Fully automated report (no human intervention)',NOSIG:'No significant change expected in the next 2 hours',CAVOK:'Ceiling & Visibility OK - visibility ≥10 km, no cloud below 5000 ft / no CB, no significant weather',NSC:'No significant cloud',NCD:'No cloud detected',SKC:'Sky clear',CLR:'Sky clear (no cloud below 12000 ft)',NSW:'No significant weather',RMK:'Remarks follow',BECMG:'Becoming - a gradual change',TEMPO:'Temporarily - fluctuating change'};
   if(C[tok]) return C[tok];
   let m;
   if(m=tok.match(/^(\d{2})(\d{2})(\d{2})Z$/)){
     const d = new Date(parseMetarObs(tok));
     const ist = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',hour:'2-digit',minute:'2-digit',hour12:false}).format(d);
-    return 'Observation time — <b>'+m[2]+':'+m[3]+'Z</b> Zulu (UTC) · <b>'+ist+'</b> IST · day '+m[1]+' of the month';
+    return 'Observation time - <b>'+m[2]+':'+m[3]+'Z</b> Zulu (UTC) · <b>'+ist+'</b> IST · day '+m[1]+' of the month';
   }
   if(m=tok.match(/^(\d{3}|VRB)(\d{2,3})(?:G(\d{2,3}))?(KT|MPS)$/)){
     const dir=m[1]==='VRB'?'variable direction':'from '+m[1]+'°', u=m[4]==='KT'?'kt':'m/s';
@@ -255,7 +264,7 @@ function decodeToken(tok, idx){
   if(m=tok.match(/^A(\d{4})$/)) return 'Altimeter '+m[1].slice(0,2)+'.'+m[1].slice(2)+' inHg';
   if(m=tok.match(/^(M?\d{2})\/(M?\d{2})$/)){ const t=v=>v[0]==='M'?-(+v.slice(1)):+v; return 'Temperature '+t(m[1])+'°C, dew point '+t(m[2])+'°C'; }
   if(m=tok.match(/^(FEW|SCT|BKN|OVC)(\d{3})(CB|TCU)?$/)){
-    const a={FEW:'Few (1–2 oktas)',SCT:'Scattered (3–4 oktas)',BKN:'Broken (5–7 oktas)',OVC:'Overcast (8 oktas)'}[m[1]];
+    const a={FEW:'Few (1-2 oktas)',SCT:'Scattered (3-4 oktas)',BKN:'Broken (5-7 oktas)',OVC:'Overcast (8 oktas)'}[m[1]];
     return a+' cloud at '+(+m[2]*100).toLocaleString()+' ft'+(m[3]==='CB'?', cumulonimbus':m[3]==='TCU'?', towering cumulus':'');
   }
   if(m=tok.match(/^VV(\d{3})$/)) return 'Vertical visibility '+(+m[1]*100)+' ft (sky obscured)';
@@ -264,7 +273,7 @@ function decodeToken(tok, idx){
   if(m=tok.match(/^(\d{4})$/)) return 'Visibility '+(+m[1])+' m';
   if(m=tok.match(/^(\d{2})SM$/)) return 'Visibility '+m[1]+' statute miles';
   const wx=decodeWeather(tok); if(wx) return wx;
-  if(idx<=1 && /^[A-Z]{4}$/.test(tok)) return 'ICAO station identifier — <b>'+tok+'</b>';
+  if(idx<=1 && /^[A-Z]{4}$/.test(tok)) return 'ICAO station identifier - <b>'+tok+'</b>';
   return null;
 }
 function decodeMetarHTML(metar){
@@ -320,7 +329,7 @@ let LAST = null;
 
 /* Every Refresh performs a LIVE fetch straight from the source, via free CORS proxies
    (the source APIs don't send CORS headers, so a browser can't hit them directly).
-   data.json — the server snapshot kept fresh by GitHub Actions — is only a fallback
+   data.json - the server snapshot kept fresh by GitHub Actions - is only a fallback
    if the live fetch fails, so the page never goes blank. */
 const STATION = 'VIDP';
 // CORS proxies tried in order (the source APIs don't send CORS headers). First entry is a direct
@@ -336,7 +345,7 @@ const POST_PROXIES = [
   u => 'https://test.cors.workers.dev/?' + encodeURIComponent(u),
   u => 'https://api.cors.lol/?url=' + encodeURIComponent(u),
 ];
-// Multiple independent METAR sources — if one portal is unreliable or down, the next is tried.
+// Multiple independent METAR sources - if one portal is unreliable or down, the next is tried.
 const METAR_SOURCES = [
   () => 'https://aviationweather.gov/api/data/metar?ids=' + STATION + '&format=raw',
   () => 'https://metar.vatsim.net/' + STATION,
@@ -417,7 +426,7 @@ async function refresh(){
     data.notams = snap.notams || [];
     if(data.notams.length) data.source.notams = 'snapshot';
   } else { data.notams = []; }
-  // Live UPGRADES only — a failed or empty live result must never downgrade the base.
+  // Live UPGRADES only - a failed or empty live result must never downgrade the base.
   const [mRes, nRes] = await Promise.allSettled([liveMetar(), liveNotams()]);
   if(mRes.status === 'fulfilled' && mRes.value){
     if(!data.metar || (parseMetarObs(mRes.value) || 0) >= (parseMetarObs(data.metar) || 0)){ data.metar = mRes.value; data.source.metar = 'live'; }
@@ -438,7 +447,7 @@ function render(data){
   if(data.metar){ mEl.className='metar'; mEl.innerHTML = decodeMetarHTML(data.metar); }
   else { mEl.className='metar empty'; mEl.textContent = 'METAR unavailable' + (data.metarError? ' ('+data.metarError+')':''); }
   document.getElementById('metarPlain').innerHTML = data.metar
-    ? '<b>Showing ' + (/^SPECI/.test(data.metar)?'SPECI':'METAR') + ' for ' + STATION + '</b> — ' + esc(decodeMetarFull(data.metar)) + '.'
+    ? '<b>Showing ' + (/^SPECI/.test(data.metar)?'SPECI':'METAR') + ' for ' + STATION + '</b> - ' + esc(decodeMetarFull(data.metar)) + '.'
     : '';
 
   // NOTAMs
@@ -481,11 +490,11 @@ function updateChecks(){
   const snap = LAST.snapshotAt ? new Date(LAST.snapshotAt) : null;
   const sAge = snap ? Math.max(0, Math.round((nowMs-snap.getTime())/60000)) : null;
   if(src.metar==='live'){
-    setStatus('ok', 'Live — METAR fetched ' + relTime(fAge) + (fetched ? ' (' + fmt(fetched,'UTC').t + 'Z)' : ''));
+    setStatus('ok', 'Live - METAR fetched ' + relTime(fAge) + (fetched ? ' (' + fmt(fetched,'UTC').t + 'Z)' : ''));
   } else if(src.metar==='snapshot'){
-    setStatus('warn', 'METAR from server snapshot' + (snap?' ('+relTime(sAge)+')':'') + ' — live blocked; click Refresh to retry.');
+    setStatus('warn', 'METAR from server snapshot' + (snap?' ('+relTime(sAge)+')':'') + ' - live blocked; click Refresh to retry.');
   } else {
-    setStatus('err', 'No METAR available — click Refresh to retry.');
+    setStatus('err', 'No METAR available - click Refresh to retry.');
   }
   const el = document.getElementById('metarCheck');
   const obs = parseMetarObs(LAST.metar);
@@ -493,7 +502,7 @@ function updateChecks(){
   const age = Math.max(0, Math.round((nowMs-obs)/60000));
   const obsZ = fmt(new Date(obs),'UTC').t;
   let cls='metar-check', note='within expected '+METAR_INTERVAL_MIN+'-min cycle';
-  if(age >= METAR_BAD_AFTER){ cls='metar-check bad'; note='stale — a full '+METAR_INTERVAL_MIN+'-min cycle has passed with no newer report'; }
+  if(age >= METAR_BAD_AFTER){ cls='metar-check bad'; note='stale - a full '+METAR_INTERVAL_MIN+'-min cycle has passed with no newer report'; }
   else if(age >= METAR_STALE_AFTER){ cls='metar-check stale'; note='older than the expected '+METAR_INTERVAL_MIN+'-min cadence'; }
   el.className = cls;
   el.innerHTML = '<span class="ico"></span>Observed '+obsZ+'Z · '+relTime(age)+' · '+note;
@@ -508,7 +517,7 @@ function setStatus(cls, txt){
 function openSidebar(){ document.body.classList.add('sidebar-open'); document.getElementById('sidebar').setAttribute('aria-hidden','false'); ensureDatasets(); }
 function closeSidebar(){ document.body.classList.remove('sidebar-open'); document.getElementById('sidebar').setAttribute('aria-hidden','true'); }
 function showTab(which){
-  for(const k of ['abbr','airline','airport']){
+  for(const k of ['abbr','metar','airline','airport']){
     document.getElementById('pane-'+k).style.display = (k===which)?'block':'none';
     document.getElementById('tab-'+k).classList.toggle('active', k===which);
   }
@@ -540,6 +549,131 @@ function renderAbbr(){
   document.getElementById('abbrRes').innerHTML = shown.map(a =>
     '<div class="row"><span class="k">'+hl(a.abbr,q)+'</span><span class="v">'+hl(a.meaning,q)+'</span></div>'
   ).join('') || '<div class="loading">No match.</div>';
+}
+
+/* ---------- METAR code reference ---------- */
+const METAR_GROUPS = [
+  ['Report type', [
+    ['METAR','Routine (scheduled) aerodrome weather report'],
+    ['SPECI','Special report, issued off-schedule on a significant change'],
+    ['AUTO','Fully automated report, no human intervention'],
+    ['COR','Corrected report'],
+    ['NIL','No report / no data available'],
+    ['CCA / CCB','Corrected report (1st, 2nd correction, etc.)'],
+    ['=','End of report'],
+  ]],
+  ['Wind', [
+    ['dddffKT','Wind: direction ddd deg true, speed ff (e.g. 12006KT = 120 deg / 6 kt)'],
+    ['GggKT','Gusting to gg kt (e.g. 12006G16KT)'],
+    ['VRB','Variable direction (speed 6 kt or less, or near thunderstorms)'],
+    ['dddVddd','Direction varying between the two bearings (e.g. 250V300)'],
+    ['00000KT','Calm'],
+    ['KT / MPS / KMH','Speed units: knots / metres per second / km per hour'],
+    ['P (wind)','Greater than (e.g. P49KT = wind over 49 kt)'],
+    ['/////KT','Wind not available (automated)'],
+  ]],
+  ['Visibility', [
+    ['9999','Visibility 10 km or more'],
+    ['NNNN','Prevailing visibility in metres (e.g. 5000 = 5 km)'],
+    ['CAVOK','Ceiling and visibility OK: vis 10 km+, no cloud below 5000 ft / no CB, no significant weather'],
+    ['nSM','Visibility in statute miles, US (e.g. 6SM, 1/2SM)'],
+    ['P6SM','Visibility greater than 6 statute miles'],
+    ['M1/4SM','Visibility less than 1/4 statute mile'],
+    ['NDV','No directional variation of visibility available (automated)'],
+    ['dddd + N/NE/E...','Minimum visibility in metres toward that direction'],
+    ['NSW','Nil significant weather (used in trends)'],
+  ]],
+  ['RVR (runway visual range)', [
+    ['RDD/VVVVFT','RVR on runway DD: VVVV in feet or metres (e.g. R29/0600FT)'],
+    ['L / C / R','Left / Centre / Right parallel runway'],
+    ['U / D / N','RVR tendency: going Up / Down / No change'],
+    ['P (RVR)','RVR greater than the maximum assessable value'],
+    ['M (RVR)','RVR less than the minimum assessable value'],
+    ['VVVVVVVVVV','RVR varying between two values (V between them)'],
+  ]],
+  ['Weather: intensity and proximity', [
+    ['-','Light intensity (prefix)'],
+    ['+','Heavy intensity (prefix)'],
+    ['(no prefix)','Moderate intensity'],
+    ['VC','In the vicinity (5 to 10 km from the aerodrome)'],
+    ['RE','Recent: weather since the last report (e.g. RERA, RETS)'],
+  ]],
+  ['Weather: descriptors', [
+    ['MI','Shallow'], ['BC','Patches'], ['PR','Partial (covers part of the aerodrome)'],
+    ['DR','Low drifting (under 2 m above ground)'], ['BL','Blowing (raised 2 m or more)'],
+    ['SH','Showers'], ['TS','Thunderstorm'], ['FZ','Freezing (supercooled)'],
+  ]],
+  ['Weather: precipitation', [
+    ['DZ','Drizzle'], ['RA','Rain'], ['SN','Snow'], ['SG','Snow grains'],
+    ['IC','Ice crystals (diamond dust)'], ['PL','Ice pellets'], ['GR','Hail (5 mm or more)'],
+    ['GS','Small hail / snow pellets (under 5 mm)'], ['UP','Unknown precipitation (automated)'],
+  ]],
+  ['Weather: obscuration', [
+    ['BR','Mist (visibility 1000 to 5000 m)'], ['FG','Fog (visibility under 1000 m)'],
+    ['FU','Smoke'], ['VA','Volcanic ash'], ['DU','Widespread dust'], ['SA','Sand'], ['HZ','Haze'],
+  ]],
+  ['Weather: other', [
+    ['PO','Dust / sand whirls (dust devils)'], ['SQ','Squall'],
+    ['FC','Funnel cloud / tornado / waterspout'], ['SS','Sandstorm'], ['DS','Duststorm'],
+    ['Chaining','Combine the above: TSRA = thunderstorm with rain; +SHRA = heavy rain showers; FZFG = freezing fog; VCTS = thunderstorm in vicinity; -DZ = light drizzle'],
+  ]],
+  ['Cloud', [
+    ['FEW','Few: 1 to 2 oktas'], ['SCT','Scattered: 3 to 4 oktas'],
+    ['BKN','Broken: 5 to 7 oktas'], ['OVC','Overcast: 8 oktas'],
+    ['nnn','Cloud base = nnn x100 ft above the aerodrome (e.g. 040 = 4000 ft)'],
+    ['CB','Cumulonimbus'], ['TCU','Towering cumulus'],
+    ['VVnnn','Vertical visibility (sky obscured), nnn x100 ft'],
+    ['NSC','No significant cloud'], ['NCD','No cloud detected (automated)'],
+    ['SKC','Sky clear'], ['CLR','Clear, no cloud below 12,000 ft (automated)'],
+    ['///','Cloud amount / type not measured (automated)'],
+  ]],
+  ['Temperature and pressure', [
+    ['TT/TdTd','Temperature / dew point in deg C (e.g. 35/20)'],
+    ['M (temp)','Minus, below 0 deg C (e.g. M03 = minus 3 deg C)'],
+    ['Qnnnn','QNH altimeter setting in hectopascals (e.g. Q1006)'],
+    ['Annnn','Altimeter setting in inches of mercury x100 (e.g. A2992 = 29.92 inHg)'],
+  ]],
+  ['Trend forecast (TREND)', [
+    ['NOSIG','No significant change expected in the next 2 hours'],
+    ['BECMG','Becoming: a gradual, lasting change'],
+    ['TEMPO','Temporarily: fluctuations each under 1 h, totalling under half the period'],
+    ['FMhhmm','From the time hh:mm UTC'],
+    ['TLhhmm','Until the time hh:mm UTC'],
+    ['AThhmm','At the time hh:mm UTC'],
+    ['PROB30 / PROB40','30% / 40% probability of the following conditions'],
+  ]],
+  ['Remarks and supplementary', [
+    ['RMK','Remarks follow (often national format)'],
+    ['WS','Wind shear (e.g. WS RWY28, WS ALL RWY)'],
+    ['W (sea)','Sea-surface temp / state at offshore stations (e.g. W19/S4)'],
+    ['Rnn/ERCReReBRBR','Runway state group: deposit / extent / depth / friction (braking action)'],
+    ['SNOCLO','Aerodrome closed due to snow'],
+    ['$','Maintenance check needed at the automated station'],
+    ['//','Element missing / not available'],
+  ]],
+  ['Colour states (military)', [
+    ['BLU','Cloud base 2500 ft+ and vis 8 km+'],
+    ['WHT','1500 ft+ and 5 km+'],
+    ['GRN','700 ft+ and 3.7 km+'],
+    ['YLO1 / YLO2','500 / 300 ft+ and 2.5 / 1.6 km+'],
+    ['AMB','200 ft+ and 0.8 km+'],
+    ['RED','Below 200 ft or below 0.8 km'],
+    ['BLACK','Aerodrome closed (not weather related)'],
+  ]],
+];
+const METARCODES = METAR_GROUPS.flatMap(([g, rows]) => rows.map(([code, meaning]) => ({g, code, meaning})));
+function renderMetarCodes(){
+  const q = document.getElementById('metarSearch').value.trim();
+  const ql = q.toLowerCase();
+  let list = METARCODES;
+  if(ql) list = METARCODES.filter(a => a.code.toLowerCase().includes(ql) || a.meaning.toLowerCase().includes(ql) || a.g.toLowerCase().includes(ql));
+  document.getElementById('metarCount').textContent = ql ? (list.length + ' of ' + METARCODES.length) : (METARCODES.length + ' codes');
+  let html = '', lastG = null;
+  for(const a of list){
+    if(a.g !== lastG){ html += '<div class="grp">' + esc(a.g) + '</div>'; lastG = a.g; }
+    html += '<div class="row"><span class="k">' + hl(a.code, q) + '</span><span class="v">' + hl(a.meaning, q) + '</span></div>';
+  }
+  document.getElementById('metarRes').innerHTML = html || '<div class="loading">No match.</div>';
 }
 
 /* ---------- Airline / Airport datasets (loaded on demand) ---------- */
@@ -598,7 +732,7 @@ function renderAirline(){
   }
   document.getElementById('airlineCount').textContent = list.length + ' result' + (list.length===1?'':'s');
   document.getElementById('airlineRes').innerHTML = list.slice(0,200).map(a =>
-    '<div class="row"><span class="k"><span class="codes"><b>'+esc(a.iata||'—')+'</b> '+esc(a.icao||'—')+'</span></span>'+
+    '<div class="row"><span class="k"><span class="codes"><b>'+esc(a.iata||'-')+'</b> '+esc(a.icao||'-')+'</span></span>'+
     '<span class="v">'+hl(a.name,q)+(a.country?' <span class="sub2">'+esc(a.country)+(a.callsign?' · '+esc(a.callsign):'')+'</span>':'')+'</span></div>'
   ).join('') || '<div class="loading">No match.</div>';
 }
@@ -619,13 +753,14 @@ function renderAirport(){
   }
   document.getElementById('airportCount').textContent = ql ? (list.length + ' result' + (list.length===1?'':'s')) : 'Type to search '+AIRPORTS.length.toLocaleString()+' airports';
   document.getElementById('airportRes').innerHTML = list.slice(0,200).map(a =>
-    '<div class="row"><span class="k"><span class="codes"><b>'+esc(a.iata||'—')+'</b> '+esc(a.icao||'—')+'</span></span>'+
+    '<div class="row"><span class="k"><span class="codes"><b>'+esc(a.iata||'-')+'</b> '+esc(a.icao||'-')+'</span></span>'+
     '<span class="v">'+hl(a.name||'',q)+'<span class="sub2">'+esc([a.city,a.country].filter(Boolean).join(', '))+'</span></span></div>'
   ).join('') || '<div class="loading">No match.</div>';
 }
 
 /* ---------- init ---------- */
 renderAbbr();
+renderMetarCodes();
 refresh();
 setInterval(refresh, 5*60*1000); // re-pull data.json every 5 min
 document.addEventListener('keydown', e => { if(e.key==='Escape') closeSidebar(); });
