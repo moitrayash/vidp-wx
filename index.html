@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>VIDP — METAR &amp; NOTAMs</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/aaaakshat/cm-web-fonts@latest/fonts.css" />
+<style>
+  :root{
+    --serif:"Computer Modern Serif",Georgia,"Times New Roman",serif;
+    --sans:"Computer Modern Sans","Helvetica Neue",Arial,sans-serif;
+    --mono:"Computer Modern Typewriter","SFMono-Regular",Consolas,"Liberation Mono",monospace;
+    --ink:#111;
+    --muted:#666;
+    --line:#ddd;
+    --line2:#eee;
+    --bg:#fff;
+    --panel:#fafafa;
+    --accent:#1a3a6b;
+    --active:#0a7d34;
+    --warn:#9a6b00;
+    --sidebar-w:380px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:17px;line-height:1.45;}
+  a{color:var(--accent);}
+  .wrap{max-width:880px;margin:0 auto;padding:28px 22px 80px;transition:margin-right .2s ease;}
+  body.sidebar-open .wrap{margin-right:var(--sidebar-w);}
+  header.top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:20px;flex-wrap:wrap;}
+  h1{font-family:var(--sans);font-weight:700;font-size:25px;margin:0 0 2px;letter-spacing:.2px;}
+  .sub{font-family:var(--sans);color:var(--muted);font-size:13.5px;}
+  .clocks{display:flex;gap:22px;font-family:var(--sans);}
+  .clock{text-align:right;}
+  .clock .lbl{font-size:11.5px;letter-spacing:1.2px;color:var(--muted);text-transform:uppercase;}
+  .clock .t{font-family:var(--mono);font-size:23px;font-variant-numeric:tabular-nums;line-height:1.1;}
+  .clock .d{font-size:12px;color:var(--muted);}
+  .bar{display:flex;align-items:center;gap:14px;margin-bottom:22px;flex-wrap:wrap;}
+  button{font-family:var(--sans);font-size:14px;border:1px solid var(--line);background:#fff;color:var(--ink);padding:7px 14px;border-radius:5px;cursor:pointer;}
+  button:hover{background:#f3f3f3;}
+  button:active{background:#ebebeb;}
+  .status{font-family:var(--sans);font-size:13px;color:var(--muted);}
+  .status .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#bbb;margin-right:6px;vertical-align:middle;}
+  .status.ok .dot{background:var(--active);}
+  .status.err .dot{background:#b00;}
+  section{margin-bottom:34px;}
+  h2{font-family:var(--sans);font-weight:700;font-size:15px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line2);padding-bottom:7px;margin:0 0 14px;}
+  .metar{font-family:var(--mono);font-size:19px;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px 18px;white-space:pre-wrap;word-break:break-word;}
+  .metar.empty{color:var(--muted);font-style:italic;}
+  .notam-meta{font-family:var(--sans);font-size:13px;color:var(--muted);margin-bottom:14px;}
+  .notam{border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin-bottom:14px;background:#fff;}
+  .notam .hd{display:flex;justify-content:space-between;gap:14px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px;}
+  .notam .num{font-family:var(--sans);font-weight:700;font-size:16px;}
+  .notam .end{font-family:var(--sans);font-size:13px;color:var(--warn);white-space:nowrap;}
+  .notam .end.perm{color:var(--active);}
+  .notam .feat{font-family:var(--sans);font-size:12px;color:var(--muted);}
+  .notam pre{font-family:var(--mono);font-size:14px;white-space:pre-wrap;word-break:break-word;margin:0;color:#222;}
+  .empty-note{color:var(--muted);font-style:italic;font-family:var(--sans);font-size:14px;}
+  footer{border-top:1px solid var(--line2);margin-top:40px;padding-top:14px;font-family:var(--sans);font-size:12px;color:var(--muted);}
+
+  /* Glossary toggle button (fixed) */
+  #glossaryToggle{position:fixed;top:18px;right:18px;z-index:40;}
+  body.sidebar-open #glossaryToggle{display:none;}
+
+  /* Sidebar */
+  #sidebar{position:fixed;top:0;right:0;width:var(--sidebar-w);height:100vh;background:#fff;border-left:1px solid var(--line);box-shadow:-3px 0 14px rgba(0,0,0,.05);transform:translateX(100%);transition:transform .2s ease;z-index:50;display:flex;flex-direction:column;}
+  body.sidebar-open #sidebar{transform:translateX(0);}
+  .sb-head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);}
+  .sb-head h3{font-family:var(--sans);font-size:16px;margin:0;font-weight:700;}
+  .sb-close{border:none;background:none;font-size:22px;line-height:1;padding:2px 8px;color:var(--muted);}
+  .tabs{display:flex;border-bottom:1px solid var(--line);}
+  .tabs button{flex:1;border:none;border-bottom:2px solid transparent;border-radius:0;padding:10px 4px;font-size:12.5px;color:var(--muted);}
+  .tabs button.active{color:var(--ink);border-bottom-color:var(--accent);font-weight:700;}
+  .sb-body{padding:14px 16px;overflow-y:auto;flex:1;}
+  .field input{width:100%;font-family:var(--sans);font-size:15px;padding:9px 11px;border:1px solid var(--line);border-radius:5px;margin-bottom:6px;}
+  .hint{font-family:var(--sans);font-size:12px;color:var(--muted);margin-bottom:12px;}
+  .res{font-size:15px;}
+  .res .row{padding:8px 0;border-bottom:1px solid var(--line2);display:flex;gap:12px;align-items:baseline;}
+  .res .k{font-family:var(--mono);font-weight:700;color:var(--accent);min-width:78px;white-space:nowrap;}
+  .res .v{flex:1;}
+  .res .sub2{font-family:var(--sans);font-size:12px;color:var(--muted);}
+  .codes{display:inline-flex;gap:10px;font-family:var(--mono);}
+  .codes b{color:var(--accent);}
+  .count{font-family:var(--sans);font-size:12px;color:var(--muted);margin:4px 0 10px;}
+  mark{background:#fff3b0;color:inherit;padding:0 1px;}
+  .loading{color:var(--muted);font-style:italic;font-family:var(--sans);font-size:13px;}
+  @media (max-width:760px){
+    body.sidebar-open .wrap{margin-right:0;}
+    :root{--sidebar-w:100vw;}
+    .clocks{gap:16px;}
+  }
+</style>
+</head>
+<body>
+
+<button id="glossaryToggle" onclick="openSidebar()">☰ Glossary &amp; codes</button>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>VIDP — Delhi (IGI)</h1>
+      <div class="sub">Latest METAR &amp; active NOTAMs · Indira Gandhi Intl</div>
+    </div>
+    <div class="clocks">
+      <div class="clock"><div class="lbl">Zulu (UTC)</div><div class="t" id="zTime">--:--:--</div><div class="d" id="zDate">—</div></div>
+      <div class="clock"><div class="lbl">IST</div><div class="t" id="iTime">--:--:--</div><div class="d" id="iDate">—</div></div>
+    </div>
+  </header>
+
+  <div class="bar">
+    <button onclick="refresh()" id="refreshBtn">↻ Refresh</button>
+    <span class="status" id="status"><span class="dot"></span><span id="statusText">Loading…</span></span>
+  </div>
+
+  <section>
+    <h2>METAR</h2>
+    <div class="metar empty" id="metar">Loading…</div>
+  </section>
+
+  <section>
+    <h2>Active NOTAMs <span style="text-transform:none;font-weight:400;">(currently in effect)</span></h2>
+    <div class="notam-meta" id="notamMeta"></div>
+    <div id="notams"></div>
+  </section>
+
+  <footer id="footer">
+    Weather &amp; NOTAM data refreshed server-side roughly every 10 minutes via GitHub Actions; clocks above are live.
+    NOTAM source: FAA NOTAM Search. METAR source: Aviation Weather Center. Times are UTC unless noted.
+    For operational use always cross-check official sources.
+  </footer>
+</div>
+
+<!-- Sidebar -->
+<aside id="sidebar" aria-hidden="true">
+  <div class="sb-head">
+    <h3>Reference</h3>
+    <button class="sb-close" onclick="closeSidebar()" title="Collapse">×</button>
+  </div>
+  <div class="tabs">
+    <button id="tab-abbr" class="active" onclick="showTab('abbr')">Abbreviations</button>
+    <button id="tab-airline" onclick="showTab('airline')">Airline codes</button>
+    <button id="tab-airport" onclick="showTab('airport')">Airport codes</button>
+  </div>
+  <div class="sb-body">
+    <div id="pane-abbr">
+      <div class="field"><input id="abbrSearch" placeholder="Search abbreviation or meaning…" oninput="renderAbbr()" autocomplete="off" /></div>
+      <div class="hint">Source: India eAIP GEN&nbsp;2.2. Searches both the abbreviation and its meaning.</div>
+      <div class="count" id="abbrCount"></div>
+      <div class="res" id="abbrRes"></div>
+    </div>
+    <div id="pane-airline" style="display:none;">
+      <div class="field"><input id="airlineSearch" placeholder="Name, IATA (AI) or ICAO (AIC)…" oninput="renderAirline()" autocomplete="off" /></div>
+      <div class="hint">Look up by airline name or by IATA / ICAO code.</div>
+      <div class="count" id="airlineCount"></div>
+      <div class="res" id="airlineRes"></div>
+    </div>
+    <div id="pane-airport" style="display:none;">
+      <div class="field"><input id="airportSearch" placeholder="Name, city, IATA (DEL) or ICAO (VIDP)…" oninput="renderAirport()" autocomplete="off" /></div>
+      <div class="hint">Look up by airport name, city, or by IATA / ICAO code.</div>
+      <div class="count" id="airportCount"></div>
+      <div class="res" id="airportRes"></div>
+    </div>
+  </div>
+</aside>
+
+<script>
+/* ---------- Live clocks (accurate to the second) ---------- */
+function fmt(d, tz){
+  const t = new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(d);
+  const day = new Intl.DateTimeFormat('en-GB',{timeZone:tz,weekday:'short',day:'2-digit',month:'short',year:'numeric'}).format(d);
+  return {t, day};
+}
+function tick(){
+  const now = new Date();
+  const z = fmt(now,'UTC'), i = fmt(now,'Asia/Kolkata');
+  document.getElementById('zTime').textContent = z.t;
+  document.getElementById('zDate').textContent = z.day;
+  document.getElementById('iTime').textContent = i.t;
+  document.getElementById('iDate').textContent = i.day;
+}
+setInterval(tick, 250); tick();
+
+/* ---------- NOTAM date parsing ---------- */
+// FAA NOTAM times are UTC, format "MM/DD/YYYY HHMM" with optional EST (estimated) suffix; end may be "PERM".
+function parseFaaTime(s){
+  if(!s) return null;
+  s = String(s).trim();
+  if(/PERM/i.test(s)) return {perm:true};
+  const est = /EST$/i.test(s);
+  s = s.replace(/EST$/i,'').trim();
+  const m = s.match(/^(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2})(\d{2})$/);
+  if(!m) return null;
+  const [,mo,da,yr,hh,mi] = m;
+  return {ms: Date.UTC(+yr,+mo-1,+da,+hh,+mi), est};
+}
+function fmtEnd(p){
+  if(!p) return 'unknown';
+  if(p.perm) return 'PERM';
+  const d = new Date(p.ms);
+  const s = new Intl.DateTimeFormat('en-GB',{timeZone:'UTC',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).format(d).replace(',', '');
+  return s + 'Z' + (p.est ? ' (est)' : '');
+}
+function isActive(n, now){
+  const s = parseFaaTime(n.startDate), e = parseFaaTime(n.endDate);
+  const started = !s || s.perm || (s.ms != null && s.ms <= now);
+  const notEnded = !e || e.perm || (e.ms != null && e.ms >= now);
+  return started && notEnded;
+}
+
+/* ---------- Data load + render ---------- */
+function esc(t){return (t||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+let LAST = null;
+
+async function refresh(){
+  const btn = document.getElementById('refreshBtn');
+  btn.disabled = true;
+  setStatus('', 'Refreshing…');
+  try{
+    const r = await fetch('./data.json?t=' + Date.now(), {cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP ' + r.status);
+    const data = await r.json();
+    LAST = data;
+    render(data);
+  }catch(e){
+    setStatus('err', 'Could not load data.json — the updater may still be generating it. ' + e);
+    document.getElementById('metar').className = 'metar empty';
+    document.getElementById('metar').textContent = 'Data not available yet.';
+  }finally{
+    btn.disabled = false;
+  }
+}
+
+function render(data){
+  // METAR
+  const mEl = document.getElementById('metar');
+  if(data.metar){ mEl.className='metar'; mEl.textContent = data.metar; }
+  else { mEl.className='metar empty'; mEl.textContent = 'METAR unavailable' + (data.metarError? ' ('+data.metarError+')':''); }
+
+  // NOTAMs
+  const now = Date.now();
+  const all = data.notams || [];
+  const active = all.filter(n => isActive(n, now));
+  const cont = document.getElementById('notams');
+  cont.innerHTML = '';
+  if(active.length === 0){
+    cont.innerHTML = '<div class="empty-note">No NOTAMs currently in effect.</div>';
+  } else {
+    for(const n of active){
+      const div = document.createElement('div');
+      div.className = 'notam';
+      const endP = parseFaaTime(n.endDate);
+      const endTxt = fmtEnd(endP);
+      const endCls = (endP && endP.perm) ? 'end perm' : 'end';
+      const text = n.icaoMessage || n.traditionalMessage || '';
+      div.innerHTML =
+        '<div class="hd"><span class="num">'+esc(n.notamNumber)+'</span>'+
+        '<span class="'+endCls+'">Until: '+esc(endTxt)+'</span></div>'+
+        (n.featureName ? '<div class="feat">'+esc(n.featureName)+'</div>' : '')+
+        '<pre>'+esc(text)+'</pre>';
+      cont.appendChild(div);
+    }
+  }
+  const gen = data.generatedAt ? new Date(data.generatedAt) : null;
+  document.getElementById('notamMeta').textContent =
+    active.length + ' active of ' + all.length + ' total · evaluated live against current UTC';
+  const ago = gen ? Math.max(0, Math.round((Date.now()-gen.getTime())/60000)) : null;
+  setStatus('ok', 'Data updated ' + (gen ? (ago===0?'just now':ago+' min ago') : '—') +
+    (gen ? ' (' + fmt(gen,'UTC').t + 'Z)' : ''));
+}
+function setStatus(cls, txt){
+  const s = document.getElementById('status');
+  s.className = 'status' + (cls? ' '+cls : '');
+  document.getElementById('statusText').textContent = txt;
+}
+
+/* ---------- Sidebar ---------- */
+function openSidebar(){ document.body.classList.add('sidebar-open'); document.getElementById('sidebar').setAttribute('aria-hidden','false'); ensureDatasets(); }
+function closeSidebar(){ document.body.classList.remove('sidebar-open'); document.getElementById('sidebar').setAttribute('aria-hidden','true'); }
+function showTab(which){
+  for(const k of ['abbr','airline','airport']){
+    document.getElementById('pane-'+k).style.display = (k===which)?'block':'none';
+    document.getElementById('tab-'+k).classList.toggle('active', k===which);
+  }
+  if(which==='airline' || which==='airport') ensureDatasets();
+}
+
+/* ---------- Abbreviations (embedded) ---------- */
+const ABBR = [{"abbr":"A","meaning":"Amber"},{"abbr":"A","meaning":"Air- to Air"},{"abbr":"A/A","meaning":"Air- to Air"},{"abbr":"A/G","meaning":"Air to ground"},{"abbr":"AA","meaning":"Approved Agency"},{"abbr":"AAI","meaning":"Airports Authority of India"},{"abbr":"AAL","meaning":"Above aerodrome level"},{"abbr":"ABAS","meaning":"Aircraft-Based Augmentation System"},{"abbr":"ABM","meaning":"Abeam"},{"abbr":"ABN","meaning":"Aerodrome beacon"},{"abbr":"ABT","meaning":"About"},{"abbr":"ABV","meaning":"Above"},{"abbr":"AC","meaning":"Advisory Circular"},{"abbr":"ACAS","meaning":"Airborne collision avoidance system"},{"abbr":"ACC","meaning":"Area control centre or Area control"},{"abbr":"ACCID","meaning":"Notification of an aircraft accident"},{"abbr":"ACFT","meaning":"Aircraft"},{"abbr":"ACK","meaning":"Acknowledge"},{"abbr":"ACL","meaning":"Altimeter check location"},{"abbr":"ACPT","meaning":"Accept or accepted"},{"abbr":"ACS","meaning":"Aeronautical Communication Station"},{"abbr":"ACT","meaning":"Active or activated or activity"},{"abbr":"AD","meaning":"Aerodrome"},{"abbr":"ADA","meaning":"Advisory Area"},{"abbr":"ADC","meaning":"Air Defence Clearance"},{"abbr":"ADDN","meaning":"Addition or Additional"},{"abbr":"ADF","meaning":"Automatic direction finding equipment"},{"abbr":"ADIZ","meaning":"Air Defence identification zone"},{"abbr":"ADJ","meaning":"Adjacent"},{"abbr":"ADR","meaning":"Advisory route"},{"abbr":"ADS","meaning":"Automatic dependent surveillance"},{"abbr":"ADVS","meaning":"Advisory service"},{"abbr":"ADZ","meaning":"Advice"},{"abbr":"AES","meaning":"Aircraft earth station"},{"abbr":"AFIL","meaning":"Flight plan filled in the air"},{"abbr":"AFIS","meaning":"Aerodrome flight information service"},{"abbr":"AFM","meaning":"Aircraft Flight Manual"},{"abbr":"AFS","meaning":"Aeronautical fixed service"},{"abbr":"AFT","meaning":"After (time or place)"},{"abbr":"AGA","meaning":"Aerodrome , air routes and ground aids"},{"abbr":"AGL","meaning":"Above ground level"},{"abbr":"AGN","meaning":"Again"},{"abbr":"AIC","meaning":"Aeronautical information circular"},{"abbr":"AIP","meaning":"Aeronautical information publication"},{"abbr":"AIRAC","meaning":"Aeronautical information regulation and control"},{"abbr":"AIREP","meaning":"Air-report"},{"abbr":"AIS","meaning":"Aeronautical Information Services"},{"abbr":"ALA","meaning":"Alighting area"},{"abbr":"ALERFA","meaning":"Alert phase"},{"abbr":"ALR","meaning":"Alerting (message type designator)"},{"abbr":"ALRS","meaning":"Alerting service"},{"abbr":"ALS","meaning":"Approach lighting system"},{"abbr":"ALT","meaning":"Altitude"},{"abbr":"ALTN","meaning":"Alternate or alternating (light alternates in colour ) or alternate (aerodrome)"},{"abbr":"AMC","meaning":"Airspace Management Cell"},{"abbr":"AMD","meaning":"Amend or amended"},{"abbr":"AMDT","meaning":"Amendment"},{"abbr":"AMS","meaning":"Aeronautical mobile service"},{"abbr":"AMSL","meaning":"Above mean sea level"},{"abbr":"AMSS","meaning":"Aeronautical mobile satellite service"},{"abbr":"AOC","meaning":"Aerodrome obstacle chart"},{"abbr":"AP","meaning":"Airport"},{"abbr":"APCH","meaning":"Approach"},{"abbr":"APN","meaning":"Apron"},{"abbr":"APP","meaning":"Approach control office or approach control or approach control services"},{"abbr":"APR","meaning":"April"},{"abbr":"APRX","meaning":"Approximate or approximately"},{"abbr":"APV","meaning":"Approve or approved or approval"},{"abbr":"ARC","meaning":"Aviation research centre"},{"abbr":"ARFOR","meaning":"Area forecast"},{"abbr":"ARNG","meaning":"Arrange"},{"abbr":"ARO","meaning":"Air traffic services reporting office"},{"abbr":"ARP","meaning":"Aerodrome reference point / Air Report (message type designators)"},{"abbr":"ARR","meaning":"Arrive or arrival (message type designator)"},{"abbr":"AS","meaning":"Altostratus"},{"abbr":"ASC","meaning":"Ascent or ascending to"},{"abbr":"ASDA","meaning":"Accelerated stop distance available"},{"abbr":"ASM","meaning":"Airspace Management"},{"abbr":"ASPH","meaning":"Asphalt"},{"abbr":"ATA","meaning":"Actual time of arrival"},{"abbr":"ATC","meaning":"Air traffic control"},{"abbr":"ATD","meaning":"Actual time of departure"},{"abbr":"ATFM","meaning":"Air traffic flow management"},{"abbr":"ATIS","meaning":"Automatic terminal information service"},{"abbr":"ATM","meaning":"Air traffic management"},{"abbr":"ATN","meaning":"Aeronautical telecommunication network"},{"abbr":"ATS","meaning":"Air traffic services"},{"abbr":"ATTN","meaning":"Attention"},{"abbr":"ATZ","meaning":"Aerodrome traffic zone"},{"abbr":"AUG","meaning":"August"},{"abbr":"AUM","meaning":"Airspace Use Plan"},{"abbr":"AUTH","meaning":"Authorized or authorization"},{"abbr":"AUW","meaning":"All up weight"},{"abbr":"AUX","meaning":"Auxiliary"},{"abbr":"AVASIS","meaning":"Abbreviated visual approach slope indicator system"},{"abbr":"AVBL","meaning":"Available"},{"abbr":"AVDGS","meaning":"Advanced Visual Docking Guidance System"},{"abbr":"AVGAS","meaning":"Aviation gasoline"},{"abbr":"AWY","meaning":"Airway"},{"abbr":"AZM","meaning":"Azimuth"},{"abbr":"B","meaning":"Blue"},{"abbr":"BA","meaning":"Braking action"},{"abbr":"Baro-VNAV","meaning":"Barometric Vertical Navigation"},{"abbr":"BASE","meaning":"Cloud base"},{"abbr":"BCFG","meaning":"Fog patches"},{"abbr":"BCN","meaning":"Beacon"},{"abbr":"BCST","meaning":"Broadcast"},{"abbr":"BDRY","meaning":"Boundary"},{"abbr":"BECMG","meaning":"Becoming"},{"abbr":"BFR","meaning":"Before"},{"abbr":"BKN","meaning":"Broken"},{"abbr":"BLDG","meaning":"Building"},{"abbr":"BLO","meaning":"Below clouds"},{"abbr":"BLSN","meaning":"Blowing snow"},{"abbr":"BLW","meaning":"Below"},{"abbr":"BPSK","meaning":"Binary Phase Shift Keying"},{"abbr":"BRG","meaning":"Bearing"},{"abbr":"BRKG","meaning":"Breaking"},{"abbr":"BRLOS","meaning":"Beyond radio line-of-sight"},{"abbr":"BTN","meaning":"Between"},{"abbr":"BVLOS","meaning":"Beyond visual line-of-sight"},{"abbr":"C","meaning":"Degree Celsius (Centigrade)"},{"abbr":"C/A Code","meaning":"Coarse/Acquisition Code"},{"abbr":"C2","meaning":"Command And Control"},{"abbr":"CAR","meaning":"Civil Aviation Requirements"},{"abbr":"CAT","meaning":"Category or clear air turbulence"},{"abbr":"CAVOK","meaning":"Visibility, cloud and present weather better than prescribed value or conditions"},{"abbr":"CB","meaning":"Cumulonimbus"},{"abbr":"CC","meaning":"Cirrocumulus"},{"abbr":"CDN","meaning":"Coordination (message type designator)"},{"abbr":"CDO","meaning":"Continuous descent operations"},{"abbr":"CDR","meaning":"Conditional Route"},{"abbr":"CFIT","meaning":"Controlled Flight Into Terrain"},{"abbr":"CFM","meaning":"Confirm or I confirm"},{"abbr":"CIDIN","meaning":"Common ICAO data interchange network"},{"abbr":"CL","meaning":"Centre line"},{"abbr":"CLD","meaning":"Cloud"},{"abbr":"CLR","meaning":"Clear(s) or cleared to or clearance"},{"abbr":"CLSD","meaning":"Close or closed or closing"},{"abbr":"CM","meaning":"Centimeter"},{"abbr":"CMB","meaning":"Climb to or climbing to"},{"abbr":"CMPL","meaning":"Completion or complete"},{"abbr":"CNL","meaning":"Cancel or cancelled or flight plan cancellation (message type designator)"},{"abbr":"CNS","meaning":"Communication navigation and surveillance"},{"abbr":"COM","meaning":"Communication"},{"abbr":"COND","meaning":"Condition"},{"abbr":"CONS","meaning":"Continuous"},{"abbr":"CONST","meaning":"Construction or constructed"},{"abbr":"CONT","meaning":"Continue (s) or continued"},{"abbr":"COORD","meaning":"Co-ordinate or co-ordination"},{"abbr":"CP","meaning":"Corrections Processor"},{"abbr":"CRC","meaning":"Cyclic Redundancy Check"},{"abbr":"CTA","meaning":"Control Area"},{"abbr":"CTN","meaning":"Caution"},{"abbr":"CTR","meaning":"Control Zone"},{"abbr":"CVSS","meaning":"Correction and Verification Subsystem"},{"abbr":"D","meaning":"Danger area (followed by identification)"},{"abbr":"DA","meaning":"Decision altitude"},{"abbr":"DCD","meaning":"Double channel duplex"},{"abbr":"DCKG","meaning":"Docking"},{"abbr":"DCS","meaning":"Double channel simplex"},{"abbr":"DCSS","meaning":"Data Communication Subsystem"},{"abbr":"DCT","meaning":"Direct (in relation to flight plan clearance and type of approach)"},{"abbr":"DEP","meaning":"Depart or departure"},{"abbr":"DER","meaning":"Departure End of Runway"},{"abbr":"DES","meaning":"Descend to or descending to"},{"abbr":"DEST","meaning":"Destination"},{"abbr":"DETRESFA","meaning":"Distress phase"},{"abbr":"DEV","meaning":"Deviation"},{"abbr":"DFTI","meaning":"Distance from touch down indicator"},{"abbr":"DGCA","meaning":"Director general of civil aviation"},{"abbr":"DH","meaning":"Decision height"},{"abbr":"DISP","meaning":"Displaced"},{"abbr":"DIST","meaning":"Distance"},{"abbr":"DIV","meaning":"Divert or Diverting"},{"abbr":"DLA","meaning":"Delay or delayed (message type designator)"},{"abbr":"DLY","meaning":"Daily"},{"abbr":"DME","meaning":"Distance measuring equipment"},{"abbr":"DNG","meaning":"Danger or dangerous"},{"abbr":"DOC","meaning":"Document (S)"},{"abbr":"DP","meaning":"Dew point temperature"},{"abbr":"DPT","meaning":"Depth"},{"abbr":"DSB","meaning":"Double side band"},{"abbr":"DTAM","meaning":"Descend to and maintain"},{"abbr":"DTRT","meaning":"Deteriorate or deteriorating"},{"abbr":"DUR","meaning":"Duration"},{"abbr":"DVOR","meaning":"Doppler VOR"},{"abbr":"DW","meaning":"Dual wheels"},{"abbr":"DZ","meaning":"Drizzle"},{"abbr":"EAT","meaning":"Expected approach time"},{"abbr":"EB","meaning":"East bound"},{"abbr":"EET","meaning":"Estimated elapsed time"},{"abbr":"EGNOS","meaning":"European Geostationary Navigation Overlay System"},{"abbr":"ELBA","meaning":"Emergency location beacon aircraft"},{"abbr":"ELECT","meaning":"Electric, Electricity"},{"abbr":"EN","meaning":"English"},{"abbr":"END","meaning":"Stop-end (related to RVR)"},{"abbr":"ENE","meaning":"East north east"},{"abbr":"ENRT","meaning":"En - route"},{"abbr":"EOBT","meaning":"Estimated off block time"},{"abbr":"EQPT","meaning":"Equipment"},{"abbr":"ERC","meaning":"En-route chart"},{"abbr":"ESE","meaning":"East south east"},{"abbr":"EST","meaning":"Estimate or estimated (message type designator)"},{"abbr":"ETA","meaning":"Estimated time of arrival or estimating arrival"},{"abbr":"ETC","meaning":"Etceteras"},{"abbr":"ETD","meaning":"Estimated time of departure or estimating departure"},{"abbr":"ETO","meaning":"Estimated time over significant point"},{"abbr":"EV","meaning":"Every"},{"abbr":"EXC","meaning":"Except"},{"abbr":"EXER","meaning":"Exercises or exercising or to exercise"},{"abbr":"EXP","meaning":"Except or excepted or expecting"},{"abbr":"EXTD","meaning":"Extend or extending or extended"},{"abbr":"F","meaning":"Fixed"},{"abbr":"FAA","meaning":"Federal Aviation Administration"},{"abbr":"FAC","meaning":"Facilities"},{"abbr":"FAF","meaning":"Final approach point"},{"abbr":"FAL","meaning":"Facilitation of international air transport"},{"abbr":"FAP","meaning":"Final approach point"},{"abbr":"FAS","meaning":"Final Approach Segment"},{"abbr":"FATO","meaning":"Final approach and take-off area"},{"abbr":"FAX","meaning":"Facsimile transmission"},{"abbr":"FCST","meaning":"Forecast"},{"abbr":"FCT","meaning":"Friction coefficient"},{"abbr":"FD","meaning":"Fixed Distance"},{"abbr":"FDE","meaning":"Fault Detection and Exclusion"},{"abbr":"FEC","meaning":"Forward Error Correction"},{"abbr":"FG","meaning":"Fog"},{"abbr":"FIC","meaning":"Flight information centre"},{"abbr":"FIR","meaning":"Flight information region"},{"abbr":"FIS","meaning":"Flight information service"},{"abbr":"FISA","meaning":"Automated flight information service"},{"abbr":"FL","meaning":"Flight level"},{"abbr":"FLG","meaning":"Flashing"},{"abbr":"FLR","meaning":"Flares"},{"abbr":"FLT","meaning":"Flight"},{"abbr":"FLTCK","meaning":"Flight check"},{"abbr":"FLUC","meaning":"Fluctuating or fluctuated or fluctuation"},{"abbr":"FLW","meaning":"Follow (s) or following"},{"abbr":"FLY","meaning":"Fly or flying"},{"abbr":"FM","meaning":"From"},{"abbr":"FMP","meaning":"Flow Management Position"},{"abbr":"FMS","meaning":"Flight Management System"},{"abbr":"FMU","meaning":"Flow management unit"},{"abbr":"FNA","meaning":"Final approach"},{"abbr":"FOD","meaning":"Foreign object damage"},{"abbr":"FPAP","meaning":"Flight Path Alignment Point"},{"abbr":"FPL","meaning":"Flight plan"},{"abbr":"FPM","meaning":"Feet per minute"},{"abbr":"FREQ","meaning":"Frequency"},{"abbr":"FRNG","meaning":"Firing"},{"abbr":"FRQ","meaning":"Frequent"},{"abbr":"FSD","meaning":"Full-scale Deflection"},{"abbr":"FSL","meaning":"Full stop landing"},{"abbr":"FSP","meaning":"Flight Service Predictor"},{"abbr":"FSS","meaning":"Flight service station"},{"abbr":"FST","meaning":"First"},{"abbr":"FT","meaning":"Feet"},{"abbr":"FTE","meaning":"Flight Technical Error"},{"abbr":"FTP","meaning":"Fictitious Threshold Point"},{"abbr":"FU","meaning":"Smoke"},{"abbr":"FUA","meaning":"Flexible Use of Airspace"},{"abbr":"FZ","meaning":"Freezing"},{"abbr":"G","meaning":"Green"},{"abbr":"G/A","meaning":"Ground to air"},{"abbr":"G/A/G","meaning":"Ground to air and air to ground"},{"abbr":"GAGAN","meaning":"GPS Aided GEO Augmented Navigation"},{"abbr":"GARP","meaning":"GBAS Azimuth Reference Point"},{"abbr":"GBAS","meaning":"Ground-Based Augmentation System"},{"abbr":"GCA","meaning":"Ground control approach system or ground control approach"},{"abbr":"GEN","meaning":"General"},{"abbr":"GEO","meaning":"Geographic / Geostationary Satellite"},{"abbr":"GES","meaning":"Ground earth station"},{"abbr":"GLD","meaning":"Glider"},{"abbr":"GLONASS","meaning":"Global Navigation Satellite System"},{"abbr":"GND","meaning":"Ground"},{"abbr":"GNDCK","meaning":"Ground check"},{"abbr":"GNSS","meaning":"Global navigation satellite system"},{"abbr":"GP","meaning":"Glide path"},{"abbr":"GPA","meaning":"Glide Path Angle"},{"abbr":"GPIP","meaning":"Glide Path Intercept Point"},{"abbr":"GPS","meaning":"Global Positioning System"},{"abbr":"GPS SP","meaning":"GPS - Standard Positioning Service"},{"abbr":"GR","meaning":"Group"},{"abbr":"GRASS","meaning":"Grass landing area"},{"abbr":"GS","meaning":"Ground speed"},{"abbr":"H+","meaning":"Hours plus ...minutes past the hour"},{"abbr":"H24","meaning":"Continuos day and night service"},{"abbr":"HAL","meaning":"Hindustan Aeronautics Ltd."},{"abbr":"HBN","meaning":"Hazard beacon"},{"abbr":"HDF","meaning":"High frequency direction finding station"},{"abbr":"HDG","meaning":"Heading"},{"abbr":"HEL","meaning":"Helicopter"},{"abbr":"HEL-H","meaning":"Heavy helicopter (radius of action in excess of 100 NM and capacity for evacuating more than 5 persons)"},{"abbr":"HEL-L","meaning":"Light helicopter (radius of action of 50NM and capacity for evacuating one person)"},{"abbr":"HEL-M","meaning":"Medium helicopter (radius of action of 50 to 100NM and capacity for evacuating 2-5 persons)"},{"abbr":"HF","meaning":"High frequency (3000 to 30000 khz)"},{"abbr":"HGT","meaning":"Height or height above"},{"abbr":"HJ","meaning":"Sunrise to sunset"},{"abbr":"HLDG","meaning":"Holding"},{"abbr":"HMI","meaning":"Hazardously Misleading Information"},{"abbr":"HN","meaning":"Sunset to sunrise"},{"abbr":"HO","meaning":"Service available to meet operational requirements"},{"abbr":"HOL","meaning":"Holiday"},{"abbr":"HOSP","meaning":"Hospital aircraft"},{"abbr":"HPA","meaning":"Hectopascal"},{"abbr":"HPL","meaning":"Horizontal Protection Level"},{"abbr":"HQ","meaning":"Headquarters"},{"abbr":"HR","meaning":"Hours"},{"abbr":"HS","meaning":"Service available during hours of Scheduled operations"},{"abbr":"HX","meaning":"No specific working hours"},{"abbr":"HZ","meaning":"Dust haze / Hertz (cycle per second )"},{"abbr":"IAC","meaning":"Instrument approach chart"},{"abbr":"IAF","meaning":"Initial approach fix"},{"abbr":"IAP","meaning":"Instrument Approach Procedure"},{"abbr":"IAR","meaning":"Intersection of air routes"},{"abbr":"IAS","meaning":"Indicated air speed"},{"abbr":"IBN","meaning":"Identification beacon"},{"abbr":"ICAO","meaning":"International Civil Aviation Organization"},{"abbr":"ID","meaning":"Identifier or identify"},{"abbr":"IDENT","meaning":"Identification"},{"abbr":"IF","meaning":"Intermediate approach fix"},{"abbr":"IFR","meaning":"Instrument flight rules"},{"abbr":"IGA","meaning":"International general aviation"},{"abbr":"IGP","meaning":"Ionospheric Grid Points"},{"abbr":"ILS","meaning":"Instrument landing system"},{"abbr":"IM","meaning":"Inner marker"},{"abbr":"IMC","meaning":"Instrument meteorological conditions"},{"abbr":"IMG","meaning":"Immigration"},{"abbr":"IMPR","meaning":"Improve or improving"},{"abbr":"IMT","meaning":"Immediate or immediately"},{"abbr":"INA","meaning":"Initial approach"},{"abbr":"INBD","meaning":"Inbound"},{"abbr":"INLUS","meaning":"Indian Land Uplink Stations"},{"abbr":"INLUS-SGS","meaning":"INLUS - Signal Generation Subsystem"},{"abbr":"INMCC","meaning":"Indian Master Control Centre"},{"abbr":"INREC","meaning":"Indian Reference Stations"},{"abbr":"INREE","meaning":"INRES Equipment (Indian Reference Equipment)"},{"abbr":"INRES","meaning":"Indian Reference Stations"},{"abbr":"INSTL","meaning":"Install or installed or installation"},{"abbr":"INSTR","meaning":"Instrument"},{"abbr":"INT","meaning":"Intersection"},{"abbr":"INTL","meaning":"International"},{"abbr":"INTRG","meaning":"Interrogator"},{"abbr":"INTRP","meaning":"Interrupt or interruption or interrupted"},{"abbr":"INTSF","meaning":"Intensify or intensifying"},{"abbr":"INTST","meaning":"Intensity"},{"abbr":"ISA","meaning":"International standard atmosphere"},{"abbr":"ISB","meaning":"Independent sideband"},{"abbr":"ISOL","meaning":"Isolated"},{"abbr":"ISRO","meaning":"Indian Space Research Organisation"},{"abbr":"JAN","meaning":"January"},{"abbr":"JUL","meaning":"July"},{"abbr":"JUN","meaning":"June"},{"abbr":"KG","meaning":"Kilograms"},{"abbr":"KHZ","meaning":"Kiloherz"},{"abbr":"KM","meaning":"Kilometres"},{"abbr":"KMH","meaning":"Kilometres per hour"},{"abbr":"KRA","meaning":"Kilopascal"},{"abbr":"KT","meaning":"Knots"},{"abbr":"KW","meaning":"Kilowatt"},{"abbr":"L","meaning":"Left (preceded by runway designation number to identify a parallel runway) / Locator (see LM, LO)"},{"abbr":"L1 Frequency","meaning":"1575.42MHz"},{"abbr":"LAT","meaning":"Latitude"},{"abbr":"LDA","meaning":"Landing distance available"},{"abbr":"LDG","meaning":"Landing"},{"abbr":"LDI","meaning":"Landing direction indicator"},{"abbr":"LEN","meaning":"Length"},{"abbr":"LF","meaning":"Low frequency (30 to 300 khz)"},{"abbr":"LGT","meaning":"Light"},{"abbr":"LGTD","meaning":"Lighted"},{"abbr":"LIH","meaning":"Light intensity high"},{"abbr":"LIL","meaning":"Light intensity low"},{"abbr":"LIM","meaning":"Light intensity medium"},{"abbr":"LLZ","meaning":"Lacalizer"},{"abbr":"LM","meaning":"Locator middle"},{"abbr":"LNAV","meaning":"Lateral Navigation"},{"abbr":"LNG","meaning":"Long (used to indicate the type of approach desired or required)"},{"abbr":"LO","meaning":"Locator , outer"},{"abbr":"LOC","meaning":"Localizer"},{"abbr":"LONG","meaning":"Longitude"},{"abbr":"LORAN","meaning":"LORAN(Long range navigation system)"},{"abbr":"LPV","meaning":"Localizer Performance with Vertical Guidance"},{"abbr":"LRG","meaning":"Long range"},{"abbr":"LSQ","meaning":"Line squall"},{"abbr":"LT","meaning":"Local time"},{"abbr":"LTA","meaning":"Lower control area"},{"abbr":"LTD","meaning":"Limited"},{"abbr":"LTP","meaning":"Landing Threshold Point"},{"abbr":"LV","meaning":"Light and variable(relating to wind)"},{"abbr":"LVL","meaning":"Level"},{"abbr":"LYR","meaning":"Layer or layered"},{"abbr":"M","meaning":"Mach number (followed by figures) or Metres (preceded by figures )"},{"abbr":"MAG","meaning":"Magnetic"},{"abbr":"MAINT","meaning":"Maintenance"},{"abbr":"MAP","meaning":"Aeronautical maps and charts"},{"abbr":"MAPT","meaning":"Missed approach point"},{"abbr":"MAR","meaning":"March"},{"abbr":"MAWP","meaning":"Missed Approach Way Point"},{"abbr":"MAX","meaning":"Maximum"},{"abbr":"MAY","meaning":"May"},{"abbr":"MCA","meaning":"Minimum crossing altitude"},{"abbr":"MCW","meaning":"Modulated continuous wave"},{"abbr":"MDA","meaning":"Minimum descent altitude"},{"abbr":"MDH","meaning":"Minimum descent height"},{"abbr":"MEA","meaning":"Minimum en-route altitude"},{"abbr":"MEHT","meaning":"Minimum eye height threshold(for visual approach slope indicator system"},{"abbr":"MET","meaning":"Meteorology or meteorological"},{"abbr":"METAR","meaning":"Aviation routine weather report (in aeronautical code)"},{"abbr":"MHA","meaning":"Ministry Of Home Affairs"},{"abbr":"MHZ","meaning":"Megahertz"},{"abbr":"MIFG","meaning":"Shallow fog"},{"abbr":"MIL","meaning":"Military"},{"abbr":"MKR","meaning":"Marker radio beacon"},{"abbr":"MLS","meaning":"Microwave landing system"},{"abbr":"MM","meaning":"Middle marker"},{"abbr":"MNM","meaning":"Minimum"},{"abbr":"MNPS","meaning":"Minimum navigation performance specification"},{"abbr":"MNT","meaning":"Monitor or monitoring or monitored"},{"abbr":"MNTN","meaning":"Maintain"},{"abbr":"MOA","meaning":"Military operating area"},{"abbr":"MOB","meaning":"Mobile"},{"abbr":"MOC","meaning":"Minimum obstacle clearance (required)"},{"abbr":"MOD","meaning":"Ministry of Defence"},{"abbr":"MOEFCC","meaning":"Ministry Of Environment, Forest And Climate Change"},{"abbr":"MRA","meaning":"Minimum reception altitude"},{"abbr":"MRG","meaning":"Medium range"},{"abbr":"MRP","meaning":"ATS/MET reporting point"},{"abbr":"MS","meaning":"Minus"},{"abbr":"MSA","meaning":"Minimum sector altitude"},{"abbr":"MSAS","meaning":"Multifunctional Transport Satellite (MTSAT) Satellite-based Augmentation System"},{"abbr":"MSAW","meaning":"Minimum Safe Altitude Warning"},{"abbr":"MSG","meaning":"Message"},{"abbr":"MSL","meaning":"Mean sea level"},{"abbr":"MTU","meaning":"Metric units"},{"abbr":"MWO","meaning":"Meteorological watch office"},{"abbr":"N","meaning":"North or northern latitude"},{"abbr":"NAMAC","meaning":"National Airspace Management Advisory Committee"},{"abbr":"NAMC","meaning":"National Airspace Management Cell"},{"abbr":"NAV","meaning":"Navigation"},{"abbr":"NC","meaning":"No change"},{"abbr":"NDB","meaning":"Non directional radio beacon"},{"abbr":"NDZ","meaning":"No Drone Zone"},{"abbr":"NE","meaning":"North east"},{"abbr":"NGT","meaning":"Night"},{"abbr":"NHLAPB","meaning":"National High Level Airspace Policy Body"},{"abbr":"NIL","meaning":"None or I have nothing to send to you"},{"abbr":"NLUS-RFU","meaning":"INLUS - Radio Frequency Unit"},{"abbr":"NM","meaning":"Nautical mile"},{"abbr":"NML","meaning":"Normal"},{"abbr":"NNE","meaning":"North North East"},{"abbr":"NNW","meaning":"North North West"},{"abbr":"NOF","meaning":"International NOTAM office"},{"abbr":"NOSIG","meaning":"No significant change (used in trend type landing forecasts )"},{"abbr":"NOTAM","meaning":"Notice to Airmen"},{"abbr":"NOV","meaning":"November"},{"abbr":"NPA","meaning":"Non-Precision Approach"},{"abbr":"NPNT","meaning":"No Permission-no Takeoff"},{"abbr":"NR","meaning":"Number"},{"abbr":"NS","meaning":"Nimbostratus"},{"abbr":"NTRO","meaning":"National Technical Research Organisation"},{"abbr":"NW","meaning":"North west"},{"abbr":"NXT","meaning":"Next"},{"abbr":"OAC","meaning":"Oceanic area control centre"},{"abbr":"OAS","meaning":"Obstacle assessment surface"},{"abbr":"OBS","meaning":"Observe or observed or observation"},{"abbr":"OBST","meaning":"Obstacle"},{"abbr":"OBSTR","meaning":"Obstruction"},{"abbr":"OCA","meaning":"Oceanic control area or obstacle clearance altitude"},{"abbr":"OCA/H","meaning":"Obstacle Clearance Altitude/Height"},{"abbr":"OCC","meaning":"Occulting light"},{"abbr":"OCH","meaning":"Obstacle clearance height"},{"abbr":"OCNL","meaning":"Occasional or occasionally"},{"abbr":"OCS","meaning":"Obstacle clearance surface"},{"abbr":"OCT","meaning":"October"},{"abbr":"OFZ","meaning":"Obstacle Free Zone"},{"abbr":"OLS","meaning":"Obstacle Limitation Surface"},{"abbr":"OM","meaning":"Outer marker"},{"abbr":"OMSS","meaning":"Operation & Maintenance Subsystem"},{"abbr":"OPMET","meaning":"Operational meteorological (information)"},{"abbr":"OPN","meaning":"Open or opened or opening"},{"abbr":"OPR","meaning":"Operator or operate or operative or operating or operational"},{"abbr":"OPS","meaning":"Operations"},{"abbr":"O/R","meaning":"On request"},{"abbr":"OTP","meaning":"On top"},{"abbr":"OTS","meaning":"Organised track system"},{"abbr":"OUBD","meaning":"Out of bound"},{"abbr":"P","meaning":"Prohibited area (followed by identification)"},{"abbr":"PA","meaning":"Precision Approach"},{"abbr":"PALS","meaning":"Precision approach lighting system"},{"abbr":"PANS","meaning":"Procedures for air navigation services"},{"abbr":"PAPI","meaning":"Precision approach path indicator"},{"abbr":"PAR","meaning":"Precision approach radar"},{"abbr":"PARL","meaning":"Parallel"},{"abbr":"PAX","meaning":"Passenger (s)"},{"abbr":"PBB","meaning":"Passenger boarding bridge"},{"abbr":"PBN","meaning":"Performance-Based Navigation"},{"abbr":"PCN","meaning":"Pavement classification number"},{"abbr":"PER","meaning":"Performance"},{"abbr":"PERM","meaning":"Permanent"},{"abbr":"PIB","meaning":"Pre-flight information bulletin"},{"abbr":"PJE","meaning":"Parachute jumping exercise"},{"abbr":"PLA","meaning":"Practice low approach"},{"abbr":"PLN","meaning":"Flight plan"},{"abbr":"PN","meaning":"Prior notice required"},{"abbr":"PNR","meaning":"Point of no return"},{"abbr":"POB","meaning":"Persons on board"},{"abbr":"POSS","meaning":"Possible"},{"abbr":"PPI","meaning":"Plan position indicator"},{"abbr":"PPR","meaning":"Prior permission required"},{"abbr":"PRI","meaning":"Primary"},{"abbr":"PRKG","meaning":"Parking"},{"abbr":"PRN","meaning":"Pseudo-Random Noise"},{"abbr":"PROB","meaning":"Probability"},{"abbr":"PROC","meaning":"Procedure"},{"abbr":"PROV","meaning":"Provisional"},{"abbr":"PS","meaning":"Plus"},{"abbr":"PSN","meaning":"Position"},{"abbr":"PSP","meaning":"Pierced steel plank"},{"abbr":"PSR","meaning":"Primary surveillance radar"},{"abbr":"PSTN","meaning":"Public Switched Telephone Network"},{"abbr":"PT","meaning":"Point (s)"},{"abbr":"PTN","meaning":"Procedure turn"},{"abbr":"PVT","meaning":"Private"},{"abbr":"PWR","meaning":"Power"},{"abbr":"QBI","meaning":"Compulsory IFR flight"},{"abbr":"QBM","meaning":"Magnetic heading (zero wind)"},{"abbr":"QDR","meaning":"Magnetic bearing"},{"abbr":"QFE","meaning":"Atmospheric pressure at aerodrome elevation (or at runway threshold)"},{"abbr":"QFU","meaning":"Magnetic orientation of runway"},{"abbr":"QNH","meaning":"Altimeter sub-scale setting to obtain Elevation when on ground"},{"abbr":"QTE","meaning":"True bearing"},{"abbr":"QUAD","meaning":"Quadrant"},{"abbr":"R","meaning":"Red / Restricted area (followed by identification) / Runway (runway identification)"},{"abbr":"RAC","meaning":"Rules of the air and air traffic services"},{"abbr":"RAD","meaning":"Radius"},{"abbr":"RAG","meaning":"Runway arresting gear"},{"abbr":"RAI","meaning":"Runway alignment indicator"},{"abbr":"RAMC","meaning":"Regional Airspace Management Cell"},{"abbr":"RASH","meaning":"Rain showers"},{"abbr":"RCA","meaning":"Reach cruising altitude"},{"abbr":"RCC","meaning":"Rescue coordination centre"},{"abbr":"RCF","meaning":"Radio communication failure (message type designator)"},{"abbr":"RCL","meaning":"Runway center line"},{"abbr":"RCLL","meaning":"Runway center line light (s)"},{"abbr":"RD","meaning":"Road"},{"abbr":"RDH","meaning":"Reference datum height (for ILS)"},{"abbr":"RDHL","meaning":"Runway threshold light (s)"},{"abbr":"RDL","meaning":"Radial"},{"abbr":"RDO","meaning":"Radio"},{"abbr":"REC","meaning":"Receive or receiver"},{"abbr":"REDL","meaning":"Runway edge light (s)"},{"abbr":"REF","meaning":"Reference to... or refer to..."},{"abbr":"REG","meaning":"Registration"},{"abbr":"RENL","meaning":"Runway end light (s)"},{"abbr":"REP","meaning":"Report or reporting or reporting point"},{"abbr":"REQ","meaning":"Request or requested"},{"abbr":"RERTE","meaning":"Re-route"},{"abbr":"RES","meaning":"Reservation"},{"abbr":"RESA","meaning":"Runway End Safety Area"},{"abbr":"RFC","meaning":"Radio facility chart"},{"abbr":"RFI","meaning":"Reference path Identifier"},{"abbr":"RFID","meaning":"Radio Frequency Identification"},{"abbr":"RG","meaning":"Range"},{"abbr":"RH","meaning":"Rescue helicopter"},{"abbr":"RIF","meaning":"Re-clearance in flight"},{"abbr":"RITE","meaning":"Right (direction of turn)"},{"abbr":"RIZL","meaning":"Runway touch down zone light (s)"},{"abbr":"RLLS","meaning":"Runway lead in lighting system"},{"abbr":"RLOS","meaning":"Radio Line Of Sight"},{"abbr":"RMK","meaning":"Remark"},{"abbr":"RNAV","meaning":"Area Navigation / Area navigation (to be pronounced \"ARNAV\""},{"abbr":"RNP","meaning":"Required navigation performance / Required Navigation Performance"},{"abbr":"ROC","meaning":"Rate of climb"},{"abbr":"ROD","meaning":"Rate of descent"},{"abbr":"ROFOR","meaning":"Route forecast ( in aeronautical met. code)"},{"abbr":"RON","meaning":"Receiving only"},{"abbr":"RPA","meaning":"Remotely Piloted Aircraft"},{"abbr":"RPAS","meaning":"Remotely Piloted Aircraft System"},{"abbr":"RPL","meaning":"Repetitive flight plan"},{"abbr":"RPLC","meaning":"Replace or replaced"},{"abbr":"RPS","meaning":"Radar position symbol"},{"abbr":"RPT","meaning":"Repeat"},{"abbr":"RQMNTS","meaning":"Requirements"},{"abbr":"RQP","meaning":"Request flight plan (message type designator)"},{"abbr":"RQS","meaning":"Request supplementary flight plan (message type designator)"},{"abbr":"RR","meaning":"Report reaching"},{"abbr":"RSC","meaning":"Rescue sub-centre"},{"abbr":"RSCD","meaning":"Runway surface condition"},{"abbr":"RSP","meaning":"Responder beacon"},{"abbr":"RSR","meaning":"En-route surveillance radar"},{"abbr":"RTCA","meaning":"Radio Technical Commission for Aeronautics"},{"abbr":"RTE","meaning":"Route"},{"abbr":"RTF","meaning":"Radio telephone"},{"abbr":"RTG","meaning":"Radio telegraph"},{"abbr":"RTN","meaning":"Return or returned or returning"},{"abbr":"RTS","meaning":"Return to service"},{"abbr":"RTT","meaning":"Radio teletypewriter"},{"abbr":"RUT","meaning":"Standard regional route transmitting freq."},{"abbr":"RV","meaning":"Rescue vessel"},{"abbr":"RVR","meaning":"Runway visual range"},{"abbr":"RWY","meaning":"Runway"},{"abbr":"S","meaning":"South or southern latitude"},{"abbr":"SALS","meaning":"Simple approach lighting system"},{"abbr":"SAN","meaning":"Sanitary"},{"abbr":"SAR","meaning":"Search and rescue"},{"abbr":"SARPS","meaning":"Standards and recommended practices"},{"abbr":"SAT","meaning":"Saturday"},{"abbr":"SATCOM","meaning":"Satellite communication"},{"abbr":"SB","meaning":"South bound"},{"abbr":"SBAS","meaning":"Satellite-Based Augmentation System"},{"abbr":"SC","meaning":"Stratocumulus"},{"abbr":"SCT","meaning":"Scattered"},{"abbr":"SDBY","meaning":"Stand by"},{"abbr":"SE","meaning":"South east"},{"abbr":"SEC","meaning":"Seconds"},{"abbr":"SECT","meaning":"Sector"},{"abbr":"SELCAL","meaning":"Selective calling system"},{"abbr":"SEP","meaning":"September"},{"abbr":"SER","meaning":"Service or servicing or served"},{"abbr":"SEV","meaning":"Severe"},{"abbr":"SFC","meaning":"Surface"},{"abbr":"SGL","meaning":"Signal"},{"abbr":"SID","meaning":"Standard instrument departure"},{"abbr":"SIF","meaning":"Selective identification feature"},{"abbr":"SIGMET","meaning":"Information concerning en-route weather phenomena which may affect the safety of aircraft ops."},{"abbr":"SIGWX","meaning":"Significant weather"},{"abbr":"SIM","meaning":"Subscriber Identity Module"},{"abbr":"SIMUL","meaning":"Simultaneous or simultaneously"},{"abbr":"SIS","meaning":"Signal In Space"},{"abbr":"SMC","meaning":"Surface movement control"},{"abbr":"SMR","meaning":"Surface movement radar"},{"abbr":"SMSS","meaning":"Service Monitoring Subsystem"},{"abbr":"SOP","meaning":"Standard Operating Procedure"},{"abbr":"SP","meaning":"Safety Processor"},{"abbr":"SPECI","meaning":"Aviation selected special weather report (in aeronautical meteorological code )"},{"abbr":"SPECIAL","meaning":"Special meteorological report (in abbreviated plain language )"},{"abbr":"SPL","meaning":"Supplementary flight plan (message type designator )"},{"abbr":"SPOT","meaning":"Spot wind"},{"abbr":"SPS","meaning":"Standard Positioning Service"},{"abbr":"SQ","meaning":"Squall"},{"abbr":"SR","meaning":"Sunrise"},{"abbr":"SRA","meaning":"Surveillance radar approach"},{"abbr":"SRE","meaning":"Surveillance radar element of precision approach radar system"},{"abbr":"SRG","meaning":"Short range"},{"abbr":"SRR","meaning":"Search and rescue region"},{"abbr":"SRY","meaning":"Secondary"},{"abbr":"SS","meaning":"Sunset"},{"abbr":"SSB","meaning":"Single sideband"},{"abbr":"SSE","meaning":"South south east"},{"abbr":"SSR","meaning":"Secondary surveillance radar"},{"abbr":"SST","meaning":"Supersonic transport"},{"abbr":"SSW","meaning":"South south west"},{"abbr":"ST","meaning":"Stratus"},{"abbr":"STA","meaning":"Straight in approach"},{"abbr":"STAR","meaning":"Standard instrument arrival"},{"abbr":"STD","meaning":"Standard"},{"abbr":"STF","meaning":"Stratiform"},{"abbr":"STN","meaning":"Station"},{"abbr":"STNR","meaning":"Stationary"},{"abbr":"STOL","meaning":"Short take-off and landing"},{"abbr":"STWL","meaning":"Stop way light (s)"},{"abbr":"SUA","meaning":"Special Use Airspace"},{"abbr":"SUBJ","meaning":"subject to"},{"abbr":"SUN","meaning":"Sunday"},{"abbr":"SUP","meaning":"Supplement (AIP Supplement )"},{"abbr":"SUPPS","meaning":"Regional supplementary procedures"},{"abbr":"SVC","meaning":"Service message"},{"abbr":"SVCBL","meaning":"Serviceable"},{"abbr":"SW","meaning":"South west"},{"abbr":"T","meaning":"Temperature"},{"abbr":"TA","meaning":"Transition altitude"},{"abbr":"TACAN","meaning":"UHF tactical air navigation aid"},{"abbr":"TAF","meaning":"Aerodrome forecast"},{"abbr":"TAIL","meaning":"Tail wind"},{"abbr":"TAR","meaning":"Terminal area surveillance radar"},{"abbr":"TAS","meaning":"True air speed"},{"abbr":"TAX","meaning":"Taxing or taxi"},{"abbr":"TBO","meaning":"Trajectory Based Operations"},{"abbr":"TCH","meaning":"Threshold Crossing Height"},{"abbr":"TCU","meaning":"Towering cumulus"},{"abbr":"TDZ","meaning":"Touch down zone"},{"abbr":"TECR","meaning":"Technical reason"},{"abbr":"TEL","meaning":"Telephone"},{"abbr":"TEMPO","meaning":"Temporary or temporarily"},{"abbr":"TF","meaning":"Track to Fix"},{"abbr":"TFC","meaning":"Traffic"},{"abbr":"TGL","meaning":"Touch and go landing"},{"abbr":"TGS","meaning":"Taxing guidance system"},{"abbr":"THR","meaning":"Threshold"},{"abbr":"THRU","meaning":"Through"},{"abbr":"THU","meaning":"Thursday"},{"abbr":"TIL","meaning":"Until"},{"abbr":"TKOF","meaning":"Take-off"},{"abbr":"TLOF","meaning":"Touch down and lift-off area"},{"abbr":"TMA","meaning":"Terminal control area"},{"abbr":"TOC","meaning":"Top climb TODA"},{"abbr":"TODA","meaning":"Take-off distance available"},{"abbr":"TOP","meaning":"Cloud top"},{"abbr":"TP","meaning":"Turning Point"},{"abbr":"TRA","meaning":"Temporary reserved area"},{"abbr":"TRANS","meaning":"Transmit or transmitter"},{"abbr":"TRL","meaning":"Transition level"},{"abbr":"TRNG","meaning":"Training"},{"abbr":"TS","meaning":"Thunderstorm"},{"abbr":"TSA","meaning":"Temporary Segregated Area"},{"abbr":"TSO","meaning":"Technical Standard Order"},{"abbr":"TT","meaning":"Teletypewriter"},{"abbr":"TUE","meaning":"Tuesday"},{"abbr":"TURB","meaning":"Turbulence"},{"abbr":"TVOR","meaning":"Terminal VOR"},{"abbr":"TWR","meaning":"Aerodrome control tower or aerodrome control"},{"abbr":"TWY","meaning":"Taxi"},{"abbr":"TWYL","meaning":"Taxiway link"},{"abbr":"TYP","meaning":"Type of aircraft"},{"abbr":"TYPH","meaning":"Typhoon"},{"abbr":"UA","meaning":"Unmanned Aircraft"},{"abbr":"UAB","meaning":"Until advised by........."},{"abbr":"UAC","meaning":"Upper area control centre"},{"abbr":"UAOP","meaning":"Unmanned Aircraft Operator Permit"},{"abbr":"UAR","meaning":"Upper air route"},{"abbr":"UAS","meaning":"Unmanned Aircraft System"},{"abbr":"UFN","meaning":"Until further notice"},{"abbr":"UHF","meaning":"Ultra high frequency (300 to 3000 mhz )"},{"abbr":"UIC","meaning":"Upper information centre"},{"abbr":"UIN","meaning":"Unique Identification Number"},{"abbr":"UIR","meaning":"Upper flight information region"},{"abbr":"ULR","meaning":"Ultra long range"},{"abbr":"UNA","meaning":"Unable"},{"abbr":"UNL","meaning":"Unlimited"},{"abbr":"UNREL","meaning":"Unreliable"},{"abbr":"U/S","meaning":"Unserviceable"},{"abbr":"UTA","meaning":"Upper control area"},{"abbr":"UTC","meaning":"Coordinated universal time"},{"abbr":"UUP","meaning":"Updated Airspace Use Plan"},{"abbr":"VA","meaning":"Volcanic ash"},{"abbr":"VAC","meaning":"Visual approach chart"},{"abbr":"VAL","meaning":"Vertical Alarm Limit"},{"abbr":"VAR","meaning":"Visual aural radio range /magnetic variation"},{"abbr":"VASIS","meaning":"Visual approach slope indicator system"},{"abbr":"VCY","meaning":"Vicinity"},{"abbr":"VDF","meaning":"Very high frequency direction finding station"},{"abbr":"VER","meaning":"Vertical"},{"abbr":"VFR","meaning":"Visual flight rules"},{"abbr":"VHF","meaning":"Very high frequency (30 to 300 mhz )"},{"abbr":"VIP","meaning":"Very important person"},{"abbr":"VIS","meaning":"Visibility"},{"abbr":"VLF","meaning":"Very low frequency (3 to 30 khz )"},{"abbr":"VLOS","meaning":"Visual Line-of-sight"},{"abbr":"VLR","meaning":"Very long range"},{"abbr":"VMC","meaning":"Visual meteorological conditions"},{"abbr":"VNAV","meaning":"Vertical Navigation"},{"abbr":"VOLMET","meaning":"Met. information for aircraft in flight"},{"abbr":"VOR","meaning":"VHF omni directional radio range"},{"abbr":"VORTAC","meaning":"VOR and TACAN combination"},{"abbr":"VOT","meaning":"VOR airborne equipment test facility"},{"abbr":"VPA","meaning":"Vertical Path Angle"},{"abbr":"VPL","meaning":"Vertical Protection Level"},{"abbr":"VRB","meaning":"Variable"},{"abbr":"VSA","meaning":"By visual reference to the ground"},{"abbr":"VSP","meaning":"Vertical speed"},{"abbr":"VTF","meaning":"Vector to Final"},{"abbr":"VTOL","meaning":"Vertical take-off and landing"},{"abbr":"VVIP","meaning":"Very very important person"},{"abbr":"W","meaning":"West or western latitude or white"},{"abbr":"W & G","meaning":"White & Green"},{"abbr":"W/S","meaning":"Wingspan"},{"abbr":"WAAS","meaning":"Wide Area Augmentation System"},{"abbr":"WAC","meaning":"World Aeronautical chart ICAO 1:1000000"},{"abbr":"WBAR","meaning":"Wing bar lights"},{"abbr":"WDI","meaning":"Wind direction indicator"},{"abbr":"WDSPR","meaning":"Widespread"},{"abbr":"WED","meaning":"Wednesday"},{"abbr":"WEF","meaning":"With effect from or effective from"},{"abbr":"WGS","meaning":"World Geodetic System"},{"abbr":"WI","meaning":"With in"},{"abbr":"WID","meaning":"Width"},{"abbr":"WIE","meaning":"With immediate effect or effective immediately"},{"abbr":"WILCO","meaning":"Will comply"},{"abbr":"WIP","meaning":"Work in progress"},{"abbr":"WKN","meaning":"Weaken or weakening"},{"abbr":"WNW","meaning":"West north west"},{"abbr":"WPT","meaning":"Way point"},{"abbr":"WRNG","meaning":"Warning"},{"abbr":"WS","meaning":"Wind shear"},{"abbr":"WSW","meaning":"West south west"},{"abbr":"WT","meaning":"Weight"},{"abbr":"WTSPT","meaning":"Waterspout"},{"abbr":"WX","meaning":"Weather"},{"abbr":"X","meaning":"Cross"},{"abbr":"XBAR","meaning":"Cross bar (of approach lighting system )"},{"abbr":"XNG","meaning":"Crossing"},{"abbr":"XS","meaning":"Atmospherics"},{"abbr":"Y","meaning":"Yellow"},{"abbr":"YCZ","meaning":"Yellow caution zone (runway lighting )"},{"abbr":"YR","meaning":"Yours"}];
+function hl(text, q){
+  if(!q) return esc(text);
+  const i = text.toLowerCase().indexOf(q.toLowerCase());
+  if(i<0) return esc(text);
+  return esc(text.slice(0,i))+'<mark>'+esc(text.slice(i,i+q.length))+'</mark>'+esc(text.slice(i+q.length));
+}
+function renderAbbr(){
+  const q = document.getElementById('abbrSearch').value.trim();
+  const ql = q.toLowerCase();
+  let list = ABBR;
+  if(ql){
+    list = ABBR.filter(a => a.abbr.toLowerCase().includes(ql) || a.meaning.toLowerCase().includes(ql))
+      .sort((a,b)=>{
+        const ax = a.abbr.toLowerCase()===ql?0:(a.abbr.toLowerCase().startsWith(ql)?1:2);
+        const bx = b.abbr.toLowerCase()===ql?0:(b.abbr.toLowerCase().startsWith(ql)?1:2);
+        return ax-bx || a.abbr.localeCompare(b.abbr);
+      });
+  }
+  document.getElementById('abbrCount').textContent = list.length + ' of ' + ABBR.length;
+  const shown = list.slice(0,400);
+  document.getElementById('abbrRes').innerHTML = shown.map(a =>
+    '<div class="row"><span class="k">'+hl(a.abbr,q)+'</span><span class="v">'+hl(a.meaning,q)+'</span></div>'
+  ).join('') || '<div class="loading">No match.</div>';
+}
+
+/* ---------- Airline / Airport datasets (loaded on demand) ---------- */
+let AIRLINES = null, AIRPORTS = null, loadingDS = false;
+async function ensureDatasets(){
+  if((AIRLINES && AIRPORTS) || loadingDS) return;
+  loadingDS = true;
+  document.getElementById('airlineRes').innerHTML = '<div class="loading">Loading airline database…</div>';
+  document.getElementById('airportRes').innerHTML = '<div class="loading">Loading airport database…</div>';
+  try{
+    const [alRes, apRes] = await Promise.all([
+      fetch('https://cdn.jsdelivr.net/gh/jpatokal/openflights@master/data/airlines.dat'),
+      fetch('https://cdn.jsdelivr.net/gh/mwgg/Airports@master/airports.json'),
+    ]);
+    AIRLINES = parseAirlines(await alRes.text());
+    const apObj = await apRes.json();
+    AIRPORTS = Object.values(apObj);
+    renderAirline(); renderAirport();
+  }catch(e){
+    document.getElementById('airlineRes').innerHTML = '<div class="loading">Failed to load airline data.</div>';
+    document.getElementById('airportRes').innerHTML = '<div class="loading">Failed to load airport data.</div>';
+  }finally{ loadingDS = false; }
+}
+function parseAirlines(text){
+  // CSV: ID,Name,Alias,IATA,ICAO,Callsign,Country,Active
+  const out = [];
+  for(const line of text.split('\n')){
+    if(!line.trim()) continue;
+    const f = []; let cur='', inq=false;
+    for(let i=0;i<line.length;i++){const c=line[i];
+      if(c==='"'){inq=!inq;} else if(c===',' && !inq){f.push(cur);cur='';} else {cur+=c;}}
+    f.push(cur);
+    const clean = v => { v=(v||'').trim(); return (v==='\\N'||v==='-'||v==='')?'':v; };
+    const name=clean(f[1]), iata=clean(f[3]), icao=clean(f[4]), callsign=clean(f[5]), country=clean(f[6]), active=clean(f[7]);
+    if(!name || (!iata && !icao)) continue;
+    out.push({name,iata,icao,callsign,country,active:active==='Y'});
+  }
+  return out;
+}
+function renderAirline(){
+  if(!AIRLINES){ ensureDatasets(); return; }
+  const q = document.getElementById('airlineSearch').value.trim();
+  const ql = q.toLowerCase();
+  let list = AIRLINES;
+  if(ql){
+    list = AIRLINES.filter(a =>
+      a.iata.toLowerCase()===ql || a.icao.toLowerCase()===ql ||
+      a.name.toLowerCase().includes(ql) || a.callsign.toLowerCase().includes(ql) ||
+      a.iata.toLowerCase().includes(ql) || a.icao.toLowerCase().includes(ql)
+    ).sort((a,b)=>{
+      const score = x => (x.iata.toLowerCase()===ql||x.icao.toLowerCase()===ql)?0:(x.name.toLowerCase().startsWith(ql)?1:2) - (x.active?0.1:0);
+      return score(a)-score(b) || a.name.localeCompare(b.name);
+    });
+  } else {
+    list = AIRLINES.filter(a=>a.active).sort((a,b)=>a.name.localeCompare(b.name));
+  }
+  document.getElementById('airlineCount').textContent = list.length + ' result' + (list.length===1?'':'s');
+  document.getElementById('airlineRes').innerHTML = list.slice(0,200).map(a =>
+    '<div class="row"><span class="k"><span class="codes"><b>'+esc(a.iata||'—')+'</b> '+esc(a.icao||'—')+'</span></span>'+
+    '<span class="v">'+hl(a.name,q)+(a.country?' <span class="sub2">'+esc(a.country)+(a.callsign?' · '+esc(a.callsign):'')+'</span>':'')+'</span></div>'
+  ).join('') || '<div class="loading">No match.</div>';
+}
+function renderAirport(){
+  if(!AIRPORTS){ ensureDatasets(); return; }
+  const q = document.getElementById('airportSearch').value.trim();
+  const ql = q.toLowerCase();
+  let list = [];
+  if(ql){
+    list = AIRPORTS.filter(a =>
+      (a.iata && a.iata.toLowerCase()===ql) || (a.icao && a.icao.toLowerCase()===ql) ||
+      (a.name && a.name.toLowerCase().includes(ql)) || (a.city && a.city.toLowerCase().includes(ql)) ||
+      (a.iata && a.iata.toLowerCase().includes(ql)) || (a.icao && a.icao.toLowerCase().includes(ql))
+    ).sort((a,b)=>{
+      const sc = x => ((x.iata&&x.iata.toLowerCase()===ql)||(x.icao&&x.icao.toLowerCase()===ql))?0:1;
+      return sc(a)-sc(b) || (a.name||'').localeCompare(b.name||'');
+    });
+  }
+  document.getElementById('airportCount').textContent = ql ? (list.length + ' result' + (list.length===1?'':'s')) : 'Type to search '+AIRPORTS.length.toLocaleString()+' airports';
+  document.getElementById('airportRes').innerHTML = list.slice(0,200).map(a =>
+    '<div class="row"><span class="k"><span class="codes"><b>'+esc(a.iata||'—')+'</b> '+esc(a.icao||'—')+'</span></span>'+
+    '<span class="v">'+hl(a.name||'',q)+'<span class="sub2">'+esc([a.city,a.country].filter(Boolean).join(', '))+'</span></span></div>'
+  ).join('') || '<div class="loading">No match.</div>';
+}
+
+/* ---------- init ---------- */
+renderAbbr();
+refresh();
+setInterval(refresh, 5*60*1000); // re-pull data.json every 5 min
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeSidebar(); });
+</script>
+</body>
+</html>
