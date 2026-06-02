@@ -49,12 +49,20 @@
   h2{font-family:var(--sans);font-weight:700;font-size:15px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line2);padding-bottom:7px;margin:0 0 14px;}
   .metar{font-family:var(--mono);font-size:19px;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px 18px;white-space:pre-wrap;word-break:break-word;}
   .metar.empty{color:var(--muted);font-style:italic;}
+  .metar-plain{font-family:var(--sans);font-size:13.5px;color:#3a3a3a;margin-top:11px;line-height:1.5;}
+  .metar-plain b{font-weight:700;color:var(--ink);}
   .metar-check{font-family:var(--sans);font-size:13px;color:var(--muted);margin-top:9px;display:flex;align-items:center;gap:7px;}
   .metar-check .ico{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--active);flex:none;}
   .metar-check.stale{color:var(--warn);}
   .metar-check.stale .ico{background:var(--warn);}
   .metar-check.bad{color:#b00;}
   .metar-check.bad .ico{background:#b00;}
+  .metar .tok{position:relative;cursor:help;border-bottom:1px dotted #b3b3b3;}
+  .metar .tok.plain{border-bottom:none;cursor:default;}
+  .metar .tip{display:none;position:absolute;bottom:135%;left:50%;transform:translateX(-50%);background:#222;color:#fff;font-family:var(--sans);font-size:12.5px;line-height:1.4;white-space:normal;width:max-content;max-width:240px;padding:7px 10px;border-radius:5px;box-shadow:0 3px 10px rgba(0,0,0,.2);z-index:20;text-align:left;font-variant-numeric:normal;}
+  .metar .tip b{color:#ffd36b;font-weight:700;}
+  .metar .tip::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#222;}
+  .metar .tok:hover .tip, .metar .tok:focus .tip{display:block;}
   .notam-meta{font-family:var(--sans);font-size:13px;color:var(--muted);margin-bottom:14px;}
   .notam{border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin-bottom:14px;background:#fff;}
   .notam .hd{display:flex;justify-content:space-between;gap:14px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px;}
@@ -123,6 +131,7 @@
   <section>
     <h2>METAR</h2>
     <div class="metar empty" id="metar">Loading…</div>
+    <div class="metar-plain" id="metarPlain"></div>
     <div class="metar-check" id="metarCheck"></div>
   </section>
 
@@ -215,6 +224,67 @@ function relTime(min){
   if(min < 60) return min + ' min ago';
   const h = Math.floor(min/60), r = min%60;
   return h + 'h ' + (r?r+'m ':'') + 'ago';
+}
+
+/* ---------- METAR decoder (hover-translate) ---------- */
+function decodeWeather(tok){
+  const desc={MI:'shallow',PR:'partial',BC:'patches of',DR:'low drifting',BL:'blowing',SH:'showers of',TS:'thunderstorm with',FZ:'freezing'};
+  const phen={DZ:'drizzle',RA:'rain',SN:'snow',SG:'snow grains',IC:'ice crystals',PL:'ice pellets',GR:'hail',GS:'small hail',UP:'unknown precipitation',BR:'mist',FG:'fog',FU:'smoke',VA:'volcanic ash',DU:'widespread dust',SA:'sand',HZ:'haze',PO:'dust/sand whirls',SQ:'squalls',FC:'funnel cloud',SS:'sandstorm',DS:'duststorm'};
+  let s=tok, inten='', vc=false, out=[], any=false;
+  if(s[0]==='+'){inten='heavy ';s=s.slice(1);} else if(s[0]==='-'){inten='light ';s=s.slice(1);}
+  if(s.startsWith('VC')){vc=true;s=s.slice(2);}
+  while(s.length>=2 && (desc[s.slice(0,2)]||phen[s.slice(0,2)])){ out.push(desc[s.slice(0,2)]||phen[s.slice(0,2)]); s=s.slice(2); any=true; }
+  if(!any || s.length) return null;
+  return inten + out.join(' ') + (vc?' in the vicinity':'');
+}
+function decodeToken(tok, idx){
+  const C={METAR:'Routine aviation weather report',SPECI:'Special report (issued on significant change)',COR:'Corrected report',AUTO:'Fully automated report (no human intervention)',NOSIG:'No significant change expected in the next 2 hours',CAVOK:'Ceiling & Visibility OK — visibility ≥10 km, no cloud below 5000 ft / no CB, no significant weather',NSC:'No significant cloud',NCD:'No cloud detected',SKC:'Sky clear',CLR:'Sky clear (no cloud below 12000 ft)',NSW:'No significant weather',RMK:'Remarks follow',BECMG:'Becoming — a gradual change',TEMPO:'Temporarily — fluctuating change'};
+  if(C[tok]) return C[tok];
+  let m;
+  if(m=tok.match(/^(\d{2})(\d{2})(\d{2})Z$/)){
+    const d = new Date(parseMetarObs(tok));
+    const ist = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',hour:'2-digit',minute:'2-digit',hour12:false}).format(d);
+    return 'Observation time — <b>'+m[2]+':'+m[3]+'Z</b> Zulu (UTC) · <b>'+ist+'</b> IST · day '+m[1]+' of the month';
+  }
+  if(m=tok.match(/^(\d{3}|VRB)(\d{2,3})(?:G(\d{2,3}))?(KT|MPS)$/)){
+    const dir=m[1]==='VRB'?'variable direction':'from '+m[1]+'°', u=m[4]==='KT'?'kt':'m/s';
+    return 'Wind '+dir+' at '+(+m[2])+' '+u+(m[3]?', gusting '+(+m[3])+' '+u:'');
+  }
+  if(m=tok.match(/^(\d{3})V(\d{3})$/)) return 'Wind direction varying between '+m[1]+'° and '+m[2]+'°';
+  if(m=tok.match(/^Q(\d{3,4})$/)) return 'QNH '+(+m[1])+' hPa (altimeter setting)';
+  if(m=tok.match(/^A(\d{4})$/)) return 'Altimeter '+m[1].slice(0,2)+'.'+m[1].slice(2)+' inHg';
+  if(m=tok.match(/^(M?\d{2})\/(M?\d{2})$/)){ const t=v=>v[0]==='M'?-(+v.slice(1)):+v; return 'Temperature '+t(m[1])+'°C, dew point '+t(m[2])+'°C'; }
+  if(m=tok.match(/^(FEW|SCT|BKN|OVC)(\d{3})(CB|TCU)?$/)){
+    const a={FEW:'Few (1–2 oktas)',SCT:'Scattered (3–4 oktas)',BKN:'Broken (5–7 oktas)',OVC:'Overcast (8 oktas)'}[m[1]];
+    return a+' cloud at '+(+m[2]*100).toLocaleString()+' ft'+(m[3]==='CB'?', cumulonimbus':m[3]==='TCU'?', towering cumulus':'');
+  }
+  if(m=tok.match(/^VV(\d{3})$/)) return 'Vertical visibility '+(+m[1]*100)+' ft (sky obscured)';
+  if(m=tok.match(/^R(\d{2}[LCR]?)\/(.+)$/)) return 'Runway '+m[1]+' visual range: '+m[2];
+  if(tok==='9999') return 'Visibility 10 km or more';
+  if(m=tok.match(/^(\d{4})$/)) return 'Visibility '+(+m[1])+' m';
+  if(m=tok.match(/^(\d{2})SM$/)) return 'Visibility '+m[1]+' statute miles';
+  const wx=decodeWeather(tok); if(wx) return wx;
+  if(idx<=1 && /^[A-Z]{4}$/.test(tok)) return 'ICAO station identifier — <b>'+tok+'</b>';
+  return null;
+}
+function decodeMetarHTML(metar){
+  let idx=-1;
+  return metar.split(/(\s+)/).map(part=>{
+    if(/^\s+$/.test(part) || part==='') return part;
+    idx++;
+    const dec = decodeToken(part, idx);
+    if(!dec) return '<span class="tok plain">'+esc(part)+'</span>';
+    return '<span class="tok" tabindex="0">'+esc(part)+'<span class="tip">'+dec+'</span></span>';
+  }).join('');
+}
+function decodeMetarFull(metar){
+  let idx=-1; const parts=[];
+  for(const t of metar.split(/\s+/)){
+    if(!t) continue; idx++;
+    const d = decodeToken(t, idx);
+    if(d) parts.push(d.replace(/<[^>]+>/g,''));
+  }
+  return parts.join('; ');
 }
 
 /* ---------- NOTAM date parsing ---------- */
@@ -331,8 +401,11 @@ async function refresh(){
 function render(data){
   // METAR
   const mEl = document.getElementById('metar');
-  if(data.metar){ mEl.className='metar'; mEl.textContent = data.metar; }
+  if(data.metar){ mEl.className='metar'; mEl.innerHTML = decodeMetarHTML(data.metar); }
   else { mEl.className='metar empty'; mEl.textContent = 'METAR unavailable' + (data.metarError? ' ('+data.metarError+')':''); }
+  document.getElementById('metarPlain').innerHTML = data.metar
+    ? '<b>Showing ' + (/^SPECI/.test(data.metar)?'SPECI':'METAR') + ' for ' + STATION + '</b> — ' + esc(decodeMetarFull(data.metar)) + '.'
+    : '';
 
   // NOTAMs
   const now = Date.now();
