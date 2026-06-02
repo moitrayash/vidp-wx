@@ -42,11 +42,19 @@
   .status{font-family:var(--sans);font-size:13px;color:var(--muted);}
   .status .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#bbb;margin-right:6px;vertical-align:middle;}
   .status.ok .dot{background:var(--active);}
+  .status.warn{color:var(--warn);}
+  .status.warn .dot{background:var(--warn);}
   .status.err .dot{background:#b00;}
   section{margin-bottom:34px;}
   h2{font-family:var(--sans);font-weight:700;font-size:15px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line2);padding-bottom:7px;margin:0 0 14px;}
   .metar{font-family:var(--mono);font-size:19px;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px 18px;white-space:pre-wrap;word-break:break-word;}
   .metar.empty{color:var(--muted);font-style:italic;}
+  .metar-check{font-family:var(--sans);font-size:13px;color:var(--muted);margin-top:9px;display:flex;align-items:center;gap:7px;}
+  .metar-check .ico{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--active);flex:none;}
+  .metar-check.stale{color:var(--warn);}
+  .metar-check.stale .ico{background:var(--warn);}
+  .metar-check.bad{color:#b00;}
+  .metar-check.bad .ico{background:#b00;}
   .notam-meta{font-family:var(--sans);font-size:13px;color:var(--muted);margin-bottom:14px;}
   .notam{border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin-bottom:14px;background:#fff;}
   .notam .hd{display:flex;justify-content:space-between;gap:14px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px;}
@@ -115,6 +123,7 @@
   <section>
     <h2>METAR</h2>
     <div class="metar empty" id="metar">Loading…</div>
+    <div class="metar-check" id="metarCheck"></div>
   </section>
 
   <section>
@@ -124,7 +133,7 @@
   </section>
 
   <footer id="footer">
-    Weather &amp; NOTAM data refreshed server-side roughly every 10 minutes via GitHub Actions; clocks above are live.
+    Every refresh fetches live from source; a server snapshot (updated ~every 10 min via GitHub Actions) is used only if a live fetch fails.
     NOTAM source: FAA NOTAM Search. METAR source: Aviation Weather Center. Times are UTC unless noted.
     For operational use always cross-check official sources.
   </footer>
@@ -177,8 +186,36 @@ function tick(){
   document.getElementById('zDate').textContent = z.day;
   document.getElementById('iTime').textContent = i.t;
   document.getElementById('iDate').textContent = i.day;
+  updateChecks();
 }
-setInterval(tick, 250); tick();
+setInterval(tick, 250);
+
+/* ---------- Time-relevance self-check ----------
+   METARs for VIDP are issued on a fixed cadence (routine every 30 min, plus SPECI).
+   i = expected interval. We parse the METAR's own observation time (ddhhmmZ),
+   compute its age live, and flag if the latest report is older than expected. */
+const METAR_INTERVAL_MIN = 30;            // i: expected METAR cadence (minutes)
+const METAR_STALE_AFTER  = METAR_INTERVAL_MIN + 15;   // amber past this age
+const METAR_BAD_AFTER    = METAR_INTERVAL_MIN * 2 + 15; // red: a full cycle missed
+const DATA_STALE_MIN     = 20;            // warn if data.json itself is older than this
+
+function parseMetarObs(metar){
+  // ddhhmmZ group, e.g. 020330Z -> day 02, 03:30 UTC
+  const m = (metar||'').match(/\b(\d{2})(\d{2})(\d{2})Z\b/);
+  if(!m) return null;
+  const [,dd,hh,mi] = m.map(Number);
+  const now = new Date();
+  let y = now.getUTCFullYear(), mo = now.getUTCMonth();
+  // If the report day is later than today's UTC day, it belongs to the previous month.
+  if(dd > now.getUTCDate()){ mo -= 1; if(mo < 0){ mo = 11; y -= 1; } }
+  return Date.UTC(y, mo, dd, hh, mi);
+}
+function relTime(min){
+  if(min < 1) return 'just now';
+  if(min < 60) return min + ' min ago';
+  const h = Math.floor(min/60), r = min%60;
+  return h + 'h ' + (r?r+'m ':'') + 'ago';
+}
 
 /* ---------- NOTAM date parsing ---------- */
 // FAA NOTAM times are UTC, format "MM/DD/YYYY HHMM" with optional EST (estimated) suffix; end may be "PERM".
@@ -211,23 +248,84 @@ function isActive(n, now){
 function esc(t){return (t||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
 let LAST = null;
 
+/* Every Refresh performs a LIVE fetch straight from the source, via free CORS proxies
+   (the source APIs don't send CORS headers, so a browser can't hit them directly).
+   data.json — the server snapshot kept fresh by GitHub Actions — is only a fallback
+   if the live fetch fails, so the page never goes blank. */
+const STATION = 'VIDP';
+const GET_PROXIES = [
+  u => 'https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(u),
+  u => 'https://test.cors.workers.dev/?' + encodeURIComponent(u),
+];
+const POST_PROXIES = [
+  u => 'https://test.cors.workers.dev/?' + encodeURIComponent(u),
+];
+async function proxyGetText(url){
+  let err;
+  for(const wrap of GET_PROXIES){
+    try{ const r = await fetch(wrap(url), {cache:'no-store'}); if(r.ok){ const t = await r.text(); if(t && t.trim()) return t; } err = 'HTTP '+r.status; }
+    catch(e){ err = e; }
+  }
+  throw new Error('GET proxies failed: ' + err);
+}
+async function proxyPostJson(url, body){
+  let err;
+  for(const wrap of POST_PROXIES){
+    try{
+      const r = await fetch(wrap(url), {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body});
+      if(r.ok){ return JSON.parse(await r.text()); }
+      err = 'HTTP '+r.status;
+    }catch(e){ err = e; }
+  }
+  throw new Error('POST proxies failed: ' + err);
+}
+async function liveMetar(){
+  const t = await proxyGetText('https://aviationweather.gov/api/data/metar?ids='+STATION+'&format=raw');
+  return t.trim();
+}
+async function liveNotams(){
+  const all = []; let offset = 0;
+  for(let page=0; page<40; page++){
+    const body = new URLSearchParams({searchType:'0', designatorsForLocation:STATION, offset:String(offset),
+      notamsOnly:'false', sortColumns:'5 false', sortDirection:'true'}).toString();
+    const j = await proxyPostJson('https://notams.aim.faa.gov/notamSearch/search', body);
+    const list = j.notamList || [];
+    all.push(...list);
+    const total = j.totalNotamCount || all.length;
+    offset += list.length;
+    if(list.length === 0 || all.length >= total) break;
+  }
+  return all.map(n => ({
+    notamNumber:n.notamNumber, facilityDesignator:n.facilityDesignator, featureName:n.featureName,
+    issueDate:n.issueDate, startDate:n.startDate, endDate:n.endDate,
+    icaoMessage:(n.icaoMessage||'').trim(), traditionalMessage:(n.traditionalMessage||'').trim()
+  }));
+}
+async function loadSnapshot(){
+  try{ const r = await fetch('./data.json?t='+Date.now(), {cache:'no-store'}); if(r.ok) return await r.json(); }catch(e){}
+  return null;
+}
+
 async function refresh(){
   const btn = document.getElementById('refreshBtn');
   btn.disabled = true;
-  setStatus('', 'Refreshing…');
-  try{
-    const r = await fetch('./data.json?t=' + Date.now(), {cache:'no-store'});
-    if(!r.ok) throw new Error('HTTP ' + r.status);
-    const data = await r.json();
-    LAST = data;
-    render(data);
-  }catch(e){
-    setStatus('err', 'Could not load data.json — the updater may still be generating it. ' + e);
-    document.getElementById('metar').className = 'metar empty';
-    document.getElementById('metar').textContent = 'Data not available yet.';
-  }finally{
-    btn.disabled = false;
+  setStatus('', 'Fetching live…');
+  const [mRes, nRes] = await Promise.allSettled([liveMetar(), liveNotams()]);
+  const data = { fetchedAt: new Date().toISOString(), source: {} };
+  if(mRes.status === 'fulfilled' && mRes.value){ data.metar = mRes.value; data.source.metar = 'live'; }
+  if(nRes.status === 'fulfilled'){ data.notams = nRes.value; data.source.notams = 'live'; }
+  if(!data.metar || !data.notams){
+    const snap = await loadSnapshot();
+    if(snap){
+      data.snapshotAt = snap.generatedAt;
+      if(!data.metar && snap.metar){ data.metar = snap.metar; data.source.metar = 'snapshot'; }
+      if(!data.notams){ data.notams = snap.notams || []; data.source.notams = 'snapshot'; }
+    }
   }
+  data.notams = data.notams || [];
+  LAST = data;
+  render(data);
+  btn.disabled = false;
 }
 
 function render(data){
@@ -239,7 +337,8 @@ function render(data){
   // NOTAMs
   const now = Date.now();
   const all = data.notams || [];
-  const active = all.filter(n => isActive(n, now));
+  const active = all.filter(n => isActive(n, now))
+    .sort((a,b) => (parseFaaTime(b.issueDate)?.ms || 0) - (parseFaaTime(a.issueDate)?.ms || 0));
   const cont = document.getElementById('notams');
   cont.innerHTML = '';
   if(active.length === 0){
@@ -260,12 +359,39 @@ function render(data){
       cont.appendChild(div);
     }
   }
-  const gen = data.generatedAt ? new Date(data.generatedAt) : null;
   document.getElementById('notamMeta').textContent =
-    active.length + ' active of ' + all.length + ' total · evaluated live against current UTC';
-  const ago = gen ? Math.max(0, Math.round((Date.now()-gen.getTime())/60000)) : null;
-  setStatus('ok', 'Data updated ' + (gen ? (ago===0?'just now':ago+' min ago') : '—') +
-    (gen ? ' (' + fmt(gen,'UTC').t + 'Z)' : ''));
+    active.length + ' active of ' + all.length + ' total · sorted by latest issue · evaluated live against current UTC';
+  updateChecks();
+}
+
+/* Live self-checks: METAR observation age vs expected interval i, and data.json freshness. */
+function updateChecks(){
+  if(!LAST) return;
+  const nowMs = Date.now();
+  const src = LAST.source || {};
+  const fetched = LAST.fetchedAt ? new Date(LAST.fetchedAt) : null;
+  const fAge = fetched ? Math.max(0, Math.round((nowMs-fetched.getTime())/60000)) : null;
+  const snap = LAST.snapshotAt ? new Date(LAST.snapshotAt) : null;
+  const sAge = snap ? Math.max(0, Math.round((nowMs-snap.getTime())/60000)) : null;
+  if(src.metar==='live' && src.notams==='live'){
+    setStatus('ok', 'Live — fetched ' + relTime(fAge) + (fetched ? ' (' + fmt(fetched,'UTC').t + 'Z)' : ''));
+  } else if(src.metar==='live' || src.notams==='live'){
+    setStatus('warn', 'Partial live — ' + (src.metar!=='live'?'METAR':'NOTAMs') + ' from server snapshot' + (snap?' ('+relTime(sAge)+')':'') + '. Refresh to retry.');
+  } else if(src.metar || src.notams){
+    setStatus('warn', 'Live fetch failed — showing server snapshot' + (snap?' from '+relTime(sAge):'') + '. Refresh to retry.');
+  } else {
+    setStatus('err', 'No data available — live fetch failed and no snapshot found. Refresh to retry.');
+  }
+  const el = document.getElementById('metarCheck');
+  const obs = parseMetarObs(LAST.metar);
+  if(!obs){ el.className='metar-check'; el.innerHTML=''; return; }
+  const age = Math.max(0, Math.round((nowMs-obs)/60000));
+  const obsZ = fmt(new Date(obs),'UTC').t;
+  let cls='metar-check', note='within expected '+METAR_INTERVAL_MIN+'-min cycle';
+  if(age >= METAR_BAD_AFTER){ cls='metar-check bad'; note='stale — a full '+METAR_INTERVAL_MIN+'-min cycle has passed with no newer report'; }
+  else if(age >= METAR_STALE_AFTER){ cls='metar-check stale'; note='older than the expected '+METAR_INTERVAL_MIN+'-min cadence'; }
+  el.className = cls;
+  el.innerHTML = '<span class="ico"></span>Observed '+obsZ+'Z · '+relTime(age)+' · '+note;
 }
 function setStatus(cls, txt){
   const s = document.getElementById('status');
