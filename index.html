@@ -323,35 +323,61 @@ let LAST = null;
    data.json — the server snapshot kept fresh by GitHub Actions — is only a fallback
    if the live fetch fails, so the page never goes blank. */
 const STATION = 'VIDP';
+// CORS proxies tried in order (the source APIs don't send CORS headers). First entry is a direct
+// attempt in case a source ever allows CORS; the rest are independent free relays for redundancy.
 const GET_PROXIES = [
+  u => u,
   u => 'https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(u),
   u => 'https://test.cors.workers.dev/?' + encodeURIComponent(u),
+  u => 'https://corsproxy.org/?url=' + encodeURIComponent(u),
+  u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
 ];
 const POST_PROXIES = [
   u => 'https://test.cors.workers.dev/?' + encodeURIComponent(u),
+  u => 'https://api.cors.lol/?url=' + encodeURIComponent(u),
 ];
-async function proxyGetText(url){
-  let err;
+// Multiple independent METAR sources — if one portal is unreliable or down, the next is tried.
+const METAR_SOURCES = [
+  () => 'https://aviationweather.gov/api/data/metar?ids=' + STATION + '&format=raw',
+  () => 'https://metar.vatsim.net/' + STATION,
+  () => 'https://tgftp.nws.noaa.gov/data/observations/metar/stations/' + STATION + '.TXT',
+];
+
+async function tryGetText(url){
   for(const wrap of GET_PROXIES){
-    try{ const r = await fetch(wrap(url), {cache:'no-store'}); if(r.ok){ const t = await r.text(); if(t && t.trim()) return t; } err = 'HTTP '+r.status; }
-    catch(e){ err = e; }
+    try{ const r = await fetch(wrap(url), {cache:'no-store'}); if(r.ok){ const t = (await r.text()).trim(); if(t) return t; } }
+    catch(e){}
   }
-  throw new Error('GET proxies failed: ' + err);
+  return null;
+}
+// Pull a clean raw METAR line out of any source format (raw, NOAA .TXT date+line, etc.).
+function extractMetar(text){
+  const lines = text.split('\n').map(s => s.trim()).filter(Boolean);
+  for(let i = lines.length - 1; i >= 0; i--){
+    const ln = lines[i].replace(/=+\s*$/,'').trim();
+    if(ln.includes(STATION) && /\d{6}Z/.test(ln))
+      return (ln.startsWith('METAR') || ln.startsWith('SPECI')) ? ln : ('METAR ' + ln);
+  }
+  return null;
+}
+async function liveMetar(){
+  for(const src of METAR_SOURCES){
+    let url; try{ url = src(); }catch(e){ continue; }
+    const txt = await tryGetText(url);
+    if(txt){ const m = extractMetar(txt); if(m) return m; }
+  }
+  throw new Error('all METAR sources/proxies failed');
 }
 async function proxyPostJson(url, body){
   let err;
   for(const wrap of POST_PROXIES){
     try{
       const r = await fetch(wrap(url), {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body});
-      if(r.ok){ return JSON.parse(await r.text()); }
+      if(r.ok){ const j = JSON.parse(await r.text()); if(j && Array.isArray(j.notamList)) return j; }
       err = 'HTTP '+r.status;
     }catch(e){ err = e; }
   }
   throw new Error('POST proxies failed: ' + err);
-}
-async function liveMetar(){
-  const t = await proxyGetText('https://aviationweather.gov/api/data/metar?ids='+STATION+'&format=raw');
-  return t.trim();
 }
 async function liveNotams(){
   const all = []; let offset = 0;
