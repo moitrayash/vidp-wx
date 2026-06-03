@@ -109,9 +109,37 @@
     :root{--sidebar-w:100vw;}
     .clocks{gap:16px;}
   }
+  /* Access gate */
+  #authgate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#fff;font-family:var(--serif);}
+  #authgate.hide{display:none;}
+  #authgate .ag-card{width:320px;max-width:88vw;text-align:center;}
+  #authgate h1{font-family:var(--sans);font-size:20px;font-weight:700;margin:0 0 4px;}
+  #authgate .ag-sub{font-family:var(--sans);font-size:13px;color:#666;margin-bottom:20px;}
+  #authgate input{width:100%;font-family:var(--mono);font-size:18px;letter-spacing:3px;text-align:center;padding:11px;border:1px solid #ccc;border-radius:6px;margin-bottom:10px;}
+  #authgate button{width:100%;font-family:var(--sans);font-size:15px;padding:10px;border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:6px;cursor:pointer;}
+  #authgate button:hover{background:#16315a;}
+  #authgate .ag-err{font-family:var(--sans);font-size:13px;color:#b00;min-height:18px;margin-top:10px;}
+  #authgate .ag-note{font-family:var(--sans);font-size:11px;color:#999;margin-top:18px;}
 </style>
 </head>
 <body>
+
+<div id="authgate">
+  <div class="ag-card">
+    <h1>VIDP - METAR &amp; NOTAMs</h1>
+    <div class="ag-sub">Restricted. Enter password to continue.</div>
+    <form onsubmit="agUnlock();return false;">
+      <input id="agPw" type="password" inputmode="numeric" placeholder="••••••" autocomplete="off" autofocus />
+      <button type="submit">Enter</button>
+    </form>
+    <div class="ag-err" id="agErr"></div>
+    <div class="ag-note">Authorized access only</div>
+  </div>
+</div>
+<script>
+function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5429218'){try{localStorage.setItem('vidp_auth_ok','1');}catch(e){}document.getElementById('authgate').classList.add('hide');}else{document.getElementById('agErr').textContent='Incorrect password.';document.getElementById('agPw').value='';}}
+try{ if(localStorage.getItem('vidp_auth_ok')==='1') document.getElementById('authgate').classList.add('hide'); }catch(e){}
+</script>
 
 <button id="glossaryToggle" onclick="openSidebar()">☰ Glossary &amp; codes</button>
 
