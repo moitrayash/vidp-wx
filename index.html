@@ -30,6 +30,7 @@
   header.top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:20px;flex-wrap:wrap;}
   h1{font-family:var(--sans);font-weight:700;font-size:25px;margin:0 0 2px;letter-spacing:.2px;}
   .sub{font-family:var(--sans);color:var(--muted);font-size:13.5px;}
+  .proto{font-family:var(--sans);color:#9a6b00;font-size:12px;margin-top:3px;letter-spacing:.2px;}
   .clocks{display:flex;gap:22px;font-family:var(--sans);}
   .clock{text-align:right;}
   .clock .lbl{font-size:11.5px;letter-spacing:1.2px;color:var(--muted);text-transform:uppercase;}
@@ -69,6 +70,7 @@
   .notam .num{font-family:var(--sans);font-weight:700;font-size:16px;}
   .notam .when{display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
   .notam .start{font-family:var(--sans);font-size:13px;color:var(--muted);white-space:nowrap;}
+  .notam .issued{font-family:var(--sans);font-size:12px;color:#999;white-space:nowrap;}
   .notam .end{font-family:var(--sans);font-size:13px;color:var(--warn);white-space:nowrap;}
   .notam .end.perm{color:var(--active);}
   .notam .feat{font-family:var(--sans);font-size:12px;color:var(--muted);}
@@ -87,7 +89,7 @@
   .sb-head h3{font-family:var(--sans);font-size:16px;margin:0;font-weight:700;}
   .sb-close{border:none;background:none;font-size:22px;line-height:1;padding:2px 8px;color:var(--muted);}
   .tabs{display:flex;border-bottom:1px solid var(--line);}
-  .tabs button{flex:1;border:none;border-bottom:2px solid transparent;border-radius:0;padding:10px 2px;font-size:11.5px;color:var(--muted);}
+  .tabs button{flex:1;border:none;border-bottom:2px solid transparent;border-radius:0;padding:10px 1px;font-size:11px;color:var(--muted);white-space:nowrap;}
   .tabs button.active{color:var(--ink);border-bottom-color:var(--accent);font-weight:700;}
   .sb-body{padding:14px 16px;overflow-y:auto;flex:1;}
   .field input{width:100%;font-family:var(--sans);font-size:15px;padding:9px 11px;border:1px solid var(--line);border-radius:5px;margin-bottom:6px;}
@@ -137,8 +139,7 @@
   </div>
 </div>
 <script>
-function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5429218'){try{localStorage.setItem('vidp_auth_ok','1');}catch(e){}document.getElementById('authgate').classList.add('hide');}else{document.getElementById('agErr').textContent='Incorrect password.';document.getElementById('agPw').value='';}}
-try{ if(localStorage.getItem('vidp_auth_ok')==='1') document.getElementById('authgate').classList.add('hide'); }catch(e){}
+function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5429218'){document.getElementById('authgate').classList.add('hide');}else{document.getElementById('agErr').textContent='Incorrect password.';document.getElementById('agPw').value='';}}
 </script>
 
 <button id="glossaryToggle" onclick="openSidebar()">☰ Glossary &amp; codes</button>
@@ -148,6 +149,7 @@ try{ if(localStorage.getItem('vidp_auth_ok')==='1') document.getElementById('aut
     <div>
       <h1>VIDP - Delhi (IGI)</h1>
       <div class="sub">Latest METAR &amp; active NOTAMs · Indira Gandhi Intl</div>
+      <div class="proto">Research Prototype · Last fix <span id="lastFix">----Z</span></div>
     </div>
     <div class="clocks">
       <div class="clock"><div class="lbl">Zulu (UTC)</div><div class="t" id="zTime">--:--:--</div><div class="d" id="zDate">-</div></div>
@@ -189,8 +191,9 @@ try{ if(localStorage.getItem('vidp_auth_ok')==='1') document.getElementById('aut
   <div class="tabs">
     <button id="tab-abbr" class="active" onclick="showTab('abbr')">Abbr.</button>
     <button id="tab-metar" onclick="showTab('metar')">METAR</button>
-    <button id="tab-airline" onclick="showTab('airline')">Airlines</button>
-    <button id="tab-airport" onclick="showTab('airport')">Airports</button>
+    <button id="tab-notam" onclick="showTab('notam')">NOTAM</button>
+    <button id="tab-airline" onclick="showTab('airline')">Airline</button>
+    <button id="tab-airport" onclick="showTab('airport')">Airport</button>
   </div>
   <div class="sb-body">
     <div id="pane-abbr">
@@ -216,6 +219,12 @@ try{ if(localStorage.getItem('vidp_auth_ok')==='1') document.getElementById('aut
       <div class="hint">Every short form used in a METAR / SPECI, grouped. Weather is built by chaining intensity + descriptor + phenomenon (e.g. +SHRA, FZFG, VCTS, TSRA).</div>
       <div class="count" id="metarCount"></div>
       <div class="res" id="metarRes"></div>
+    </div>
+    <div id="pane-notam" style="display:none;">
+      <div class="field"><input id="notamSearch" placeholder="Search a NOTAM code or its meaning…" oninput="renderNotamCodes()" autocomplete="off" /></div>
+      <div class="hint">NOTAM format, the Q-code structure, condition codes, and the contractions seen in NOTAM text (e.g. TECR, U/S, WIP, CLSD).</div>
+      <div class="count" id="notamCount"></div>
+      <div class="res" id="notamRes"></div>
     </div>
   </div>
 </aside>
@@ -442,12 +451,21 @@ async function loadSnapshot(){
   return null;
 }
 
+/* Auto-refresh cadence + last-good cache so the page never blanks. */
+let AUTO_MS = 120000;          // auto-refresh every 120 s
+let nextRefreshAt = Date.now() + AUTO_MS;
+let refreshing = false;
+let lastFixZ = '----';
+let LASTGOOD = null;
+try{ const _lg = localStorage.getItem('vidp_lastgood'); if(_lg) LASTGOOD = JSON.parse(_lg); }catch(e){}
+
 async function refresh(){
+  if(refreshing) return;
+  refreshing = true;
   const btn = document.getElementById('refreshBtn');
-  btn.disabled = true;
+  if(btn) btn.disabled = true;
   setStatus('', 'Fetching live…');
-  // Reliable BASE: the same-origin server snapshot always carries a METAR + the full NOTAM list,
-  // so the page is never empty. Retry once on a transient miss.
+  // Reliable BASE: same-origin server snapshot. Retry once on a transient miss.
   let snap = await loadSnapshot(); if(!snap) snap = await loadSnapshot();
   const data = { fetchedAt: new Date().toISOString(), source: {} };
   if(snap){
@@ -466,12 +484,31 @@ async function refresh(){
     data.notams = nRes.value; data.source.notams = 'live';
   }
   data.notams = data.notams || [];
+  // Record the time of this successful fix (a real fetch, not the cache fallback).
+  if(data.source.metar === 'live' || data.source.metar === 'snapshot'){
+    lastFixZ = fmt(new Date(),'UTC').t.replace(/:/g,'').slice(0,4);
+  }
+  // NEVER blank: if this cycle produced nothing, fall back to the last good data we ever had.
+  if(!data.metar && LASTGOOD && LASTGOOD.metar){ data.metar = LASTGOOD.metar; data.source.metar = 'cache'; }
+  if((!data.notams || !data.notams.length) && LASTGOOD && LASTGOOD.notams && LASTGOOD.notams.length){
+    data.notams = LASTGOOD.notams; data.source.notams = 'cache';
+  }
+  // Remember good data for next refresh / next visit.
+  if(data.metar || (data.notams && data.notams.length)){
+    LASTGOOD = { metar: data.metar || (LASTGOOD && LASTGOOD.metar) || '',
+                 notams: (data.notams && data.notams.length) ? data.notams : ((LASTGOOD && LASTGOOD.notams) || []) };
+    try{ localStorage.setItem('vidp_lastgood', JSON.stringify(LASTGOOD)); }catch(e){}
+  }
+  data.notams = data.notams || [];
   LAST = data;
   render(data);
-  btn.disabled = false;
+  if(btn) btn.disabled = false;
+  nextRefreshAt = Date.now() + AUTO_MS;
+  refreshing = false;
 }
 
 function render(data){
+  const lf = document.getElementById('lastFix'); if(lf) lf.textContent = (lastFixZ || '----') + 'Z';
   // METAR
   const mEl = document.getElementById('metar');
   if(data.metar){ mEl.className='metar'; mEl.innerHTML = decodeMetarHTML(data.metar); }
@@ -497,11 +534,13 @@ function render(data){
       const endTxt = fmtEnd(endP);
       const endCls = (endP && endP.perm) ? 'end perm' : 'end';
       const startTxt = fmtEnd(parseFaaTime(n.startDate));
+      const issuedTxt = fmtEnd(parseFaaTime(n.issueDate));
       const text = n.icaoMessage || n.traditionalMessage || '';
       div.innerHTML =
         '<div class="hd"><span class="num">'+esc(n.notamNumber)+'</span>'+
         '<span class="when"><span class="start">From: '+esc(startTxt)+'</span>'+
-        '<span class="'+endCls+'">Until: '+esc(endTxt)+'</span></span></div>'+
+        '<span class="'+endCls+'">Until: '+esc(endTxt)+'</span>'+
+        '<span class="issued">Issued: '+esc(issuedTxt)+'</span></span></div>'+
         (n.featureName ? '<div class="feat">'+esc(n.featureName)+'</div>' : '')+
         '<pre>'+esc(text)+'</pre>';
       cont.appendChild(div);
@@ -521,10 +560,14 @@ function updateChecks(){
   const fAge = fetched ? Math.max(0, Math.round((nowMs-fetched.getTime())/60000)) : null;
   const snap = LAST.snapshotAt ? new Date(LAST.snapshotAt) : null;
   const sAge = snap ? Math.max(0, Math.round((nowMs-snap.getTime())/60000)) : null;
+  const secs = Math.max(0, Math.ceil((nextRefreshAt - nowMs)/1000));
+  const cd = ' · next auto-refresh in ' + secs + 's';
   if(src.metar==='live'){
-    setStatus('ok', 'Live - METAR fetched ' + relTime(fAge) + (fetched ? ' (' + fmt(fetched,'UTC').t + 'Z)' : ''));
+    setStatus('ok', 'Live - METAR fetched ' + relTime(fAge) + (fetched ? ' (' + fmt(fetched,'UTC').t + 'Z)' : '') + cd);
   } else if(src.metar==='snapshot'){
-    setStatus('warn', 'METAR from server snapshot' + (snap?' ('+relTime(sAge)+')':'') + ' - live blocked; click Refresh to retry.');
+    setStatus('warn', 'METAR from server snapshot' + (snap?' ('+relTime(sAge)+')':'') + ' - retrying' + cd);
+  } else if(src.metar==='cache'){
+    setStatus('warn', 'Showing last good data - live & snapshot both failed; retrying' + cd);
   } else {
     setStatus('err', 'No METAR available - click Refresh to retry.');
   }
@@ -549,7 +592,7 @@ function setStatus(cls, txt){
 function openSidebar(){ document.body.classList.add('sidebar-open'); document.getElementById('sidebar').setAttribute('aria-hidden','false'); ensureDatasets(); }
 function closeSidebar(){ document.body.classList.remove('sidebar-open'); document.getElementById('sidebar').setAttribute('aria-hidden','true'); }
 function showTab(which){
-  for(const k of ['abbr','metar','airline','airport']){
+  for(const k of ['abbr','metar','notam','airline','airport']){
     document.getElementById('pane-'+k).style.display = (k===which)?'block':'none';
     document.getElementById('tab-'+k).classList.toggle('active', k===which);
   }
@@ -708,6 +751,101 @@ function renderMetarCodes(){
   document.getElementById('metarRes').innerHTML = html || '<div class="loading">No match.</div>';
 }
 
+/* ---------- NOTAM code reference ---------- */
+const NOTAM_GROUPS = [
+  ['NOTAM message format', [
+    ['Q)','Qualifier line: FIR / 5-letter Q-code / Traffic / Purpose / Scope / lower / upper / coordinates + radius'],
+    ['A)','Location(s) affected, by ICAO code (e.g. VIDP)'],
+    ['B)','Start of validity, UTC (YYMMDDHHMM)'],
+    ['C)','End of validity, UTC (YYMMDDHHMM); or PERM; EST = estimated end'],
+    ['D)','Schedule: the day / time periods the NOTAM is active (when not continuous)'],
+    ['E)','Plain-language text describing the NOTAM'],
+    ['F)','Lower height limit (airspace / nav-warning NOTAMs)'],
+    ['G)','Upper height limit'],
+  ]],
+  ['NOTAM type', [
+    ['NOTAMN','New NOTAM'],
+    ['NOTAMR','Replaces a previous NOTAM (number follows)'],
+    ['NOTAMC','Cancels a previous NOTAM (number follows)'],
+  ]],
+  ['Q-code: traffic / purpose / scope', [
+    ['I','Traffic: IFR'],
+    ['V','Traffic: VFR'],
+    ['IV','Traffic: IFR and VFR'],
+    ['N','Purpose: immediate attention, for the pre-flight bulletin (PIB)'],
+    ['B','Purpose: of operational significance, for briefing'],
+    ['O','Purpose: flight operations'],
+    ['M','Purpose: miscellaneous, not for briefing'],
+    ['K','Checklist'],
+    ['A','Scope: aerodrome'],
+    ['E','Scope: en-route'],
+    ['W','Scope: nav warning'],
+    ['AE','Scope: aerodrome and en-route'],
+  ]],
+  ['Q-code subject (2nd-3rd letters), category', [
+    ['L..','Lighting facilities (approach, runway, taxiway lights)'],
+    ['I..','ILS / MLS and instrument approach aids'],
+    ['N..','Terminal and en-route navaids (VOR, NDB, DME, TACAN)'],
+    ['M..','Movement and landing area (runway, taxiway, apron)'],
+    ['F..','Facilities and services (fuel, fire / rescue, handling)'],
+    ['R..','Airspace restrictions (restricted, danger, prohibited areas)'],
+    ['A..','Airspace organisation (ATS routes, FIR, control areas)'],
+    ['C..','Communications and surveillance (radar, COM frequencies)'],
+    ['G..','GNSS services'],
+    ['P..','Air traffic procedures (SID, STAR, approach procedures)'],
+    ['S..','ATM / air traffic services and VOLMET'],
+    ['W..','Warnings (obstacles, activities, hazards)'],
+    ['O..','Other information'],
+  ]],
+  ['Q-code condition (4th-5th letters), common', [
+    ['AS','Unserviceable'], ['AU','Not available'], ['AW','Completely withdrawn'],
+    ['AC','Withdrawn for maintenance'], ['AN','Available for night operation'],
+    ['AD','Available for daylight operation'], ['AP','Prior permission required'],
+    ['AR','Available on request'], ['AK','Resumed normal operation'],
+    ['CA','Activated'], ['CD','Deactivated'], ['CC','Completed'], ['CE','Erected'],
+    ['CF','Operating frequency changed to'], ['CG','Downgraded to'], ['CH','Changed'],
+    ['CL','Realigned'], ['CM','Displaced'], ['CN','Cancelled'], ['CO','Operating'],
+    ['CP','Operating on reduced power'], ['CR','Temporarily replaced by'],
+    ['CS','Installed'], ['CT','On test, do not use'],
+    ['HW','Work in progress'], ['HV','Work completed'],
+    ['LC','Closed'], ['LD','Unsafe'], ['LI','Closed to IFR operations'],
+    ['LV','Closed to VFR operations'], ['LN','Closed to night operations'],
+    ['LP','Prohibited to'], ['LR','Aircraft restricted to runways and taxiways'],
+    ['LS','Subject to interruption'], ['LT','Limited to'], ['LW','Will take place'],
+    ['XX','Plain language (condition not from the code list)'],
+    ['TT','Trigger NOTAM (announces an AIRAC amendment)'],
+  ]],
+  ['Common NOTAM contractions (E-line text)', [
+    ['TECR','Technical reason(s)'], ['U/S','Unserviceable'], ['INOP','Inoperative'],
+    ['WIP','Work in progress'], ['CLSD','Closed'], ['AVBL','Available'], ['DUE','Due to'],
+    ['EXC','Except'], ['MAINT','Maintenance'], ['OBST','Obstacle'], ['PSN','Position'],
+    ['WEF','With effect from'], ['UFN','Until further notice'], ['O/R','On request'],
+    ['PPR','Prior permission required'], ['PN','Prior notice required'], ['DRG','During'],
+    ['ACFT','Aircraft'], ['ACT','Active / activated'], ['AD','Aerodrome'], ['APCH','Approach'],
+    ['APN','Apron'], ['ARP','Aerodrome reference point'], ['BCN','Beacon'], ['BLW','Below'],
+    ['BTN','Between'], ['COM','Communications'], ['DLY','Daily'], ['ELEV','Elevation'],
+    ['FLW','Following'], ['FREQ','Frequency'], ['FT','Feet'], ['GND','Ground'], ['HGT','Height'],
+    ['HR','Hours'], ['LGT','Light / lighting'], ['LGTD','Lighted'], ['LTD','Limited'],
+    ['MNM','Minimum'], ['NM','Nautical miles'], ['OPR','Operator / operating'], ['RWY','Runway'],
+    ['SFC','Surface'], ['SKED','Scheduled'], ['THR','Threshold'], ['TIL','Until'],
+    ['TWY','Taxiway'], ['TWR','Tower'], ['UNL','Unlimited'], ['WID','Width'], ['WI','Within'],
+  ]],
+];
+const NOTAMCODES = NOTAM_GROUPS.flatMap(([g, rows]) => rows.map(([code, meaning]) => ({g, code, meaning})));
+function renderNotamCodes(){
+  const q = document.getElementById('notamSearch').value.trim();
+  const ql = q.toLowerCase();
+  let list = NOTAMCODES;
+  if(ql) list = NOTAMCODES.filter(a => a.code.toLowerCase().includes(ql) || a.meaning.toLowerCase().includes(ql) || a.g.toLowerCase().includes(ql));
+  document.getElementById('notamCount').textContent = ql ? (list.length + ' of ' + NOTAMCODES.length) : (NOTAMCODES.length + ' codes');
+  let html = '', lastG = null;
+  for(const a of list){
+    if(a.g !== lastG){ html += '<div class="grp">' + esc(a.g) + '</div>'; lastG = a.g; }
+    html += '<div class="row"><span class="k">' + hl(a.code, q) + '</span><span class="v">' + hl(a.meaning, q) + '</span></div>';
+  }
+  document.getElementById('notamRes').innerHTML = html || '<div class="loading">No match.</div>';
+}
+
 /* ---------- Airline / Airport datasets (loaded on demand) ---------- */
 let AIRLINES = null, AIRPORTS = null, loadingDS = false;
 async function ensureDatasets(){
@@ -793,8 +931,10 @@ function renderAirport(){
 /* ---------- init ---------- */
 renderAbbr();
 renderMetarCodes();
+renderNotamCodes();
+if(LASTGOOD){ LAST = { metar: LASTGOOD.metar, notams: LASTGOOD.notams || [], source:{metar:'cache',notams:'cache'}, fetchedAt: new Date().toISOString() }; render(LAST); }
 refresh();
-setInterval(refresh, 5*60*1000); // re-pull data.json every 5 min
+setInterval(function(){ if(!refreshing && Date.now() >= nextRefreshAt) refresh(); }, 1000); // auto-refresh ticker
 document.addEventListener('keydown', e => { if(e.key==='Escape') closeSidebar(); });
 </script>
 </body>
