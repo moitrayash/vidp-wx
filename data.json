@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-03T10:54:17.082Z",
+ "generatedAt": "2026-06-03T15:17:30.079Z",
  "station": "VIDP",
- "metar": "METAR VIDP 031030Z VRB02KT 4500 HZ SCT035 37/19 Q1001 NOSIG",
+ "metar": "METAR VIDP 031500Z 08007KT 350V110 4000 HZ SCT035 36/19 Q1001 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -381,16 +381,6 @@
    "startDate": "05/30/2026 0107",
    "endDate": "06/09/2026 1830",
    "icaoMessage": "A1185/26 NOTAMN\r\nQ) VIDF/QMRXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2605300107 C) 2606091830\r\nE) EXIT SIGN BOARD OF TWY P1 FOR RWY 11L NOT AVBL DUE TECR.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1186/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "05/30/2026 0127",
-   "startDate": "05/30/2026 0127",
-   "endDate": "06/09/2026 1830",
-   "icaoMessage": "A1186/26 NOTAMN\r\nQ) VIDF/QLTAS/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2605300127 C) 2606091830\r\nE) THRESHOLD INDICATOR LIGHT(TIL) OF RWY 29R U/S DUE TECR.",
    "traditionalMessage": ""
   },
   {
