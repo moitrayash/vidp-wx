@@ -158,7 +158,7 @@ function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5
   </header>
 
   <div class="bar">
-    <button onclick="refresh()" id="refreshBtn">↻ Refresh</button>
+    <button onclick="refreshMetar()" id="refreshBtn">↻ Refresh</button>
     <span class="status" id="status"><span class="dot"></span><span id="statusText">Loading…</span></span>
   </div>
 
@@ -171,13 +171,17 @@ function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5
 
   <section>
     <h2>Active NOTAMs <span style="text-transform:none;font-weight:400;">(currently in effect)</span></h2>
+    <div class="bar">
+      <button onclick="refreshNotams()" id="notamRefreshBtn">↻ Refresh NOTAMs</button>
+      <span class="status" id="notamStatus"><span class="dot"></span><span id="notamStatusText">Loading…</span></span>
+    </div>
     <div class="notam-meta" id="notamMeta"></div>
     <div id="notams"></div>
   </section>
 
   <footer id="footer">
-    Every refresh fetches live from source; a server snapshot (updated ~every 10 min via GitHub Actions) is used only if a live fetch fails.
-    NOTAM source: FAA NOTAM Search. METAR source: Aviation Weather Center. Times are UTC unless noted.
+    METAR auto-refreshes every 2 min; NOTAMs every 2 h (each also has a manual Refresh). Live fetch with a server-snapshot fallback.
+    NOTAM source: FAA NOTAM Search (Issued = the FAA system's issue/relay time). METAR source: Aviation Weather Center. Times are UTC unless noted.
     For operational use always cross-check official sources.
   </footer>
 </div>
@@ -243,7 +247,8 @@ function tick(){
   document.getElementById('zDate').textContent = z.day;
   document.getElementById('iTime').textContent = i.t;
   document.getElementById('iDate').textContent = i.day;
-  updateChecks();
+  updateMetarStatus();
+  updateNotamStatus();
 }
 setInterval(tick, 250);
 
@@ -451,75 +456,67 @@ async function loadSnapshot(){
   return null;
 }
 
-/* Auto-refresh cadence + last-good cache so the page never blanks. */
-let AUTO_MS = 120000;          // auto-refresh every 120 s
-let nextRefreshAt = Date.now() + AUTO_MS;
-let refreshing = false;
-let lastFixZ = '----';
+/* Two independent refresh cycles: METAR (fast) and NOTAMs (slow). Each has its own button,
+   auto-refresh interval, and "next refresh in Ns" countdown. A last-good cache (memory +
+   localStorage) means neither section ever blanks on a failed fetch. */
+const AUTO_METAR_MS = 120000;             // METAR: every 120 s
+const AUTO_NOTAM_MS = 2 * 60 * 60 * 1000; // NOTAMs: every 2 hours
+let metarNextAt = Date.now() + AUTO_METAR_MS, metarBusy = false, lastFixZ = '----';
+let notamNextAt = Date.now() + AUTO_NOTAM_MS, notamBusy = false;
+let LAST = { metar:null, notams:[], source:{}, metarFetchedAt:null, notamFetchedAt:null, metarSnapAt:null, notamSnapAt:null };
 let LASTGOOD = null;
 try{ const _lg = localStorage.getItem('vidp_lastgood'); if(_lg) LASTGOOD = JSON.parse(_lg); }catch(e){}
+function saveGood(){ try{ localStorage.setItem('vidp_lastgood', JSON.stringify(LASTGOOD||{})); }catch(e){} }
 
-async function refresh(){
-  if(refreshing) return;
-  refreshing = true;
-  const btn = document.getElementById('refreshBtn');
-  if(btn) btn.disabled = true;
-  setStatus('', 'Fetching live…');
-  // Reliable BASE: same-origin server snapshot. Retry once on a transient miss.
+async function refreshMetar(){
+  if(metarBusy) return; metarBusy = true;
+  const btn = document.getElementById('refreshBtn'); if(btn) btn.disabled = true;
+  setStatus('', 'Fetching METAR…');
   let snap = await loadSnapshot(); if(!snap) snap = await loadSnapshot();
-  const data = { fetchedAt: new Date().toISOString(), source: {} };
-  if(snap){
-    data.snapshotAt = snap.generatedAt;
-    if(snap.metar){ data.metar = snap.metar; data.source.metar = 'snapshot'; }
-    data.notams = snap.notams || [];
-    if(data.notams.length) data.source.notams = 'snapshot';
-  } else { data.notams = []; }
-  // Live UPGRADES only - a failed or empty live result must never downgrade the base.
-  const [mRes, nRes] = await Promise.allSettled([liveMetar(), liveNotams()]);
-  if(mRes.status === 'fulfilled' && mRes.value){
-    if(!data.metar || (parseMetarObs(mRes.value) || 0) >= (parseMetarObs(data.metar) || 0)){ data.metar = mRes.value; data.source.metar = 'live'; }
-  }
-  if(nRes.status === 'fulfilled' && Array.isArray(nRes.value) && nRes.value.length > 0
-     && nRes.value.length >= (data.notams ? data.notams.length : 0)){
-    data.notams = nRes.value; data.source.notams = 'live';
-  }
-  data.notams = data.notams || [];
-  // Record the time of this successful fix (a real fetch, not the cache fallback).
-  if(data.source.metar === 'live' || data.source.metar === 'snapshot'){
-    lastFixZ = fmt(new Date(),'UTC').t.replace(/:/g,'').slice(0,4);
-  }
-  // NEVER blank: if this cycle produced nothing, fall back to the last good data we ever had.
-  if(!data.metar && LASTGOOD && LASTGOOD.metar){ data.metar = LASTGOOD.metar; data.source.metar = 'cache'; }
-  if((!data.notams || !data.notams.length) && LASTGOOD && LASTGOOD.notams && LASTGOOD.notams.length){
-    data.notams = LASTGOOD.notams; data.source.notams = 'cache';
-  }
-  // Remember good data for next refresh / next visit.
-  if(data.metar || (data.notams && data.notams.length)){
-    LASTGOOD = { metar: data.metar || (LASTGOOD && LASTGOOD.metar) || '',
-                 notams: (data.notams && data.notams.length) ? data.notams : ((LASTGOOD && LASTGOOD.notams) || []) };
-    try{ localStorage.setItem('vidp_lastgood', JSON.stringify(LASTGOOD)); }catch(e){}
-  }
-  data.notams = data.notams || [];
-  LAST = data;
-  render(data);
+  let metar = null, src = null, snapAt = null;
+  if(snap){ snapAt = snap.generatedAt; if(snap.metar){ metar = snap.metar; src = 'snapshot'; } }
+  const m = await liveMetar().catch(() => null);
+  if(m && (!metar || (parseMetarObs(m)||0) >= (parseMetarObs(metar)||0))){ metar = m; src = 'live'; }
+  if(src === 'live' || src === 'snapshot') lastFixZ = fmt(new Date(),'UTC').t.replace(/:/g,'').slice(0,4);
+  if(!metar && LASTGOOD && LASTGOOD.metar){ metar = LASTGOOD.metar; src = 'cache'; }
+  if(metar){ LAST.metar = metar; LAST.source.metar = src; LAST.metarFetchedAt = new Date().toISOString(); LAST.metarSnapAt = snapAt;
+    LASTGOOD = LASTGOOD || {}; LASTGOOD.metar = metar; saveGood(); }
+  renderMetar(); updateMetarStatus();
   if(btn) btn.disabled = false;
-  nextRefreshAt = Date.now() + AUTO_MS;
-  refreshing = false;
+  metarNextAt = Date.now() + AUTO_METAR_MS; metarBusy = false;
 }
 
-function render(data){
-  const lf = document.getElementById('lastFix'); if(lf) lf.textContent = (lastFixZ || '----') + 'Z';
-  // METAR
-  const mEl = document.getElementById('metar');
-  if(data.metar){ mEl.className='metar'; mEl.innerHTML = decodeMetarHTML(data.metar); }
-  else { mEl.className='metar empty'; mEl.textContent = 'METAR unavailable' + (data.metarError? ' ('+data.metarError+')':''); }
-  document.getElementById('metarPlain').innerHTML = data.metar
-    ? '<b>Showing ' + (/^SPECI/.test(data.metar)?'SPECI':'METAR') + ' for ' + STATION + '</b> - ' + esc(decodeMetarFull(data.metar)) + '.'
-    : '';
+async function refreshNotams(){
+  if(notamBusy) return; notamBusy = true;
+  const btn = document.getElementById('notamRefreshBtn'); if(btn) btn.disabled = true;
+  setNotamStatus('', 'Fetching NOTAMs…');
+  let snap = await loadSnapshot(); if(!snap) snap = await loadSnapshot();
+  let notams = null, src = null, snapAt = null;
+  if(snap){ snapAt = snap.generatedAt; notams = snap.notams || []; if(notams.length) src = 'snapshot'; }
+  const n = await liveNotams().catch(() => null);
+  if(Array.isArray(n) && n.length > 0 && n.length >= ((notams && notams.length) || 0)){ notams = n; src = 'live'; }
+  if((!notams || !notams.length) && LASTGOOD && LASTGOOD.notams && LASTGOOD.notams.length){ notams = LASTGOOD.notams; src = 'cache'; }
+  notams = notams || [];
+  LAST.notams = notams; LAST.source.notams = src; LAST.notamFetchedAt = new Date().toISOString(); LAST.notamSnapAt = snapAt;
+  if(notams.length){ LASTGOOD = LASTGOOD || {}; LASTGOOD.notams = notams; saveGood(); }
+  renderNotams(); updateNotamStatus();
+  if(btn) btn.disabled = false;
+  notamNextAt = Date.now() + AUTO_NOTAM_MS; notamBusy = false;
+}
 
-  // NOTAMs
+function renderMetar(){
+  const lf = document.getElementById('lastFix'); if(lf) lf.textContent = (lastFixZ || '----') + 'Z';
+  const mEl = document.getElementById('metar');
+  if(LAST.metar){ mEl.className='metar'; mEl.innerHTML = decodeMetarHTML(LAST.metar); }
+  else { mEl.className='metar empty'; mEl.textContent = 'METAR unavailable'; }
+  document.getElementById('metarPlain').innerHTML = LAST.metar
+    ? '<b>Showing ' + (/^SPECI/.test(LAST.metar)?'SPECI':'METAR') + ' for ' + STATION + '</b> - ' + esc(decodeMetarFull(LAST.metar)) + '.'
+    : '';
+}
+
+function renderNotams(){
   const now = Date.now();
-  const all = data.notams || [];
+  const all = LAST.notams || [];
   const active = all.filter(n => isActive(n, now))
     .sort((a,b) => (parseFaaTime(b.issueDate)?.ms || 0) - (parseFaaTime(a.issueDate)?.ms || 0));
   const cont = document.getElementById('notams');
@@ -548,26 +545,23 @@ function render(data){
   }
   document.getElementById('notamMeta').textContent =
     active.length + ' active of ' + all.length + ' total · sorted by latest issue · evaluated live against current UTC';
-  updateChecks();
 }
 
-/* Live self-checks: METAR observation age vs expected interval i, and data.json freshness. */
-function updateChecks(){
-  if(!LAST) return;
+function updateMetarStatus(){
   const nowMs = Date.now();
   const src = LAST.source || {};
-  const fetched = LAST.fetchedAt ? new Date(LAST.fetchedAt) : null;
+  const fetched = LAST.metarFetchedAt ? new Date(LAST.metarFetchedAt) : null;
   const fAge = fetched ? Math.max(0, Math.round((nowMs-fetched.getTime())/60000)) : null;
-  const snap = LAST.snapshotAt ? new Date(LAST.snapshotAt) : null;
+  const snap = LAST.metarSnapAt ? new Date(LAST.metarSnapAt) : null;
   const sAge = snap ? Math.max(0, Math.round((nowMs-snap.getTime())/60000)) : null;
-  const secs = Math.max(0, Math.ceil((nextRefreshAt - nowMs)/1000));
+  const secs = Math.max(0, Math.ceil((metarNextAt - nowMs)/1000));
   const cd = ' · next auto-refresh in ' + secs + 's';
   if(src.metar==='live'){
     setStatus('ok', 'Live - METAR fetched ' + relTime(fAge) + (fetched ? ' (' + fmt(fetched,'UTC').t + 'Z)' : '') + cd);
   } else if(src.metar==='snapshot'){
     setStatus('warn', 'METAR from server snapshot' + (snap?' ('+relTime(sAge)+')':'') + ' - retrying' + cd);
   } else if(src.metar==='cache'){
-    setStatus('warn', 'Showing last good data - live & snapshot both failed; retrying' + cd);
+    setStatus('warn', 'Showing last good METAR - live & snapshot failed; retrying' + cd);
   } else {
     setStatus('err', 'No METAR available - click Refresh to retry.');
   }
@@ -576,16 +570,43 @@ function updateChecks(){
   if(!obs){ el.className='metar-check'; el.innerHTML=''; return; }
   const age = Math.max(0, Math.round((nowMs-obs)/60000));
   const obsZ = fmt(new Date(obs),'UTC').t;
-  let cls='metar-check', note='within expected '+METAR_INTERVAL_MIN+'-min cycle';
-  if(age >= METAR_BAD_AFTER){ cls='metar-check bad'; note='stale - a full '+METAR_INTERVAL_MIN+'-min cycle has passed with no newer report'; }
-  else if(age >= METAR_STALE_AFTER){ cls='metar-check stale'; note='older than the expected '+METAR_INTERVAL_MIN+'-min cadence'; }
+  let cls, note;
+  if(age <= METAR_INTERVAL_MIN){ cls='metar-check'; note='within the expected '+METAR_INTERVAL_MIN+'-min cycle'; }
+  else { cls='metar-check bad'; note='overdue - a newer report is expected every '+METAR_INTERVAL_MIN+' min'; }
   el.className = cls;
   el.innerHTML = '<span class="ico"></span>Observed '+obsZ+'Z · '+relTime(age)+' · '+note;
 }
+
+function updateNotamStatus(){
+  const nowMs = Date.now();
+  const src = LAST.source || {};
+  const fetched = LAST.notamFetchedAt ? new Date(LAST.notamFetchedAt) : null;
+  const fAge = fetched ? Math.max(0, Math.round((nowMs-fetched.getTime())/60000)) : null;
+  const snap = LAST.notamSnapAt ? new Date(LAST.notamSnapAt) : null;
+  const sAge = snap ? Math.max(0, Math.round((nowMs-snap.getTime())/60000)) : null;
+  const secs = Math.max(0, Math.ceil((notamNextAt - nowMs)/1000));
+  const cdText = secs > 99 ? (Math.ceil(secs/60) + ' min') : (secs + 's');
+  const cd = ' · next refresh in ' + cdText;
+  if(src.notams==='live'){
+    setNotamStatus('ok', 'Live - NOTAMs fetched ' + relTime(fAge) + (fetched ? ' (' + fmt(fetched,'UTC').t + 'Z)' : '') + cd);
+  } else if(src.notams==='snapshot'){
+    setNotamStatus('warn', 'NOTAMs from server snapshot' + (snap?' ('+relTime(sAge)+')':'') + ' - retrying' + cd);
+  } else if(src.notams==='cache'){
+    setNotamStatus('warn', 'Showing last good NOTAMs - live & snapshot failed; retrying' + cd);
+  } else {
+    setNotamStatus('err', 'No NOTAMs available - click Refresh NOTAMs to retry.');
+  }
+}
+
 function setStatus(cls, txt){
   const s = document.getElementById('status');
   s.className = 'status' + (cls? ' '+cls : '');
   document.getElementById('statusText').textContent = txt;
+}
+function setNotamStatus(cls, txt){
+  const s = document.getElementById('notamStatus'); if(!s) return;
+  s.className = 'status' + (cls? ' '+cls : '');
+  document.getElementById('notamStatusText').textContent = txt;
 }
 
 /* ---------- Sidebar ---------- */
@@ -932,9 +953,17 @@ function renderAirport(){
 renderAbbr();
 renderMetarCodes();
 renderNotamCodes();
-if(LASTGOOD){ LAST = { metar: LASTGOOD.metar, notams: LASTGOOD.notams || [], source:{metar:'cache',notams:'cache'}, fetchedAt: new Date().toISOString() }; render(LAST); }
-refresh();
-setInterval(function(){ if(!refreshing && Date.now() >= nextRefreshAt) refresh(); }, 1000); // auto-refresh ticker
+if(LASTGOOD){
+  if(LASTGOOD.metar){ LAST.metar = LASTGOOD.metar; LAST.source.metar = 'cache'; }
+  if(LASTGOOD.notams && LASTGOOD.notams.length){ LAST.notams = LASTGOOD.notams; LAST.source.notams = 'cache'; }
+  renderMetar(); renderNotams();
+}
+refreshMetar();
+refreshNotams();
+setInterval(function(){
+  if(!metarBusy && Date.now() >= metarNextAt) refreshMetar();
+  if(!notamBusy && Date.now() >= notamNextAt) refreshNotams();
+}, 1000); // dual auto-refresh ticker
 document.addEventListener('keydown', e => { if(e.key==='Escape') closeSidebar(); });
 </script>
 </body>
