@@ -369,7 +369,6 @@ function isActive(n, now){
 
 /* ---------- Data load + render ---------- */
 function esc(t){return (t||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
-let LAST = null;
 
 /* Every Refresh performs a LIVE fetch straight from the source, via free CORS proxies
    (the source APIs don't send CORS headers, so a browser can't hit them directly).
