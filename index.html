@@ -657,6 +657,12 @@ function decodeNotamHTML(text){
   }catch(e){ return esc(text); }
 }
 
+// FAA source wraps NOTAM text at ~64 chars with hard newlines. Rejoin a line into the next
+// when it was wrapped mid-sentence (did not end in . : ;) and the next line is not a field
+// marker (A)..G), Q)). Keeps real paragraph breaks and the Q/A/B/C/D/E field layout.
+function normalizeNotam(t){
+  return String(t || '').replace(/\r/g, '').replace(/([^.\n:;])\n(?![A-GQ]\)\s)(?=\S)/g, '$1 ');
+}
 function renderNotams(){
   const now = Date.now();
   const all = LAST.notams || [];
@@ -675,7 +681,7 @@ function renderNotams(){
       const endCls = (endP && endP.perm) ? 'end perm' : 'end';
       const startTxt = fmtEnd(parseFaaTime(n.startDate));
       const issuedTxt = fmtEnd(parseFaaTime(n.issueDate));
-      const text = n.icaoMessage || n.traditionalMessage || '';
+      const text = normalizeNotam(n.icaoMessage || n.traditionalMessage || '');
       div.innerHTML =
         '<div class="hd"><span class="num">'+esc(n.notamNumber)+'</span>'+
         '<span class="when"><span class="start">From: '+esc(startTxt)+'</span>'+
