@@ -498,7 +498,7 @@ async function refreshMetar(){
   if(snap){ snapAt = snap.generatedAt; if(snap.metar){ metar = snap.metar; src = 'snapshot'; } }
   const m = await liveMetar().catch(() => null);
   if(m && (!metar || (parseMetarObs(m)||0) >= (parseMetarObs(metar)||0))){ metar = m; src = 'live'; }
-  if(src === 'live' || src === 'snapshot') lastFixZ = fmt(new Date(),'UTC').t.replace(/:/g,'').slice(0,4);
+  if(src === 'live' || src === 'snapshot') lastFixZ = fmt(new Date(),'UTC').t;
   if(!metar && LASTGOOD && LASTGOOD.metar){ metar = LASTGOOD.metar; src = 'cache'; }
   if(metar){ LAST.metar = metar; LAST.source.metar = src; LAST.metarFetchedAt = new Date().toISOString(); LAST.metarSnapAt = snapAt;
     LASTGOOD = LASTGOOD || {}; LASTGOOD.metar = metar; saveGood(); }
