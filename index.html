@@ -181,7 +181,7 @@ function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5
 
   <footer id="footer">
     METAR auto-refreshes every 2 min; NOTAMs every 2 h (each also has a manual Refresh). Live fetch with a server-snapshot fallback.
-    NOTAM source: FAA NOTAM Search (Issued = the FAA system's issue/relay time). METAR source: Aviation Weather Center. Times are UTC unless noted.
+    NOTAM source: FAA NOTAM Search. "FAA filed" = when the FAA's system filed/relayed the record (not the originator's issue time); for foreign NOTAMs this can post-date the B) effective start. METAR source: Aviation Weather Center. Times are UTC unless noted.
     For operational use always cross-check official sources.
   </footer>
 </div>
@@ -536,7 +536,7 @@ function renderNotams(){
         '<div class="hd"><span class="num">'+esc(n.notamNumber)+'</span>'+
         '<span class="when"><span class="start">From: '+esc(startTxt)+'</span>'+
         '<span class="'+endCls+'">Until: '+esc(endTxt)+'</span>'+
-        '<span class="issued">Issued: '+esc(issuedTxt)+'</span></span></div>'+
+        '<span class="issued">FAA filed: '+esc(issuedTxt)+'</span></span></div>'+
         (n.featureName ? '<div class="feat">'+esc(n.featureName)+'</div>' : '')+
         '<pre>'+esc(text)+'</pre>';
       cont.appendChild(div);
