@@ -75,6 +75,10 @@
   .notam .end.perm{color:var(--active);}
   .notam .feat{font-family:var(--sans);font-size:12px;color:var(--muted);}
   .notam pre{font-family:var(--mono);font-size:14px;white-space:pre-wrap;word-break:break-word;margin:0;color:#222;}
+  .notam pre .ntok{position:relative;cursor:help;border-bottom:1px dotted #b3b3b3;}
+  .notam pre .ntok .tip{display:none;position:absolute;bottom:140%;left:0;background:#222;color:#fff;font-family:var(--sans);font-size:12.5px;line-height:1.4;white-space:normal;width:max-content;max-width:300px;padding:7px 10px;border-radius:5px;box-shadow:0 3px 10px rgba(0,0,0,.2);z-index:25;text-align:left;}
+  .notam pre .ntok .tip b{color:#ffd36b;font-weight:700;}
+  .notam pre .ntok:hover .tip, .notam pre .ntok:focus .tip{display:block;}
   .empty-note{color:var(--muted);font-style:italic;font-family:var(--sans);font-size:14px;}
   footer{border-top:1px solid var(--line2);margin-top:40px;padding-top:14px;font-family:var(--sans);font-size:12px;color:var(--muted);}
 
@@ -147,8 +151,8 @@ function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5
 <div class="wrap">
   <header class="top">
     <div>
-      <h1>Feathervane</h1>
-      <div class="sub">METAR &amp; NOTAMs: VIDP/DEL</div>
+      <h1>Feathervane: VIDP/DEL</h1>
+      <div class="sub">METAR &amp; NOTAMs</div>
       <div class="proto">Research Prototype · Last fix <span id="lastFix">----Z</span></div>
     </div>
     <div class="clocks">
@@ -314,7 +318,7 @@ function decodeToken(tok, idx){
   if(m=tok.match(/^VV(\d{3})$/)) return 'Vertical visibility '+(+m[1]*100)+' ft (sky obscured)';
   if(m=tok.match(/^R(\d{2}[LCR]?)\/(.+)$/)) return 'Runway '+m[1]+' visual range: '+m[2];
   if(tok==='9999') return 'Visibility 10 km or more';
-  if(m=tok.match(/^(\d{4})$/)) return 'Visibility '+(+m[1])+' m';
+  if(m=tok.match(/^(\d{4})$/)){ const v=+m[1]; return v>=5000 ? ('Visibility '+(v/1000)+' km') : ('Visibility '+v+' m'); }
   if(m=tok.match(/^(\d{2})SM$/)) return 'Visibility '+m[1]+' statute miles';
   const wx=decodeWeather(tok); if(wx) return wx;
   if(idx<=1 && /^[A-Z]{4}$/.test(tok)) return 'ICAO station identifier - <b>'+tok+'</b>';
@@ -509,8 +513,148 @@ function renderMetar(){
   if(LAST.metar){ mEl.className='metar'; mEl.innerHTML = decodeMetarHTML(LAST.metar); }
   else { mEl.className='metar empty'; mEl.textContent = 'METAR unavailable'; }
   document.getElementById('metarPlain').innerHTML = LAST.metar
-    ? '<b>Showing ' + (/^SPECI/.test(LAST.metar)?'SPECI':'METAR') + ' for ' + STATION + '</b> - ' + esc(decodeMetarFull(LAST.metar)) + '.'
+    ? '<b>Showing ' + (/^SPECI/.test(LAST.metar)?'SPECI':'METAR') + ' for ' + STATION + '</b>: ' + esc(decodeMetarFull(LAST.metar)) + '.'
     : '';
+}
+
+/* ---------- NOTAM line decoder (hover) ---------- */
+function parseNotamTime(s){
+  const m = ('' + s).match(/^(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/);
+  if(!m) return null;
+  const d = new Date(Date.UTC(2000 + (+m[1]), (+m[2]) - 1, +m[3], +m[4], +m[5]));
+  if(isNaN(d.getTime())) return null;
+  return new Intl.DateTimeFormat('en-GB',{timeZone:'UTC',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).format(d).replace(',','') + 'Z';
+}
+/* ICAO NOTAM Code tables (2nd+3rd letter = subject, 4th+5th = condition) */
+var NSUBJ = {
+AA:'Minimum altitude',AC:'Class B/C/D/E surface area',AD:'Air defence identification zone (ADIZ)',AE:'Control area (CTA)',AF:'Flight information region (FIR)',AH:'Upper control area (UTA)',AL:'Minimum usable flight level',AN:'Area navigation route',AO:'Oceanic control area (OCA)',AP:'Reporting point',AR:'ATS route',AT:'Terminal control area (TMA)',AU:'Upper flight information region (UIR)',AV:'Upper advisory area',AX:'Intersection',AZ:'Aerodrome traffic zone (ATZ)',
+CA:'Air/ground facility',CB:'ADS-B',CC:'ADS-C',CD:'Controller-pilot data link (CPDLC)',CE:'En-route surveillance radar',CG:'Ground controlled approach (GCA)',CL:'Selective calling (SELCAL)',CM:'Surface movement radar',CP:'Precision approach radar (PAR)',CR:'Surveillance radar element of PAR',CS:'Secondary surveillance radar (SSR)',CT:'Terminal area surveillance radar',
+FA:'Aerodrome',FB:'Friction measuring device',FC:'Ceiling measurement equipment',FD:'Docking system',FE:'Oxygen',FF:'Fire-fighting and rescue',FG:'Ground movement control',FH:'Helicopter alighting area',FI:'Aircraft de-icing',FJ:'Oils',FL:'Landing direction indicator',FM:'Meteorological service',FO:'Fog dispersal system',FP:'Heliport',FS:'Snow removal equipment',FT:'Transmissometer',FU:'Fuel availability',FW:'Wind direction indicator',FZ:'Customs / immigration',
+GA:'GNSS airfield-specific operations',GW:'GNSS area-wide operations',
+IC:'Instrument landing system (ILS)',ID:'DME associated with ILS',IG:'Glide path (ILS)',II:'Inner marker (ILS)',IL:'Localizer (ILS)',IM:'Middle marker (ILS)',IN:'Localizer (non-ILS)',IO:'Outer marker (ILS)',IS:'ILS Category I',IT:'ILS Category II',IU:'ILS Category III',IW:'Microwave landing system (MLS)',IX:'Locator, outer (ILS)',IY:'Locator, middle (ILS)',
+LA:'Approach lighting system',LB:'Aerodrome beacon',LC:'Runway centre line lights',LD:'Landing direction indicator lights',LE:'Runway edge lights',LF:'Sequenced flashing lights',LG:'Pilot-controlled lighting',LH:'High intensity runway lights',LI:'Runway end identifier lights',LJ:'Runway alignment indicator lights',LK:'CAT II components of approach lighting',LL:'Low intensity runway lights',LM:'Medium intensity runway / approach lights',LP:'Precision approach path indicator (PAPI)',LR:'All landing area lighting facilities',LS:'Stopway lights',LT:'Threshold lights',LU:'Helicopter approach path indicator',LV:'Visual approach slope indicator (VASIS)',LW:'Heliport lighting',LX:'Taxiway centre line lights',LY:'Taxiway edge lights',LZ:'Runway touchdown zone lights',
+MA:'Movement area',MB:'Bearing strength',MC:'Clearway',MD:'Declared distances',MG:'Taxiing guidance system',MH:'Runway arresting gear',MK:'Parking area',MM:'Daylight markings',MN:'Apron',MO:'Stop bar',MP:'Aircraft stands',MR:'Runway',MS:'Stopway',MT:'Threshold',MU:'Runway turning bay',MW:'Strip / shoulder',MX:'Taxiway(s)',MY:'Rapid exit taxiway',
+NA:'All radio navigation facilities',NB:'Non-directional radio beacon (NDB)',NC:'DECCA',ND:'Distance measuring equipment (DME)',NF:'Fan marker',NL:'Locator (NDB)',NM:'VOR/DME',NN:'TACAN',NO:'OMEGA',NT:'VORTAC',NV:'VOR',NX:'Direction-finding station',
+OA:'Aeronautical information service',OB:'Obstacle',OE:'Aircraft entry requirements',OL:'Obstacle lights',OR:'Rescue co-ordination centre',
+PA:'Standard instrument arrival (STAR)',PD:'Standard instrument departure (SID)',PH:'Holding procedure',PI:'Instrument approach procedure',PL:'Flow control procedure',PM:'Aerodrome operating minima',PN:'Noise operating restriction',PO:'Obstacle clearance',PR:'Radio failure procedure',PT:'Transition altitude / level',PU:'Missed approach procedure',PX:'Minimum holding altitude',PZ:'ADIZ procedure',
+RA:'Airspace reservation',RD:'Danger area',RM:'Military operating area',RO:'Overflying restriction',RP:'Prohibited area',RR:'Restricted area',RT:'Temporary restricted area',
+SA:'Automatic terminal information service (ATIS)',SB:'ATS reporting office',SC:'Area control centre',SE:'Flight information service',SF:'Aerodrome flight information service',SL:'Flow control centre',SO:'Oceanic area control centre',SP:'Approach control service',SS:'Flight service station',ST:'Aerodrome control tower',SU:'Upper area control centre',SV:'VOLMET broadcast',SY:'Upper advisory service',
+WA:'Air display',WB:'Aerobatics',WC:'Captive balloon or kite',WD:'Demolition of explosives',WE:'Exercises',WF:'Air refuelling',WG:'Glider flying',WH:'Blasting',WJ:'Banner / target towing',WL:'Ascent of free balloon',WM:'Missile, gun or rocket firing',WP:'Parachute jumping exercise (PJE)',WR:'Radioactive / toxic materials',WS:'Burning or blowing gas',WT:'Mass movement of aircraft',WU:'Unmanned aircraft',WV:'Formation flight',WW:'Significant volcanic activity',WZ:'Model flying',
+XX:'Plain language (see field E)'
+};
+var NCOND = {
+AC:'Withdrawn for maintenance',AD:'Available for daylight operation',AF:'Flight-checked and found reliable',AG:'Operating but ground-checked only, awaiting flight check',AH:'Hours of service changed',AK:'Resumed normal operations',AL:'Operative subject to previously published limitations',AM:'Military operations only',AN:'Available for night operation',AO:'Operational',AP:'Available, prior permission required',AR:'Available on request',AS:'Unserviceable',AU:'Not available',AW:'Completely withdrawn',AX:'Previously announced shutdown cancelled',
+CA:'Activated',CC:'Completed',CD:'Deactivated',CE:'Erected',CF:'Operating frequency changed',CG:'Downgraded',CH:'Changed',CI:'Identification / call sign changed',CL:'Realigned',CM:'Displaced',CN:'Cancelled',CO:'Operating',CP:'Operating on reduced power',CR:'Temporarily replaced',CS:'Installed',CT:'On test, do not use',
+HA:'Braking action is...',HB:'Friction coefficient is...',HC:'Covered by compacted snow',HD:'Covered by dry snow',HE:'Covered by water',HF:'Totally free of snow and ice',HG:'Grass cutting in progress',HH:'Hazard due to...',HI:'Covered by ice',HJ:'Launch planned',HK:'Bird migration in progress',HL:'Snow clearance completed',HM:'Marked by...',HN:'Covered by wet snow or slush',HO:'Obscured by snow',HP:'Snow clearance in progress',HQ:'Operation cancelled',HR:'Standing water',HS:'Sanding in progress',HT:'Approach per signal area only',HU:'Launch in progress',HV:'Work completed',HW:'Work in progress',HX:'Concentration of snow',HY:'Snow banks exist',HZ:'Covered by frozen ruts and ridges',
+LA:'Operating on auxiliary power supply',LB:'Reserved for aircraft based therein',LC:'Closed',LD:'Unsafe',LE:'Operating without auxiliary power',LF:'Interference from...',LG:'Operating without identification',LH:'Unserviceable for aircraft heavier than...',LI:'Closed to IFR operations',LK:'Operating as a fixed light',LL:'Available for... (specified)',LN:'Closed to all night operations',LP:'Prohibited to...',LR:'Aircraft restricted to runways and taxiways',LS:'Subject to interruption',LT:'Limited to...',LV:'Closed to VFR operations',LW:'Will take place',LX:'Operating but caution advised',
+XX:'Plain language (see field E)'
+};
+var NTRAF = { I:'IFR', V:'VFR', IV:'IFR and VFR', K:'Checklist' };
+var NPURP = { N:'Immediate attention of aircraft operators', B:'Of operational significance (PIB entry)', O:'Flight operations', M:'Miscellaneous', K:'Checklist' };
+var NSCOPE = { A:'Aerodrome', E:'En-route', W:'Nav warning', K:'Checklist' };
+var NFIR = { VIDF:'Delhi FIR' };
+var NLOC = { VIDP:'Indira Gandhi International Airport' };
+/* Common NOTAM / aeronautical abbreviations for field E */
+var NABBR = {
+RWY:'Runway',TWY:'Taxiway',APN:'Apron',AD:'Aerodrome',ACFT:'Aircraft',AVBL:'Available','U/S':'Unserviceable',UNSERVICEABLE:'Unserviceable',TECR:'Due to technical reasons',WIP:'Work in progress',OBST:'Obstacle',OBST:'Obstacle',CLSD:'Closed',CLOSED:'Closed',MAINT:'Maintenance',DUE:'Because of',FLW:'Following',WEF:'With effect from',TIL:'Until',PSN:'Position',COORD:'Coordinates',FREQ:'Frequency',NM:'Nautical miles',FT:'Feet',AMSL:'Above mean sea level',AGL:'Above ground level',ILS:'Instrument landing system',DME:'Distance measuring equipment',VOR:'VHF omnidirectional range',NDB:'Non-directional beacon',PAPI:'Precision approach path indicator',RVR:'Runway visual range',THR:'Threshold',LDG:'Landing',DEP:'Departure',ARR:'Arrival',APCH:'Approach',SID:'Standard instrument departure',STAR:'Standard terminal arrival route',AIP:'Aeronautical information publication',GP:'Glide path',LOC:'Localizer',MKR:'Marker',ELEV:'Elevation',HGT:'Height',CTOT:'Calculated take-off time',ATC:'Air traffic control',ATIS:'Automatic terminal information service',TWR:'Tower',APP:'Approach control',GND:'Ground',SFC:'Surface',UNL:'Unlimited',PERM:'Permanent',EST:'Estimated',TEMPO:'Temporary',CTN:'Caution',EXC:'Except',BTN:'Between',ADJ:'Adjacent',ABV:'Above',BLW:'Below',MAX:'Maximum',MIN:'Minimum',OPR:'Operator / operating',OPS:'Operations',PROC:'Procedure',REF:'Reference',SKED:'Scheduled',SR:'Sunrise',SS:'Sunset',DLY:'Daily',EXP:'Expected',FM:'From',TO:'To',RTE:'Route',INT:'Intersection',INTXN:'Intersection',STD:'Standard',CAT:'Category',CL:'Centre line',EDLY:'Each day',BCST:'Broadcast',CFM:'Confirm',ESTABLISH:'Establish',MOV:'Movement',PROT:'Protection',RESTR:'Restricted / restriction',SECT:'Sector',SVC:'Service',TFC:'Traffic',TKOF:'Take-off',TODA:'Take-off distance available',TORA:'Take-off run available',LDA:'Landing distance available',ASDA:'Accelerate-stop distance available',NOTAMN:'New NOTAM',NOTAMR:'Replaces a NOTAM',NOTAMC:'Cancels a NOTAM',
+'11L':'Runway 11 Left','11R':'Runway 11 Right','29L':'Runway 29 Left','29R':'Runway 29 Right','10':'Runway 10','28':'Runway 28','09':'Runway 09','27':'Runway 27'
+};
+/* Multi-word phrases decoded as a single underline (checked before single words) */
+var NPHRASE = {
+'NOT AVBL':'Not available','NOT AVAILABLE':'Not available','U/S':'Unserviceable','OUT OF SERVICE':'Out of service','OUT OF SVC':'Out of service','WORK IN PROGRESS':'Work in progress','DUE TO':'Because of','WILL BE':'Will be','NOT AUTH':'Not authorised','NOT PERM':'Not permitted'
+};
+function nfl(v){
+  if(/^0*$/.test(v)) return 'Ground level (surface)';
+  if(v==='999') return 'Unlimited';
+  return 'Flight level FL'+v;
+}
+function ncoords(v){
+  var m=(''+v).match(/^(\d{2})(\d{2})([NS])(\d{3})(\d{2})([EW])(\d{3})$/);
+  if(!m) return esc(v);
+  return m[1]+'°'+m[2]+"'"+m[3]+' '+m[4]+'°'+m[5]+"'"+m[6]+', radius '+(+m[7])+' NM';
+}
+function decodeQline(content){
+  var p=content.trim().split('/');
+  var L=[];
+  if(p[0]) L.push('<b>FIR:</b> '+esc(p[0])+(NFIR[p[0]]?' ('+NFIR[p[0]]+')':''));
+  if(p[1]&&p[1].length>=5){
+    var sub=p[1].substr(1,2), con=p[1].substr(3,2);
+    L.push('<b>Q-code '+esc(p[1])+'</b>');
+    L.push('• Subject: '+(NSUBJ[sub]||('unlisted code '+esc(sub))));
+    L.push('• Condition: '+(NCOND[con]||('unlisted code '+esc(con))));
+  }
+  if(p[2]) L.push('<b>Traffic:</b> '+(NTRAF[p[2]]||esc(p[2])));
+  if(p[3]) L.push('<b>Purpose:</b> '+p[3].split('').map(function(c){return NPURP[c]||c;}).join(', '));
+  if(p[4]) L.push('<b>Scope:</b> '+p[4].split('').map(function(c){return NSCOPE[c]||c;}).join(', '));
+  if(p[5]) L.push('<b>Lower limit:</b> '+nfl(p[5]));
+  if(p[6]) L.push('<b>Upper limit:</b> '+nfl(p[6]));
+  if(p[7]) L.push('<b>Area:</b> '+ncoords(p[7]));
+  return L.join('<br>');
+}
+function decodeNotamTime2(content){
+  var m=content.match(/(\d{10})/);
+  var extra='';
+  if(/PERM/i.test(content)) extra=' (permanent)';
+  else if(/EST/i.test(content)) extra=' (estimated)';
+  if(m){ var d=parseNotamTime(m[1]); if(d) return '<b>'+esc(d)+'</b>'+extra; }
+  return /PERM/i.test(content)?'<b>Permanent</b>':esc(content.trim());
+}
+function decodeNotamHTML(text){
+  try{
+    var TYPE = { NOTAMN:'New NOTAM', NOTAMR:'Replaces the NOTAM number that follows', NOTAMC:'Cancels the NOTAM number that follows' };
+    var FHEAD = {
+      Q:'Qualifier line, decoded:',
+      A:'Location(s) affected:',
+      B:'Start of validity (UTC):',
+      C:'End of validity (UTC):',
+      D:'Active schedule: the specific day / time periods this NOTAM applies.',
+      E:'Plain-language description (hover the abbreviations below).',
+      F:'Lower height limit of the activity / area:',
+      G:'Upper height limit of the activity / area:'
+    };
+    var span = function(label, body){ return '<span class="ntok" tabindex="0">' + esc(label) + '<span class="tip">' + body + '</span></span>'; };
+    var tok = function(w, body){ return '<span class="ntok" tabindex="0">' + w + '<span class="tip">' + body + '</span></span>'; };
+    var decodeE = function(content){
+      var phr = Object.keys(NPHRASE).map(function(p){ return p.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }).join('|');
+      var re2 = new RegExp('('+phr+')|([A-Z0-9]+(?:\\/[A-Z0-9]+)*)','g');
+      return esc(content).replace(re2, function(m, ph, w){
+        if(ph){ return tok(ph, NPHRASE[ph.toUpperCase()] || ''); }
+        var k = w.toUpperCase();
+        return NABBR[k] ? tok(w, NABBR[k]) : w;
+      });
+    };
+    var decodeField = function(L, content){
+      if(L==='Q') return decodeQline(content);
+      if(L==='A'){ var loc=content.trim().split(/\s+/)[0]; return FHEAD.A+'<br><b>'+esc(content.trim())+'</b>'+(NLOC[loc]?': '+NLOC[loc]:''); }
+      if(L==='B') return FHEAD.B+'<br>'+decodeNotamTime2(content);
+      if(L==='C') return FHEAD.C+'<br>'+decodeNotamTime2(content);
+      if(L==='D') return FHEAD.D;
+      if(L==='E') return FHEAD.E;
+      if(L==='F'||L==='G') return FHEAD[L]+'<br><b>'+esc(content.trim())+'</b>';
+      return '';
+    };
+    var re = /\b(NOTAMN|NOTAMR|NOTAMC)\b|(?<=^|\s)([QABCDEFG])\)/g;
+    var marks = [], mm;
+    while((mm = re.exec(text))){
+      if(mm[1]) marks.push({kind:'kw', label:mm[1], start:mm.index, end:mm.index+mm[1].length});
+      else marks.push({kind:'fld', label:mm[2], start:mm.index, end:mm.index+2});
+    }
+    var out = '', last = 0;
+    for(var i=0;i<marks.length;i++){
+      var mk = marks[i];
+      out += esc(text.slice(last, mk.start));
+      if(mk.kind==='kw'){ out += span(mk.label, TYPE[mk.label]||''); last = mk.end; }
+      else {
+        var nextStart = marks[i+1] ? marks[i+1].start : text.length;
+        var content = text.slice(mk.end, nextStart);
+        out += span(mk.label+')', decodeField(mk.label, content));
+        out += (mk.label==='E') ? decodeE(content) : esc(content);
+        last = nextStart;
+      }
+    }
+    out += esc(text.slice(last));
+    return out;
+  }catch(e){ return esc(text); }
 }
 
 function renderNotams(){
@@ -538,7 +682,7 @@ function renderNotams(){
         '<span class="'+endCls+'">Until: '+esc(endTxt)+'</span>'+
         '<span class="issued">FAA filed: '+esc(issuedTxt)+'</span></span></div>'+
         (n.featureName ? '<div class="feat">'+esc(n.featureName)+'</div>' : '')+
-        '<pre>'+esc(text)+'</pre>';
+        '<pre>'+decodeNotamHTML(text)+'</pre>';
       cont.appendChild(div);
     }
   }
@@ -556,7 +700,7 @@ function updateMetarStatus(){
   const secs = Math.max(0, Math.ceil((metarNextAt - nowMs)/1000));
   const cd = ' · next auto-refresh in ' + secs + 's';
   if(src.metar==='live'){
-    setStatus('ok', 'Live - METAR fetched ' + relTime(fAge) + (fetched ? ' (' + fmt(fetched,'UTC').t + 'Z)' : '') + cd);
+    setStatus('ok', 'Live: METAR fetched ' + relTime(fAge) + (fetched ? ' (' + fmt(fetched,'UTC').t + 'Z)' : '') + cd);
   } else if(src.metar==='snapshot'){
     setStatus('warn', 'METAR from server snapshot' + (snap?' ('+relTime(sAge)+')':'') + ' - retrying' + cd);
   } else if(src.metar==='cache'){
@@ -587,7 +731,7 @@ function updateNotamStatus(){
   const cdText = secs > 99 ? (Math.ceil(secs/60) + ' min') : (secs + 's');
   const cd = ' · next refresh in ' + cdText;
   if(src.notams==='live'){
-    setNotamStatus('ok', 'Live - NOTAMs fetched ' + relTime(fAge) + (fetched ? ' (' + fmt(fetched,'UTC').t + 'Z)' : '') + cd);
+    setNotamStatus('ok', 'Live: NOTAMs fetched ' + relTime(fAge) + (fetched ? ' (' + fmt(fetched,'UTC').t + 'Z)' : '') + cd);
   } else if(src.notams==='snapshot'){
     setNotamStatus('warn', 'NOTAMs from server snapshot' + (snap?' ('+relTime(sAge)+')':'') + ' - retrying' + cd);
   } else if(src.notams==='cache'){
