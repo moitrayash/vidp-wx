@@ -200,8 +200,6 @@ function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5
     <button id="tab-abbr" class="active" onclick="showTab('abbr')">Abbr.</button>
     <button id="tab-metar" onclick="showTab('metar')">METAR</button>
     <button id="tab-notam" onclick="showTab('notam')">NOTAM</button>
-    <button id="tab-airline" onclick="showTab('airline')">Airline</button>
-    <button id="tab-airport" onclick="showTab('airport')">Airport</button>
   </div>
   <div class="sb-body">
     <div id="pane-abbr">
@@ -209,18 +207,6 @@ function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5
       <div class="hint">Source: India eAIP GEN&nbsp;2.2. Searches both the abbreviation and its meaning.</div>
       <div class="count" id="abbrCount"></div>
       <div class="res" id="abbrRes"></div>
-    </div>
-    <div id="pane-airline" style="display:none;">
-      <div class="field"><input id="airlineSearch" placeholder="Name, IATA (AI) or ICAO (AIC)…" oninput="renderAirline()" autocomplete="off" /></div>
-      <div class="hint">Look up by airline name or by IATA / ICAO code.</div>
-      <div class="count" id="airlineCount"></div>
-      <div class="res" id="airlineRes"></div>
-    </div>
-    <div id="pane-airport" style="display:none;">
-      <div class="field"><input id="airportSearch" placeholder="Name, city, IATA (DEL) or ICAO (VIDP)…" oninput="renderAirport()" autocomplete="off" /></div>
-      <div class="hint">Look up by airport name, city, or by IATA / ICAO code.</div>
-      <div class="count" id="airportCount"></div>
-      <div class="res" id="airportRes"></div>
     </div>
     <div id="pane-metar" style="display:none;">
       <div class="field"><input id="metarSearch" placeholder="Search a METAR code or its meaning…" oninput="renderMetarCodes()" autocomplete="off" /></div>
@@ -759,14 +745,13 @@ function setNotamStatus(cls, txt){
 }
 
 /* ---------- Sidebar ---------- */
-function openSidebar(){ document.body.classList.add('sidebar-open'); document.getElementById('sidebar').setAttribute('aria-hidden','false'); ensureDatasets(); }
+function openSidebar(){ document.body.classList.add('sidebar-open'); document.getElementById('sidebar').setAttribute('aria-hidden','false'); }
 function closeSidebar(){ document.body.classList.remove('sidebar-open'); document.getElementById('sidebar').setAttribute('aria-hidden','true'); }
 function showTab(which){
-  for(const k of ['abbr','metar','notam','airline','airport']){
+  for(const k of ['abbr','metar','notam']){
     document.getElementById('pane-'+k).style.display = (k===which)?'block':'none';
     document.getElementById('tab-'+k).classList.toggle('active', k===which);
   }
-  if(which==='airline' || which==='airport') ensureDatasets();
 }
 
 /* ---------- Abbreviations (embedded) ---------- */
@@ -1016,87 +1001,6 @@ function renderNotamCodes(){
   document.getElementById('notamRes').innerHTML = html || '<div class="loading">No match.</div>';
 }
 
-/* ---------- Airline / Airport datasets (loaded on demand) ---------- */
-let AIRLINES = null, AIRPORTS = null, loadingDS = false;
-async function ensureDatasets(){
-  if((AIRLINES && AIRPORTS) || loadingDS) return;
-  loadingDS = true;
-  document.getElementById('airlineRes').innerHTML = '<div class="loading">Loading airline database…</div>';
-  document.getElementById('airportRes').innerHTML = '<div class="loading">Loading airport database…</div>';
-  try{
-    const [alRes, apRes] = await Promise.all([
-      fetch('https://cdn.jsdelivr.net/gh/jpatokal/openflights@master/data/airlines.dat'),
-      fetch('https://cdn.jsdelivr.net/gh/mwgg/Airports@master/airports.json'),
-    ]);
-    AIRLINES = parseAirlines(await alRes.text());
-    const apObj = await apRes.json();
-    AIRPORTS = Object.values(apObj);
-    renderAirline(); renderAirport();
-  }catch(e){
-    document.getElementById('airlineRes').innerHTML = '<div class="loading">Failed to load airline data.</div>';
-    document.getElementById('airportRes').innerHTML = '<div class="loading">Failed to load airport data.</div>';
-  }finally{ loadingDS = false; }
-}
-function parseAirlines(text){
-  // CSV: ID,Name,Alias,IATA,ICAO,Callsign,Country,Active
-  const out = [];
-  for(const line of text.split('\n')){
-    if(!line.trim()) continue;
-    const f = []; let cur='', inq=false;
-    for(let i=0;i<line.length;i++){const c=line[i];
-      if(c==='"'){inq=!inq;} else if(c===',' && !inq){f.push(cur);cur='';} else {cur+=c;}}
-    f.push(cur);
-    const clean = v => { v=(v||'').trim(); return (v==='\\N'||v==='-'||v==='')?'':v; };
-    const name=clean(f[1]), iata=clean(f[3]), icao=clean(f[4]), callsign=clean(f[5]), country=clean(f[6]), active=clean(f[7]);
-    if(!name || (!iata && !icao)) continue;
-    out.push({name,iata,icao,callsign,country,active:active==='Y'});
-  }
-  return out;
-}
-function renderAirline(){
-  if(!AIRLINES){ ensureDatasets(); return; }
-  const q = document.getElementById('airlineSearch').value.trim();
-  const ql = q.toLowerCase();
-  let list = AIRLINES;
-  if(ql){
-    list = AIRLINES.filter(a =>
-      a.iata.toLowerCase()===ql || a.icao.toLowerCase()===ql ||
-      a.name.toLowerCase().includes(ql) || a.callsign.toLowerCase().includes(ql) ||
-      a.iata.toLowerCase().includes(ql) || a.icao.toLowerCase().includes(ql)
-    ).sort((a,b)=>{
-      const score = x => (x.iata.toLowerCase()===ql||x.icao.toLowerCase()===ql)?0:(x.name.toLowerCase().startsWith(ql)?1:2) - (x.active?0.1:0);
-      return score(a)-score(b) || a.name.localeCompare(b.name);
-    });
-  } else {
-    list = AIRLINES.filter(a=>a.active).sort((a,b)=>a.name.localeCompare(b.name));
-  }
-  document.getElementById('airlineCount').textContent = list.length + ' result' + (list.length===1?'':'s');
-  document.getElementById('airlineRes').innerHTML = list.slice(0,200).map(a =>
-    '<div class="row"><span class="k"><span class="codes"><b>'+esc(a.iata||'-')+'</b> '+esc(a.icao||'-')+'</span></span>'+
-    '<span class="v">'+hl(a.name,q)+(a.country?' <span class="sub2">'+esc(a.country)+(a.callsign?' · '+esc(a.callsign):'')+'</span>':'')+'</span></div>'
-  ).join('') || '<div class="loading">No match.</div>';
-}
-function renderAirport(){
-  if(!AIRPORTS){ ensureDatasets(); return; }
-  const q = document.getElementById('airportSearch').value.trim();
-  const ql = q.toLowerCase();
-  let list = [];
-  if(ql){
-    list = AIRPORTS.filter(a =>
-      (a.iata && a.iata.toLowerCase()===ql) || (a.icao && a.icao.toLowerCase()===ql) ||
-      (a.name && a.name.toLowerCase().includes(ql)) || (a.city && a.city.toLowerCase().includes(ql)) ||
-      (a.iata && a.iata.toLowerCase().includes(ql)) || (a.icao && a.icao.toLowerCase().includes(ql))
-    ).sort((a,b)=>{
-      const sc = x => ((x.iata&&x.iata.toLowerCase()===ql)||(x.icao&&x.icao.toLowerCase()===ql))?0:1;
-      return sc(a)-sc(b) || (a.name||'').localeCompare(b.name||'');
-    });
-  }
-  document.getElementById('airportCount').textContent = ql ? (list.length + ' result' + (list.length===1?'':'s')) : 'Type to search '+AIRPORTS.length.toLocaleString()+' airports';
-  document.getElementById('airportRes').innerHTML = list.slice(0,200).map(a =>
-    '<div class="row"><span class="k"><span class="codes"><b>'+esc(a.iata||'-')+'</b> '+esc(a.icao||'-')+'</span></span>'+
-    '<span class="v">'+hl(a.name||'',q)+'<span class="sub2">'+esc([a.city,a.country].filter(Boolean).join(', '))+'</span></span></div>'
-  ).join('') || '<div class="loading">No match.</div>';
-}
 
 /* ---------- init ---------- */
 renderAbbr();
