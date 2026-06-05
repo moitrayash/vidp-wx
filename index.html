@@ -65,6 +65,16 @@
   .metar .tip::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#222;}
   .metar .tok:hover .tip, .metar .tok:focus .tip{display:block;}
   .notam-meta{font-family:var(--sans);font-size:13px;color:var(--muted);margin-bottom:14px;}
+  .nfilter{font-family:var(--sans);font-size:12.5px;margin:-8px 0 14px;}
+  .nfilter summary{cursor:pointer;color:var(--accent);width:max-content;}
+  .nf-body{margin-top:8px;padding:9px 12px;border:1px solid var(--line);border-radius:6px;background:var(--panel);display:inline-block;}
+  .nf-row{margin:5px 0;display:flex;gap:14px;align-items:center;flex-wrap:wrap;}
+  .nf-row label{display:inline-flex;gap:4px;align-items:center;cursor:pointer;}
+  .nf-lbl{color:var(--muted);}
+  .notam .nstat{font-family:var(--sans);font-size:12px;font-weight:700;white-space:nowrap;}
+  .notam .nstat.active{color:var(--active);}
+  .notam .nstat.upcoming{color:var(--warn);}
+  .notam .nstat.expired{color:#999;}
   .notam{border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin-bottom:14px;background:#fff;}
   .notam .hd{display:flex;justify-content:space-between;gap:14px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px;}
   .notam .num{font-family:var(--sans);font-weight:700;font-size:16px;}
@@ -183,6 +193,18 @@ function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5
       <button onclick="refreshNotams()" id="notamRefreshBtn">↻ Refresh NOTAMs</button>
       <span class="status" id="notamStatus"><span class="dot"></span><span id="notamStatusText">Loading…</span></span>
     </div>
+    <details class="nfilter">
+      <summary>Filter</summary>
+      <div class="nf-body">
+        <div class="nf-row"><span class="nf-lbl">Include only</span>
+          <label><input type="checkbox" class="fprefix" value="A" checked onchange="renderNotams()"> A</label>
+          <label><input type="checkbox" class="fprefix" value="B" checked onchange="renderNotams()"> B</label>
+          <label><input type="checkbox" class="fprefix" value="G" checked onchange="renderNotams()"> G</label>
+        </div>
+        <div class="nf-row"><label><input type="checkbox" id="fRemovePerm" onchange="renderNotams()"> Remove PERM</label></div>
+        <div class="nf-row"><label><input type="checkbox" id="fActiveOnly" checked onchange="renderNotams()"> Active only</label></div>
+      </div>
+    </details>
     <div class="notam-meta" id="notamMeta"></div>
     <div id="notams"></div>
   </section>
@@ -664,37 +686,60 @@ function decodeNotamHTML(text){
 function normalizeNotam(t){
   return String(t || '').replace(/\r/g, '').replace(/([^.\n:;])\n(?![A-GQ]\)\s)(?=\S)/g, '$1 ');
 }
+function notamStatusOf(n, now){
+  const s = parseFaaTime(n.startDate), e = parseFaaTime(n.endDate);
+  const started = !s || s.perm || (s.ms != null && s.ms <= now);
+  const ended = e && !e.perm && e.ms != null && e.ms < now;
+  if(ended) return 'Expired';
+  if(!started) return 'Upcoming';
+  return 'Active';
+}
+function notamFilters(){
+  const prefixes = [];
+  document.querySelectorAll('.fprefix').forEach(el => { if(el.checked) prefixes.push(el.value); });
+  const rp = document.getElementById('fRemovePerm');
+  const ao = document.getElementById('fActiveOnly');
+  return { prefixes, removePerm: !!(rp && rp.checked), activeOnly: !ao || ao.checked };
+}
 function renderNotams(){
   const now = Date.now();
   const all = LAST.notams || [];
-  const active = all.filter(n => isActive(n, now))
+  const f = notamFilters();
+  const list = all.filter(n => {
+      const num = String(n.notamNumber || '').trim().toUpperCase();
+      if(f.prefixes.length && f.prefixes.indexOf(num.charAt(0)) < 0) return false; // include-only A/B/G (also drops DOD / other series)
+      const e = parseFaaTime(n.endDate);
+      if(f.removePerm && e && e.perm) return false;
+      if(f.activeOnly && !isActive(n, now)) return false;
+      return true;
+    })
     .sort((a,b) => (parseFaaTime(b.issueDate)?.ms || 0) - (parseFaaTime(a.issueDate)?.ms || 0));
   const cont = document.getElementById('notams');
   cont.innerHTML = '';
-  if(active.length === 0){
-    cont.innerHTML = '<div class="empty-note">No NOTAMs currently in effect.</div>';
+  if(list.length === 0){
+    cont.innerHTML = '<div class="empty-note">No NOTAMs match the current filters.</div>';
   } else {
-    for(const n of active){
+    for(const n of list){
       const div = document.createElement('div');
       div.className = 'notam';
       const endP = parseFaaTime(n.endDate);
       const endTxt = fmtEnd(endP);
       const endCls = (endP && endP.perm) ? 'end perm' : 'end';
       const startTxt = fmtEnd(parseFaaTime(n.startDate));
-      const issuedTxt = fmtEnd(parseFaaTime(n.issueDate));
+      const st = notamStatusOf(n, now);
       const text = normalizeNotam(n.icaoMessage || n.traditionalMessage || '');
       div.innerHTML =
         '<div class="hd"><span class="num">'+esc(n.notamNumber)+'</span>'+
         '<span class="when"><span class="start">From: '+esc(startTxt)+'</span>'+
         '<span class="'+endCls+'">Until: '+esc(endTxt)+'</span>'+
-        '<span class="issued">FAA filed: '+esc(issuedTxt)+'</span></span></div>'+
+        '<span class="nstat '+st.toLowerCase()+'">'+esc(st)+'</span></span></div>'+
         (n.featureName ? '<div class="feat">'+esc(n.featureName)+'</div>' : '')+
         '<pre>'+decodeNotamHTML(text)+'</pre>';
       cont.appendChild(div);
     }
   }
   document.getElementById('notamMeta').textContent =
-    active.length + ' active of ' + all.length + ' total · sorted by latest issue · evaluated live against current UTC';
+    list.length + ' shown of ' + all.length + ' total · sorted by latest issue · evaluated live against current UTC';
 }
 
 function updateMetarStatus(){
