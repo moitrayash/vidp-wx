@@ -547,7 +547,7 @@ RWY:'Runway',TWY:'Taxiway',APN:'Apron',AD:'Aerodrome',ACFT:'Aircraft',AVBL:'Avai
 };
 /* Multi-word phrases decoded as a single underline (checked before single words) */
 var NPHRASE = {
-'NOT AVBL':'Not available','NOT AVAILABLE':'Not available','U/S':'Unserviceable','OUT OF SERVICE':'Out of service','OUT OF SVC':'Out of service','WORK IN PROGRESS':'Work in progress','DUE TO':'Because of','WILL BE':'Will be','NOT AUTH':'Not authorised','NOT PERM':'Not permitted'
+'ASSIGNED RWY':'Assigned runway','NOT AVBL':'Not available','NOT AVAILABLE':'Not available','U/S':'Unserviceable','OUT OF SERVICE':'Out of service','OUT OF SVC':'Out of service','WORK IN PROGRESS':'Work in progress','WILL BE':'Will be','NOT AUTH':'Not authorised','NOT PERM':'Not permitted'
 };
 function nfl(v){
   if(/^0*$/.test(v)) return 'Ground level (surface)';
@@ -600,11 +600,19 @@ function decodeNotamHTML(text){
     };
     var span = function(label, body){ return '<span class="ntok" tabindex="0">' + esc(label) + '<span class="tip">' + body + '</span></span>'; };
     var tok = function(w, body){ return '<span class="ntok" tabindex="0">' + w + '<span class="tip">' + body + '</span></span>'; };
+    var MON = 'JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC';
     var decodeE = function(content){
       var phr = Object.keys(NPHRASE).map(function(p){ return p.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }).join('|');
-      var re2 = new RegExp('('+phr+')|([A-Z0-9]+(?:\\/[A-Z0-9]+)*)','g');
-      return esc(content).replace(re2, function(m, ph, w){
+      var re2 = new RegExp('('+phr+')'
+        + '|(\\b\\d{1,2}\\s+(?:'+MON+')(?:\\s+\\d{4})?\\b)'
+        + '|(\\b(?:RWY|TWY|TWYL|APN)\\s+\\d{1,2}[LRC]?\\b)'
+        + '|(\\bIDENT\\s+[A-Z0-9]{1,5}\\b)'
+        + '|([A-Z0-9]+(?:\\/[A-Z0-9]+)*)', 'g');
+      return esc(content).replace(re2, function(m, ph, dt, rw, idn, w){
         if(ph){ return tok(ph, NPHRASE[ph.toUpperCase()] || ''); }
+        if(dt){ return tok(dt, 'Date (UTC unless stated)'); }
+        if(rw){ var mm = rw.match(/^(\S+)\s+(\S+)$/); var d = mm[1].toUpperCase(); return tok(rw, (NMAP[d]||d) + ' ' + mm[2]); }
+        if(idn){ var im = idn.match(/^IDENT\s+(\S+)$/); return tok('IDENT','Identification') + ' ' + tok(im[1], 'Navaid ident (Morse), not an abbreviation'); }
         var k = w.toUpperCase();
         return (w.length >= 3 && !NSTOP[k] && NMAP[k]) ? tok(w, NMAP[k]) : w;
       });
