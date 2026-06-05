@@ -75,10 +75,12 @@
   .notam .end.perm{color:var(--active);}
   .notam .feat{font-family:var(--sans);font-size:12px;color:var(--muted);}
   .notam pre{font-family:var(--mono);font-size:14px;white-space:pre-wrap;word-break:break-word;margin:0;color:#222;}
-  .notam pre .ntok{position:relative;cursor:help;border-bottom:1px dotted #b3b3b3;}
+  .notam pre .ntok{position:relative;cursor:help;border-bottom:1px dotted #b3b3b3;transition:color .12s ease;}
   .notam pre .ntok .tip{display:none;position:absolute;bottom:140%;left:0;background:#222;color:#fff;font-family:var(--sans);font-size:12.5px;line-height:1.4;white-space:normal;width:max-content;max-width:300px;padding:7px 10px;border-radius:5px;box-shadow:0 3px 10px rgba(0,0,0,.2);z-index:25;text-align:left;}
   .notam pre .ntok .tip b{color:#ffd36b;font-weight:700;}
   .notam pre .ntok:hover .tip, .notam pre .ntok:focus .tip{display:block;}
+  .notam pre .ntok.permred{color:#b00;border-bottom-color:#b00;}
+  .notam pre .ntok:not(.permred):hover, .notam pre .ntok:not(.permred):focus{color:#1a3a6b;}
   .empty-note{color:var(--muted);font-style:italic;font-family:var(--sans);font-size:14px;}
   footer{border-top:1px solid var(--line2);margin-top:40px;padding-top:14px;font-family:var(--sans);font-size:12px;color:var(--muted);}
 
@@ -617,6 +619,9 @@ function decodeNotamHTML(text){
         return (w.length >= 3 && !NSTOP[k] && NMAP[k]) ? tok(w, NMAP[k]) : w;
       });
     };
+    var decodePlain = function(content){
+      return esc(content).replace(/\bPERM\b/g, function(){ return '<span class="ntok permred" tabindex="0">PERM<span class="tip"><b>Permanent</b> - no end date; remains in force until cancelled.</span></span>'; });
+    };
     var decodeField = function(L, content){
       if(L==='Q') return decodeQline(content);
       if(L==='A'){ var loc=content.trim().split(/\s+/)[0]; return FHEAD.A+'<br><b>'+esc(content.trim())+'</b>'+(NLOC[loc]?': '+NLOC[loc]:''); }
@@ -642,7 +647,7 @@ function decodeNotamHTML(text){
         var nextStart = marks[i+1] ? marks[i+1].start : text.length;
         var content = text.slice(mk.end, nextStart);
         out += span(mk.label+')', decodeField(mk.label, content));
-        out += (mk.label==='E') ? decodeE(content) : esc(content);
+        out += (mk.label==='E') ? decodeE(content) : decodePlain(content);
         last = nextStart;
       }
     }
