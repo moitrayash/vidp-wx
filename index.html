@@ -79,7 +79,14 @@
   .notam .nstat.upcoming{color:var(--warn);}
   .notam .nstat.expired{color:#999;}
   .notam{border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin-bottom:14px;background:#fff;}
-  .notam .hd{display:flex;justify-content:space-between;gap:14px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px;}
+  .notam .hd{display:flex;justify-content:space-between;gap:14px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px;cursor:pointer;user-select:none;}
+  .notam .caret{font-family:var(--sans);font-size:10px;color:var(--muted);margin-right:9px;display:inline-block;transform:rotate(90deg);transition:transform .12s ease;}
+  .notam.collapsed .caret{transform:rotate(0deg);}
+  .notam.collapsed .feat, .notam.collapsed pre{display:none;}
+  .notam.collapsed{padding-bottom:13px;}
+  .notam-controls{display:flex;gap:16px;align-items:center;margin:2px 0 12px;font-family:var(--sans);font-size:13px;}
+  .notam-controls button{background:none;border:none;color:#3a5e8c;cursor:pointer;font-family:var(--sans);font-size:13px;padding:0;}
+  .notam-controls button:hover{text-decoration:underline;}
   .notam .num{font-family:var(--sans);font-weight:700;font-size:16px;}
   .notam .when{display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
   .notam .start{font-family:var(--sans);font-size:13px;color:var(--muted);white-space:nowrap;}
@@ -212,6 +219,7 @@ function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5
       </div>
     </details>
     <div class="notam-meta" id="notamMeta"></div>
+    <div class="notam-controls" id="notamControls" style="display:none"><button type="button" onclick="setAllNotams(true)">Collapse all</button><button type="button" onclick="setAllNotams(false)">Expand all</button></div>
     <div id="notams"></div>
   </section>
 
@@ -749,7 +757,7 @@ function renderNotams(){
       const st = notamStatusOf(n, now);
       const text = normalizeNotam(n.icaoMessage || n.traditionalMessage || '');
       div.innerHTML =
-        '<div class="hd"><span class="num">'+esc(n.notamNumber)+'</span>'+
+        '<div class="hd" onclick="this.parentNode.classList.toggle(&#39;collapsed&#39;)"><span class="caret">\u25B8</span><span class="num">'+esc(n.notamNumber)+'</span>'+
         '<span class="when"><span class="start">From: '+esc(startTxt)+'</span>'+
         '<span class="'+endCls+'">Until: '+(endP && endP.perm ? '<span class="permu" tabindex="0">PERM<span class="ptip">Permanent.</span></span>' : esc(endTxt))+'</span>'+
         '<span class="nstat '+st.toLowerCase()+'">'+esc(st)+'</span></span></div>'+
@@ -758,9 +766,15 @@ function renderNotams(){
       cont.appendChild(div);
     }
   }
+  document.getElementById('notamControls').style.display = list.length ? 'flex' : 'none';
   document.getElementById('notamMeta').innerHTML =
     esc(list.length + ' shown of ' + all.length + ' total') +
     ' <span class="metainfo" tabindex="0">i<span class="tip">Why not all ' + all.length + '? The list is filtered: only NOTAM series A, B and G are shown (this also drops US DOD and other series), and with \'Active only\' on, upcoming and expired NOTAMs are hidden. Adjust these in the Filter above.</span></span>';
+}
+
+function setAllNotams(collapsed){
+  var cards = document.querySelectorAll('#notams .notam');
+  for(var i=0;i<cards.length;i++){ cards[i].classList.toggle('collapsed', collapsed); }
 }
 
 function updateMetarStatus(){
