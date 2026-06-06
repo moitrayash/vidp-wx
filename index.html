@@ -635,7 +635,7 @@ function decodeNotamHTML(text){
     var MON = 'JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC';
     var decodeE = function(content){
       var phr = Object.keys(NPHRASE).map(function(p){ return p.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }).join('|');
-      var re2 = new RegExp('('+phr+')'
+      var re2 = new RegExp('(\\b(?:'+phr+')\\b)'
         + '|(\\b\\d{1,2}\\s+(?:'+MON+')(?:\\s+\\d{4})?\\b)'
         + '|(\\b(?:RWY|TWY|TWYL|APN)\\s+\\d{1,2}[LRC]?(?:\\/\\d{1,2}[LRC]?)*\\b)'
         + '|(\\bCAT\\s+(?:I{1,3}|IV)\\b)'
