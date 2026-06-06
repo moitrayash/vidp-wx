@@ -46,12 +46,19 @@ This file is the source of truth for **how this project is built and changed**. 
 This is the authoritative spec for how NOTAM text is decoded and rendered. Any new term,
 pattern, or rendering change must conform to it.
 
-**1. Abbreviation source & precedence.**
-- The embedded eAIP GEN 2.2 list (`ABBR` -> `NMAP`) is the base. It IS India's official adoption
-  of ICAO Doc 8400, so it already carries the ICAO abbreviations.
-- **ICAO Doc 8400 (PANS-ABC) is primary on conflict**: where ICAO and eAIP differ, add an
-  explicit override in the `NMAP` overrides block (e.g. `m['TWY']='Taxiway'`). eAIP is the
-  secondary/fallback. Do NOT embed a raw 8400 PDF parse (it scans incompletely and garbles).
+**1. Abbreviation source & authority hierarchy (implemented).** The embedded `ABBR` list
+(~1137 entries) is built ICAO-PRIMARY by one algorithm, no per-term patchwork:
+1. **ICAO Doc 8400 (PANS-ABC)** parsed from the official PDF (two-column decode section) = primary.
+2. **India eAIP GEN 2.2** fills any term ICAO lacks (fallback).
+3. **Fallback-up rule:** if the ICAO parse is truncated (ends mid-phrase on a connective) or is a
+   single word that the eAIP value extends, use eAIP (catches NOTAM -> "Notice to Airmen",
+   RNAV -> "Area navigation").
+4. **User-stated values are top authority** (e.g. STAR = "Standard terminal arrival route",
+   which the user set; it overrides Doc 8400's "Standard instrument arrival").
+5. **No invented guesses.** A term in NEITHER list (e.g. AOM, TXL) is left PLAIN. Do not fabricate.
+- One cleaning pass yields single definitions: trim at first " or " and " / "; strip leading and
+  trailing/unclosed parentheticals. `NMAP` builds from `ABBR` with NO term overrides in code.
+- Regenerate via the pipeline: parse 8400 -> merge eAIP -> clean -> embed as `ABBR`. Backtest before ship.
 
 **2. Single definitions only.** Every meaning is one definition. Build step trims each eAIP
 meaning at the first " or " and strips a trailing or unclosed parenthetical. Never show
