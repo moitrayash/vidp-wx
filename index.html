@@ -80,7 +80,8 @@
   .notam .nstat.expired{color:#999;}
   .notam{border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin-bottom:14px;background:#fff;}
   .notam .hd{display:flex;justify-content:space-between;gap:14px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px;cursor:pointer;user-select:none;}
-  .notam .caret{font-family:var(--sans);font-size:10px;color:var(--muted);margin-right:9px;display:inline-block;transform:rotate(90deg);transition:transform .12s ease;}
+  .notam .numwrap{display:inline-flex;align-items:center;gap:9px;}
+  .notam .caret{font-family:var(--sans);font-size:10px;color:var(--muted);display:inline-block;transform:rotate(90deg);transition:transform .12s ease;}
   .notam.collapsed .caret{transform:rotate(0deg);}
   .notam.collapsed .feat, .notam.collapsed pre{display:none;}
   .notam.collapsed{padding-bottom:13px;}
@@ -757,7 +758,7 @@ function renderNotams(){
       const st = notamStatusOf(n, now);
       const text = normalizeNotam(n.icaoMessage || n.traditionalMessage || '');
       div.innerHTML =
-        '<div class="hd" onclick="this.parentNode.classList.toggle(&#39;collapsed&#39;)"><span class="caret">\u25B8</span><span class="num">'+esc(n.notamNumber)+'</span>'+
+        '<div class="hd" onclick="this.parentNode.classList.toggle(&#39;collapsed&#39;)"><span class="numwrap"><span class="num">'+esc(n.notamNumber)+'</span><span class="caret">&#9656;</span></span>'+
         '<span class="when"><span class="start">From: '+esc(startTxt)+'</span>'+
         '<span class="'+endCls+'">Until: '+(endP && endP.perm ? '<span class="permu" tabindex="0">PERM<span class="ptip">Permanent.</span></span>' : esc(endTxt))+'</span>'+
         '<span class="nstat '+st.toLowerCase()+'">'+esc(st)+'</span></span></div>'+
