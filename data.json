@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-06T13:44:05.639Z",
+ "generatedAt": "2026-06-06T15:02:15.693Z",
  "station": "VIDP",
- "metar": "METAR VIDP 061330Z 21006KT 4500 HZ FEW030 SCT100 36/17 Q1001 NOSIG",
+ "metar": "METAR VIDP 061430Z 21008KT 4500 HZ SCT100 35/17 Q1002 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -391,16 +391,6 @@
    "startDate": "06/01/2026 1830",
    "endDate": "06/08/2026 2330",
    "icaoMessage": "A1174/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606011830 C) 2606082330\r\nD) 01 05 08 1830-2330\r\nE) RWY 11L/29R NOT AVBL FOR OPS DUE MAINT.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1194/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "05/30/2026 1122",
-   "startDate": "05/30/2026 1122",
-   "endDate": "06/06/2026 1500",
-   "icaoMessage": "A1194/26 NOTAMN\r\nQ) VIDF/QMRXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2605301122 C) 2606061500\r\nE) EXIT SIGN BOARD OF TWY R3 FOR RWY 29R NOT AVBL FOR OPS DUE TECR.",
    "traditionalMessage": ""
   }
  ]
