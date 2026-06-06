@@ -857,7 +857,7 @@ var NMAP = (function(){ var m={}; for(var i=0;i<ABBR.length;i++){ var k=ABBR[i].
 var NSTOP = {TO:1,DUE:1,FOR:1,AND:1,THE:1,NOT:1,ALL:1,PER:1,END:1,TOP:1,BASE:1,MAP:1,NEW:1,OLD:1,OUT:1,USE:1,SEE:1,VIA:1,DAY:1,WAS:1,HAS:1,HAD:1,ARE:1,WILL:1,FROM:1,WITH:1,THIS:1,THAT:1,SHALL:1,ANY:1,CAN:1,NOW:1,ITS:1,OUR:1,AS:1,IF:1,NO:1,UP:1,OF:1,ON:1,IN:1,AT:1,IS:1,IT:1,BE:1,BY:1,OR:1,AN:1,AM:1,WE:1,DO:1,GO:1,SO:1,LINE:1,LONG:1,LOSS:1,WIND:1};
 /* User-stated corrections = TOP authority in the decode cascade (see DEV_LOG "Authority hierarchy").
    These override ICAO Doc 8400 / eAIP where the user gave the NOTAM-context meaning. */
-var OVR = {FM:'From', STAR:'Standard terminal arrival route', DRG:'During', WIE:'With immediate effect', EQPT:'Equipment', EST:'Estimated', CAT:'Category'};
+var OVR = {FM:'From', STAR:'Standard terminal arrival route', DRG:'During', WIE:'With immediate effect', EQPT:'Equipment', EST:'Estimated', CAT:'Category', AOM:'Aerodrome operating minima'};
 /* Universal lookup: user override first, then merged ICAO->eAIP dictionary. No length whitelist. */
 function Dlook(key){ return OVR.hasOwnProperty(key) ? OVR[key] : NMAP[key]; }
 function hl(text, q){
