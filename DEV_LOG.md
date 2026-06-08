@@ -44,6 +44,40 @@ This file is the source of truth for **how this project is built and changed**. 
 
 ---
 
+## Deploying for another aerodrome (replication)
+
+The app is parameterized: **everything aerodrome-specific lives in one `CFG` block** at the top of
+the main `<script>`. To stand up the app for a different AD, change ONLY `CFG`:
+
+```
+var CFG = {
+  icao: 'VIDP',                                       // ICAO indicator -> METAR/NOTAM fetch, title, A-line
+  iata: 'DEL',                                        // IATA code (display)
+  appName: 'Feathervane',                             // product name (header + gate)
+  airportName: 'Indira Gandhi International Airport',  // A-line friendly name
+  fir: 'VIDF',                                         // home FIR code (Q-line)
+  firName: 'Delhi FIR'                                // home FIR friendly name (Q-line)
+};
+```
+
+`applyConfig()` (run at init) derives the page title, both `<h1>`s, the gate access note, and the
+footer source links (`search <ICAO>`, `ids=<ICAO>`, `(<ICAO>)`) from `CFG`. `STATION`, `NLOC`
+(A-line airport name) and `NFIR` (Q-line FIR name) also derive from `CFG`. Nothing else is
+AD-specific, so the VIDP build is byte-for-byte unchanged after this refactor.
+
+What does NOT need editing per-AD (already generic / national):
+- **Decode engine** — `ABBR` (~1137 ICAO Doc 8400 + eAIP), `OVR`, `NPHRASE`, `NSTOP`, the regex
+  groups, `Dlook`. All generic ICAO; identical for every AD worldwide.
+- **Waypoint registry `WPT`** — the 775 five-letter fixes are India's national eAIP **ENR 4.4**
+  list, so it is correct for *every Indian AD* (VIDP, VOMM, VABB, VECC, ...). Only for an AD in
+  another country do you replace the `WPT` data set with that country's ENR 4.4 equivalent.
+- Filters, status pills, collapse, fetch cadence, proxies, password gate mechanics.
+
+Per-AD checklist: (1) edit `CFG`; (2) if non-India, swap `WPT`; (3) point the repo's `data.json`
+GitHub Action at the new ICAO; (4) set the CNAME/subdomain. That's the whole port.
+
+---
+
 ## NOTAM decoding specification (procedure ALL future NOTAMs/changes must follow)
 
 This is the authoritative spec for how NOTAM text is decoded and rendered. Any new term,
