@@ -181,7 +181,7 @@ function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5
     <div>
       <h1>VIDP: Feathervane</h1>
       <div class="sub">METAR &amp; NOTAMs</div>
-      <div class="proto">Research Prototype · Last fix <span id="lastFix">08 Jun 2026 0443Z</span></div>
+      <div class="proto">Research Prototype · Last fix <span id="lastFix">08 Jun 2026 0455Z</span></div>
     </div>
     <div class="clocks">
       <div class="clock"><div class="lbl">Zulu (UTC)</div><div class="t" id="zTime">--:--:--</div><div class="d" id="zDate">-</div></div>
@@ -647,7 +647,7 @@ function decodeNotamHTML(text){
       var re2 = new RegExp('(\\b(?:'+phr+')\\b)'
         + '|(\\b\\d{1,2}\\s+(?:'+MON+')(?:\\s+\\d{4})?\\b)'
         + '|(\\b(?:RWY|TWY|TWYL|APN)\\s+\\d{1,2}[LRC]?(?:\\/\\d{1,2}[LRC]?)*\\b)'
-        + '|(\\bCAT\\s+(?:I{1,3}|IV)\\b)'
+        + '|(\\bCAT\\s+(?:\\(ROMAN\\)\\s*)?(?:I{1,3}|IV)\\b)'
         + '|(\\b\\d{1,3}DEG\\b)'
         + '|(\\bFL\\s?\\d{2,3}\\b)'
         + '|(\\b(?:IDENT|DME)\\s+[A-Z]{2,5}\\b)'
@@ -656,9 +656,9 @@ function decodeNotamHTML(text){
         if(ph){ return tok(ph, NPHRASE[ph.toUpperCase()] || ''); }
         if(dt){ return tok(dt, 'Date (UTC unless stated)'); }
         if(rw){ var mm = rw.match(/^(\S+)\s+(\S+)$/); var d = mm[1].toUpperCase(); return tok(rw, (Dlook(d)||d) + ' ' + mm[2], d); }
-        if(cat){ var cn = cat.match(/CAT\s+(\S+)/)[1]; return tok(cat, 'Category ' + cn + ' (ILS precision approach category)', 'CAT'); }
+        if(cat){ var cn = cat.match(/CAT\s+(?:\(ROMAN\)\s*)?(I{1,3}|IV)/)[1]; return tok(cat, 'Category ' + cn + ' (ILS precision approach category)', 'CAT'); }
         if(deg){ return tok(deg, deg.replace(/DEG$/,'') + '° (bearing / radial)'); }
-        if(fl){ var fn = fl.replace(/\D/g,''); return tok(fl, 'Flight level ' + fn + ' (altitude in hundreds of feet on standard pressure)', 'FL'); }
+        if(fl){ var fn = fl.replace(/\D/g,''); return tok(fl, 'Flight level ' + fn + ' (' + (parseInt(fn,10)*100).toLocaleString() + ' feet)', 'FL'); }
         if(nv){ var nm = nv.match(/^(\S+)\s+(\S+)$/); var kw = nm[1], code = nm[2]; var kwm = Dlook(kw) || kw;
           if(NSTOP[code]) return tok(kw, kwm, kw) + ' ' + code;
           return tok(kw, kwm, kw) + ' ' + tok(code, 'Navaid identification code \u2014 the Morse callsign broadcast to identify this ' + (kw === 'IDENT' ? 'navaid' : kw) + '. It is an identifier, not an abbreviation, so it has no plain-language expansion.', code); }
@@ -668,7 +668,7 @@ function decodeNotamHTML(text){
         if(!mean && k.length > 3 && k.charAt(k.length-1) === 'S' && Dlook(k.slice(0,-1))){ key = k.slice(0,-1); mean = Dlook(key); }
         /* digit-suffix base-strip removed: produced false positives (TRA508, GEN2, ENR4, ILS25). Real digit forms (FL/RWY/TWY/CAT/DEG) have dedicated patterns. */
         if(mean) return tok(w, mean, key);
-        if(WPT[k]) return tok(w, 'Waypoint: five-letter name-code designator of a significant point on the India ATS route network (confirmed against eAIP ENR 4.4)');
+        if(WPT[k]) return tok(w, 'Waypoint');
         return w;
       });
     };
@@ -859,7 +859,7 @@ var NMAP = (function(){ var m={}; for(var i=0;i<ABBR.length;i++){ var k=ABBR[i].
 var NSTOP = {TO:1,DUE:1,FOR:1,AND:1,THE:1,NOT:1,ALL:1,PER:1,END:1,TOP:1,BASE:1,MAP:1,NEW:1,OLD:1,OUT:1,USE:1,SEE:1,VIA:1,DAY:1,WAS:1,HAS:1,HAD:1,ARE:1,WILL:1,FROM:1,WITH:1,THIS:1,THAT:1,SHALL:1,ANY:1,CAN:1,NOW:1,ITS:1,OUR:1,AS:1,IF:1,NO:1,UP:1,OF:1,ON:1,IN:1,AT:1,IS:1,IT:1,BE:1,BY:1,OR:1,AN:1,AM:1,WE:1,DO:1,GO:1,SO:1,LINE:1,LONG:1,LOSS:1,WIND:1};
 /* User-stated corrections = TOP authority in the decode cascade (see DEV_LOG "Authority hierarchy").
    These override ICAO Doc 8400 / eAIP where the user gave the NOTAM-context meaning. */
-var OVR = {FM:'From', STAR:'Standard terminal arrival route', DRG:'During', WIE:'With immediate effect', EQPT:'Equipment', EST:'Estimated', CAT:'Category', AOM:'Aerodrome operating minima'};
+var OVR = {FM:'From', STAR:'Standard terminal arrival route', DRG:'During', WIE:'With immediate effect', EQPT:'Equipment', EST:'Estimated', CAT:'Category', AOM:'Aerodrome operating minima', EAIP:'India electronic Aeronautical Information Publication (eAIP)'};
 /* Universal lookup: user override first, then merged ICAO->eAIP dictionary. No length whitelist. */
 /* Significant-point (waypoint) registry: eAIP India ENR 4.4 name-code designators, i.e. the five-letter
    fixes on the lo-alt and hi-alt ATS routes. A 5-letter token is labelled Waypoint ONLY if it is in this list. */
