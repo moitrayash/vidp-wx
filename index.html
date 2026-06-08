@@ -160,14 +160,14 @@
 
 <div id="authgate">
   <div class="ag-card">
-    <h1>Feathervane</h1>
+    <h1 id="gateTitle">Feathervane</h1>
     <div class="ag-sub">Closed Research Preview</div>
     <form onsubmit="agUnlock();return false;">
       <input id="agPw" type="password" inputmode="numeric" placeholder="••••••" autocomplete="off" autofocus />
       <button type="submit">Enter</button>
     </form>
     <div class="ag-err" id="agErr"></div>
-    <div class="ag-note">Access is limited to authorized personnel associated with and employed by VIDP.</div>
+    <div class="ag-note" id="gateNote">Access is limited to authorized personnel associated with and employed by VIDP.</div>
   </div>
 </div>
 <script>
@@ -179,9 +179,9 @@ function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5
 <div class="wrap">
   <header class="top">
     <div>
-      <h1>VIDP: Feathervane</h1>
+      <h1 id="appTitle">VIDP: Feathervane</h1>
       <div class="sub">METAR &amp; NOTAMs</div>
-      <div class="proto">Research Prototype · Last fix <span id="lastFix">08 Jun 2026 0626Z</span></div>
+      <div class="proto">Research Prototype · Last fix <span id="lastFix">08 Jun 2026 0701Z</span></div>
     </div>
     <div class="clocks">
       <div class="clock"><div class="lbl">Zulu (UTC)</div><div class="t" id="zTime">--:--:--</div><div class="d" id="zDate">-</div></div>
@@ -226,7 +226,7 @@ function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5
 
   <footer id="footer">
     METAR auto-refreshes every 2 minutes; NOTAMs every 2 hours (each also has a manual Refresh). Live fetch with a server-snapshot fallback.
-    NOTAM source: <a href="https://notams.aim.faa.gov/notamSearch/" target="_blank" rel="noopener">FAA NOTAM Search</a> (live; search VIDP). METAR source: <a href="https://aviationweather.gov/data/metar/?decoded=1&ids=VIDP" target="_blank" rel="noopener">Aviation Weather Center (VIDP)</a>. Times are UTC.
+    <span id="srcLine">NOTAM source: <a href="https://notams.aim.faa.gov/notamSearch/" target="_blank" rel="noopener">FAA NOTAM Search</a> (live; search VIDP). METAR source: <a href="https://aviationweather.gov/data/metar/?decoded=1&ids=VIDP" target="_blank" rel="noopener">Aviation Weather Center (VIDP)</a>. Times are UTC.</span>
     For operational use always cross-check official sources.
   </footer>
 </div>
@@ -405,7 +405,28 @@ function esc(t){return (t||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':
    (the source APIs don't send CORS headers, so a browser can't hit them directly).
    data.json - the server snapshot kept fresh by GitHub Actions - is only a fallback
    if the live fetch fails, so the page never goes blank. */
-const STATION = 'VIDP';
+/* ===== AERODROME CONFIG: to deploy this app for another aerodrome, change ONLY this block. =====
+   Everything below (fetch URLs, title, header, gate, footer links, A-line airport name, Q-line FIR)
+   derives from CFG. The decode engine (ABBR/OVR/NPHRASE/regex) is generic ICAO and needs no change.
+   The waypoint registry (WPT) is the national eAIP ENR 4.4 list (India-wide, reusable for all Indian
+   ADs); for an AD in another country, replace the WPT data set with that country's ENR 4.4 equivalent. */
+var CFG = {
+  icao: 'VIDP',                                       // ICAO indicator: drives METAR/NOTAM fetch, title, A-line
+  iata: 'DEL',                                        // IATA code (display)
+  appName: 'Feathervane',                             // product name (header + gate)
+  airportName: 'Indira Gandhi International Airport',  // A-line friendly name
+  fir: 'VIDF',                                         // home FIR code (Q-line)
+  firName: 'Delhi FIR'                                // home FIR friendly name (Q-line)
+};
+function applyConfig(){
+  var t = CFG.icao + ': ' + CFG.appName, e;
+  document.title = t;
+  if(e=document.getElementById('appTitle')) e.textContent = t;
+  if(e=document.getElementById('gateTitle')) e.textContent = CFG.appName;
+  if(e=document.getElementById('gateNote')) e.textContent = 'Access is limited to authorized personnel associated with and employed by ' + CFG.icao + '.';
+  if(e=document.getElementById('srcLine')) e.innerHTML = 'NOTAM source: <a href="https://notams.aim.faa.gov/notamSearch/" target="_blank" rel="noopener">FAA NOTAM Search</a> (live; search ' + CFG.icao + '). METAR source: <a href="https://aviationweather.gov/data/metar/?decoded=1&ids=' + CFG.icao + '" target="_blank" rel="noopener">Aviation Weather Center (' + CFG.icao + ')</a>. Times are UTC.';
+}
+const STATION = CFG.icao;
 // CORS proxies tried in order (the source APIs don't send CORS headers). First entry is a direct
 // attempt in case a source ever allows CORS; the rest are independent free relays for redundancy.
 const GET_PROXIES = [
@@ -579,8 +600,8 @@ XX:'Plain language (see field E)'
 var NTRAF = { I:'IFR', V:'VFR', IV:'IFR and VFR', K:'Checklist' };
 var NPURP = { N:'Immediate attention of aircraft operators', B:'Of operational significance (PIB entry)', O:'Flight operations', M:'Miscellaneous', K:'Checklist' };
 var NSCOPE = { A:'Aerodrome', E:'En-route', W:'Nav warning', K:'Checklist' };
-var NFIR = { VIDF:'Delhi FIR' };
-var NLOC = { VIDP:'Indira Gandhi International Airport' };
+var NFIR = {}; NFIR[CFG.fir] = CFG.firName;
+var NLOC = {}; NLOC[CFG.icao] = CFG.airportName;
 /* Common NOTAM / aeronautical abbreviations for field E */
 var NABBR = {
 RWY:'Runway',TWY:'Taxiway',APN:'Apron',AD:'Aerodrome',ACFT:'Aircraft',AVBL:'Available','U/S':'Unserviceable',UNSERVICEABLE:'Unserviceable',TECR:'Due to technical reasons',WIP:'Work in progress',OBST:'Obstacle',OBST:'Obstacle',CLSD:'Closed',CLOSED:'Closed',MAINT:'Maintenance',DUE:'Because of',FLW:'Following',WEF:'With effect from',TIL:'Until',PSN:'Position',COORD:'Coordinates',FREQ:'Frequency',NM:'Nautical miles',FT:'Feet',AMSL:'Above mean sea level',AGL:'Above ground level',ILS:'Instrument landing system',DME:'Distance measuring equipment',VOR:'VHF omnidirectional range',NDB:'Non-directional beacon',PAPI:'Precision approach path indicator',RVR:'Runway visual range',THR:'Threshold',LDG:'Landing',DEP:'Departure',ARR:'Arrival',APCH:'Approach',SID:'Standard instrument departure',STAR:'Standard terminal arrival route',AIP:'Aeronautical information publication',GP:'Glide path',LOC:'Localizer',MKR:'Marker',ELEV:'Elevation',HGT:'Height',CTOT:'Calculated take-off time',ATC:'Air traffic control',ATIS:'Automatic terminal information service',TWR:'Tower',APP:'Approach control',GND:'Ground',SFC:'Surface',UNL:'Unlimited',PERM:'Permanent',EST:'Estimated',TEMPO:'Temporary',CTN:'Caution',EXC:'Except',BTN:'Between',ADJ:'Adjacent',ABV:'Above',BLW:'Below',MAX:'Maximum',MIN:'Minimum',OPR:'Operator / operating',OPS:'Operations',PROC:'Procedure',REF:'Reference',SKED:'Scheduled',SR:'Sunrise',SS:'Sunset',DLY:'Daily',EXP:'Expected',FM:'From',TO:'To',RTE:'Route',INT:'Intersection',INTXN:'Intersection',STD:'Standard',CAT:'Category',CL:'Centre line',EDLY:'Each day',BCST:'Broadcast',CFM:'Confirm',ESTABLISH:'Establish',MOV:'Movement',PROT:'Protection',RESTR:'Restricted / restriction',SECT:'Sector',SVC:'Service',TFC:'Traffic',TKOF:'Take-off',TODA:'Take-off distance available',TORA:'Take-off run available',LDA:'Landing distance available',ASDA:'Accelerate-stop distance available',NOTAMN:'New NOTAM',NOTAMR:'Replaces a NOTAM',NOTAMC:'Cancels a NOTAM',
@@ -1120,6 +1141,7 @@ function renderNotamCodes(){
 
 
 /* ---------- init ---------- */
+applyConfig();
 renderAbbr();
 renderMetarCodes();
 renderNotamCodes();
