@@ -1,8 +1,7 @@
 {
- "generatedAt": "2026-06-08T04:55:18.297Z",
+ "generatedAt": "2026-06-08T05:00:28.979Z",
  "station": "VIDP",
- "metar": "",
- "metarError": "Error: METAR HTTP 504",
+ "metar": "METAR VIDP 080430Z 26011KT 5000 HZ NSC 35/22 Q1003 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
