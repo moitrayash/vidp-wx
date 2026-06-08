@@ -181,7 +181,7 @@ function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5
     <div>
       <h1>VIDP: Feathervane</h1>
       <div class="sub">METAR &amp; NOTAMs</div>
-      <div class="proto">Research Prototype · Last fix <span id="lastFix">08 Jun 2026 0553Z</span></div>
+      <div class="proto">Research Prototype · Last fix <span id="lastFix">08 Jun 2026 0626Z</span></div>
     </div>
     <div class="clocks">
       <div class="clock"><div class="lbl">Zulu (UTC)</div><div class="t" id="zTime">--:--:--</div><div class="d" id="zDate">-</div></div>
@@ -216,7 +216,7 @@ function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5
           <label><input type="checkbox" class="fprefix" value="G" checked onchange="renderNotams()"> G</label>
         </div>
         <div class="nf-row"><label><input type="checkbox" id="fRemovePerm" onchange="renderNotams()"> Remove PERM</label></div>
-        <div class="nf-row"><label><input type="checkbox" id="fActiveOnly" checked onchange="renderNotams()"> Active only</label></div>
+        <div class="nf-row"><label><input type="checkbox" id="fActiveOnly" checked onchange="renderNotams()"> Hide expired</label></div>
       </div>
     </details>
     <div class="notam-meta" id="notamMeta"></div>
@@ -226,7 +226,7 @@ function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5
 
   <footer id="footer">
     METAR auto-refreshes every 2 minutes; NOTAMs every 2 hours (each also has a manual Refresh). Live fetch with a server-snapshot fallback.
-    NOTAM source: <a href="https://notams.aim.faa.gov/notamSearch/" target="_blank" rel="noopener">FAA NOTAM Search</a> (live; search VIDP). METAR source: <a href="https://aviationweather.gov/data/metar/?decoded=1&ids=VIDP" target="_blank" rel="noopener">Aviation Weather Center (VIDP)</a>. Times are UTC unless noted.
+    NOTAM source: <a href="https://notams.aim.faa.gov/notamSearch/" target="_blank" rel="noopener">FAA NOTAM Search</a> (live; search VIDP). METAR source: <a href="https://aviationweather.gov/data/metar/?decoded=1&ids=VIDP" target="_blank" rel="noopener">Aviation Weather Center (VIDP)</a>. Times are UTC.
     For operational use always cross-check official sources.
   </footer>
 </div>
@@ -335,7 +335,7 @@ function decodeToken(tok, idx){
     return 'Wind '+dir+' at '+(+m[2])+' '+u+(m[3]?', gusting '+(+m[3])+' '+u:'');
   }
   if(m=tok.match(/^(\d{3})V(\d{3})$/)) return 'Wind direction varying between '+m[1]+'° and '+m[2]+'°';
-  if(m=tok.match(/^Q(\d{3,4})$/)) return 'QNH '+(+m[1])+' hPa (altimeter setting)';
+  if(m=tok.match(/^Q(\d{3,4})$/)) return 'QNH '+(+m[1])+' hPa';
   if(m=tok.match(/^A(\d{4})$/)) return 'Altimeter '+m[1].slice(0,2)+'.'+m[1].slice(2)+' inHg';
   if(m=tok.match(/^(M?\d{2})\/(M?\d{2})$/)){ const t=v=>v[0]==='M'?-(+v.slice(1)):+v; return 'Temperature '+t(m[1])+'°C, dew point '+t(m[2])+'°C'; }
   if(m=tok.match(/^(FEW|SCT|BKN|OVC)(\d{3})(CB|TCU)?$/)){
@@ -588,7 +588,7 @@ RWY:'Runway',TWY:'Taxiway',APN:'Apron',AD:'Aerodrome',ACFT:'Aircraft',AVBL:'Avai
 };
 /* Multi-word phrases decoded as a single underline (checked before single words) */
 var NPHRASE = {
-'ASSIGNED RWY':'Assigned runway','E-AIP':'India electronic Aeronautical Information Publication (eAIP)','NOT AVBL':'Not available','NOT AVAILABLE':'Not available','U/S':'Unserviceable','OUT OF SERVICE':'Out of service','OUT OF SVC':'Out of service','WORK IN PROGRESS':'Work in progress','WILL BE':'Will be','NOT AUTH':'Not authorised','NOT PERM':'Not permitted'
+'E-AIP':'India electronic Aeronautical Information Publication (eAIP)','NOT AVBL':'Not available','NOT AVAILABLE':'Not available','U/S':'Unserviceable','OUT OF SERVICE':'Out of service','OUT OF SVC':'Out of service','WORK IN PROGRESS':'Work in progress','WILL BE':'Will be','NOT AUTH':'Not authorised','NOT PERM':'Not permitted'
 };
 function nfl(v){
   if(/^0*$/.test(v)) return 'Ground level (surface)';
@@ -635,7 +635,7 @@ function decodeNotamHTML(text){
       B:'Start of validity (UTC):',
       C:'End of validity (UTC):',
       D:'Active schedule: the specific day / time periods this NOTAM applies.',
-      E:'Plain-language description (hover the abbreviations below).',
+      E:'Description',
       F:'Lower height limit of the activity / area:',
       G:'Upper height limit of the activity / area:'
     };
@@ -654,14 +654,14 @@ function decodeNotamHTML(text){
         + '|([A-Z0-9]+(?:\\/[A-Z0-9]+)*)', 'g');
       return esc(content).replace(re2, function(m, ph, dt, rw, cat, deg, fl, nv, w){
         if(ph){ return tok(ph, NPHRASE[ph.toUpperCase()] || ''); }
-        if(dt){ return tok(dt, 'Date (UTC unless stated)'); }
+        if(dt){ return tok(dt, 'Date'); }
         if(rw){ var mm = rw.match(/^(\S+)\s+(\S+)$/); var d = mm[1].toUpperCase(); return tok(rw, (Dlook(d)||d) + ' ' + mm[2], d); }
         if(cat){ var cn = cat.match(/CAT\s+(?:\(ROMAN\)\s*)?(I{1,3}|IV)/)[1]; return tok(cat, 'Category ' + cn + ' (ILS precision approach category)', 'CAT'); }
         if(deg){ return tok(deg, deg.replace(/DEG$/,'') + '° (bearing / radial)'); }
         if(fl){ var fn = fl.replace(/\D/g,''); return tok(fl, 'Flight level ' + fn + ' (' + (parseInt(fn,10)*100).toLocaleString() + ' feet)', 'FL'); }
         if(nv){ var nm = nv.match(/^(\S+)\s+(\S+)$/); var kw = nm[1], code = nm[2]; var kwm = Dlook(kw) || kw;
           if(NSTOP[code]) return tok(kw, kwm, kw) + ' ' + code;
-          return tok(kw, kwm, kw) + ' ' + tok(code, 'Navaid identification code \u2014 the Morse callsign broadcast to identify this ' + (kw === 'IDENT' ? 'navaid' : kw) + '. It is an identifier, not an abbreviation, so it has no plain-language expansion.', code); }
+          return tok(kw, kwm, kw) + ' ' + code; }
         var k = w.toUpperCase();
         if(NSTOP[k] || w.length < 2) return w;
         var key = k, mean = Dlook(k);
@@ -741,7 +741,7 @@ function renderNotams(){
       if(f.prefixes.length && f.prefixes.indexOf(num.charAt(0)) < 0) return false; // include-only A/B/G (also drops DOD / other series)
       const e = parseFaaTime(n.endDate);
       if(f.removePerm && e && e.perm) return false;
-      if(f.activeOnly && !isActive(n, now)) return false;
+      if(f.activeOnly && notamStatusOf(n, now) === 'Expired') return false; // hide expired only; upcoming (published, not yet effective) stay visible
       return true;
     })
     .sort((a,b) => (parseFaaTime(b.issueDate)?.ms || 0) - (parseFaaTime(a.issueDate)?.ms || 0));
@@ -772,7 +772,7 @@ function renderNotams(){
   document.getElementById('notamControls').style.display = list.length ? 'flex' : 'none';
   document.getElementById('notamMeta').innerHTML =
     esc(list.length + ' shown of ' + all.length + ' total') +
-    ' <span class="metainfo" tabindex="0">i<span class="tip">Why not all ' + all.length + '? The list is filtered: only NOTAM series A, B and G are shown (this also drops US DOD and other series), and with \'Active only\' on, upcoming and expired NOTAMs are hidden. Adjust these in the Filter above.</span></span>';
+    ' <span class="metainfo" tabindex="0">i<span class="tip">Why not all ' + all.length + '? The list is filtered: only NOTAM series A, B and G are shown (this also drops US DOD and other series), and with \'Hide expired\' on, expired NOTAMs are hidden (active and upcoming stay). Adjust these in the Filter above.</span></span>';
 }
 
 function setAllNotams(collapsed){
@@ -859,7 +859,7 @@ var NMAP = (function(){ var m={}; for(var i=0;i<ABBR.length;i++){ var k=ABBR[i].
 var NSTOP = {TO:1,DUE:1,FOR:1,AND:1,THE:1,NOT:1,ALL:1,PER:1,END:1,TOP:1,BASE:1,MAP:1,NEW:1,OLD:1,OUT:1,USE:1,SEE:1,VIA:1,DAY:1,WAS:1,HAS:1,HAD:1,ARE:1,WILL:1,FROM:1,WITH:1,THIS:1,THAT:1,SHALL:1,ANY:1,CAN:1,NOW:1,ITS:1,OUR:1,AS:1,IF:1,NO:1,UP:1,OF:1,ON:1,IN:1,AT:1,IS:1,IT:1,BE:1,BY:1,OR:1,AN:1,AM:1,WE:1,DO:1,GO:1,SO:1,LINE:1,LONG:1,LOSS:1,WIND:1};
 /* User-stated corrections = TOP authority in the decode cascade (see DEV_LOG "Authority hierarchy").
    These override ICAO Doc 8400 / eAIP where the user gave the NOTAM-context meaning. */
-var OVR = {FM:'From', STAR:'Standard terminal arrival route', DRG:'During', WIE:'With immediate effect', EQPT:'Equipment', EST:'Estimated', CAT:'Category', AOM:'Aerodrome operating minima', EAIP:'India electronic Aeronautical Information Publication (eAIP)'};
+var OVR = {FM:'From', STAR:'Standard terminal arrival route', DRG:'During', WIE:'With immediate effect', EQPT:'Equipment', EST:'Estimated', CAT:'Category', AOM:'Aerodrome operating minima', EAIP:'India electronic Aeronautical Information Publication (eAIP)', TEMPO:'Temporarily'};
 /* Universal lookup: user override first, then merged ICAO->eAIP dictionary. No length whitelist. */
 /* Significant-point (waypoint) registry: eAIP India ENR 4.4 name-code designators, i.e. the five-letter
    fixes on the lo-alt and hi-alt ATS routes. A 5-letter token is labelled Waypoint ONLY if it is in this list. */
