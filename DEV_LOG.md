@@ -35,6 +35,13 @@ This file is the source of truth for **how this project is built and changed**. 
 
 5. **No em dashes anywhere in UI text.** Use colons or commas.
 
+6. **Bump the "Last fix" build stamp on EVERY deploy.** The header line "Research Prototype ·
+   Last fix <span id="lastFix">DD MON YYYY HHMMZ</span>" is a STATIC build/deploy stamp, not the
+   live data-fetch time (the fetch->lastFix binding was deliberately removed). It means "when the
+   app code was last changed". So on each code deploy, edit the literal date string in the
+   `#lastFix` span to the current UTC deploy time (`date -u '+%d %b %Y %H%MZ'`). Do NOT re-wire it
+   to any runtime clock or fetch time.
+
 ---
 
 ## NOTAM decoding specification (procedure ALL future NOTAMs/changes must follow)
@@ -137,6 +144,18 @@ The decoder is validated against a REAL corpus of expired NOTAMs, not synthetic 
 ---
 
 ## Changelog
+
+### 2026-06-08 (review round)
+- **AOM** added to `OVR` = "Aerodrome operating minima" (real ICAO term, not in Doc 8400/eAIP
+  abbreviation tables; user-directed, context-confirmed by "AOM BOX" on the IAP chart).
+- **Waypoint recognition.** Embedded the 775 five-letter significant-point name-codes from
+  **eAIP India ENR 4.4** (lo-alt + hi-alt ATS route fixes) as `WPT`. A 5-letter token is tagged
+  "Waypoint" ONLY if it is in `WPT` (membership check, no guessing). Terminal SID/STAR-only fixes
+  not on any airway (e.g. MUNUV) and procedure designators (e.g. OROTI6C) stay plain by design.
+  Re-pull ENR 4.4 when airways change; navaid idents (IDMR/IDGM/DH after IDENT/DME) remain idents.
+- **Collapsible NOTAM cards** + Collapse all / Expand all controls. Header click toggles; number
+  stays left-aligned with a small triangle caret to its right.
+- **"Last fix" is now a static build stamp** (see Convention 6) instead of the live fetch time.
 
 ### 2026-06-06 (universal decode rule + expired-NOTAM backtest)
 - **Eliminated the length-whitelist patchwork.** Removed the `w.length < 3 && !NALLOW[k]`
