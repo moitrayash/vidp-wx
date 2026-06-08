@@ -181,7 +181,7 @@ function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5
     <div>
       <h1 id="appTitle">VIDP: Feathervane</h1>
       <div class="sub">METAR &amp; NOTAMs</div>
-      <div class="proto">Research Prototype · Last fix <span id="lastFix">08 Jun 2026 0701Z</span></div>
+      <div class="proto">Research Prototype · Last fix <span id="lastFix">08 Jun 2026 0717Z</span></div>
     </div>
     <div class="clocks">
       <div class="clock"><div class="lbl">Zulu (UTC)</div><div class="t" id="zTime">--:--:--</div><div class="d" id="zDate">-</div></div>
@@ -667,7 +667,7 @@ function decodeNotamHTML(text){
       var phr = Object.keys(NPHRASE).map(function(p){ return p.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }).join('|');
       var re2 = new RegExp('(\\b(?:'+phr+')\\b)'
         + '|(\\b\\d{1,2}\\s+(?:'+MON+')(?:\\s+\\d{4})?\\b)'
-        + '|(\\b(?:RWY|TWY|TWYL|APN)\\s+\\d{1,2}[LRC]?(?:\\/\\d{1,2}[LRC]?)*\\b)'
+        + '|(\\b(?:RWY|TWY|TWYL|APN)\\s*\\d{1,2}[LRC]?(?:\\/\\d{1,2}[LRC]?)*\\b)'
         + '|(\\bCAT\\s+(?:\\(ROMAN\\)\\s*)?(?:I{1,3}|IV)\\b)'
         + '|(\\b\\d{1,3}DEG\\b)'
         + '|(\\bFL\\s?\\d{2,3}\\b)'
@@ -676,7 +676,7 @@ function decodeNotamHTML(text){
       return esc(content).replace(re2, function(m, ph, dt, rw, cat, deg, fl, nv, w){
         if(ph){ return tok(ph, NPHRASE[ph.toUpperCase()] || ''); }
         if(dt){ return tok(dt, 'Date'); }
-        if(rw){ var mm = rw.match(/^(\S+)\s+(\S+)$/); var d = mm[1].toUpperCase(); return tok(rw, (Dlook(d)||d) + ' ' + mm[2], d); }
+        if(rw){ var mm = rw.match(/^(RWY|TWY|TWYL|APN)\s*(.+)$/i); var d = mm[1].toUpperCase(); return tok(rw, (Dlook(d)||d) + ' ' + mm[2], d); }
         if(cat){ var cn = cat.match(/CAT\s+(?:\(ROMAN\)\s*)?(I{1,3}|IV)/)[1]; return tok(cat, 'Category ' + cn + ' (ILS precision approach category)', 'CAT'); }
         if(deg){ return tok(deg, deg.replace(/DEG$/,'') + '° (bearing / radial)'); }
         if(fl){ var fn = fl.replace(/\D/g,''); return tok(fl, 'Flight level ' + fn + ' (' + (parseInt(fn,10)*100).toLocaleString() + ' feet)', 'FL'); }

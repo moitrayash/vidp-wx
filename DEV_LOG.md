@@ -76,6 +76,24 @@ What does NOT need editing per-AD (already generic / national):
 Per-AD checklist: (1) edit `CFG`; (2) if non-India, swap `WPT`; (3) point the repo's `data.json`
 GitHub Action at the new ICAO; (4) set the CNAME/subdomain. That's the whole port.
 
+**Gotchas (verified by dry-running the decoder on real Bengaluru + Hyderabad NOTAMs):**
+- **`CFG.fir` is NOT derivable from the ICAO. Look it up.** It only looked derivable for Delhi
+  because Delhi *is* its own FIR (VIDP -> VIDF). India has only **four** FIRs; every AD maps to one:
+  **VIDF** Delhi (north), **VABF** Mumbai (west), **VECF** Kolkata (east), **VOMF** Chennai (south,
+  incl. Bengaluru VOBL, Hyderabad VOHS, Chennai VOMM). So for BLR and HYD, `fir:'VOMF',
+  firName:'Chennai FIR'` — there is no "VOBF"/"VOHF".
+- **Get the ICAO right** — it is not mechanical from the IATA. HYD = **VOHS** (Rajiv Gandhi,
+  Shamshabad), not VOHY (old Begumpet). BLR = VOBL.
+- **`data.json` fallback** ships with the previous AD's NOTAMs; until the Action is repointed
+  (checklist #3), the offline fallback shows the wrong airport.
+- Example configs: BLR = `{icao:'VOBL', iata:'BLR', appName:'Feathervane', airportName:'Kempegowda
+  International Airport', fir:'VOMF', firName:'Chennai FIR'}`; HYD = same but
+  `icao:'VOHS', iata:'HYD', airportName:'Rajiv Gandhi International Airport'`.
+- Decode itself is clean on southern data (0 errors on 174 Chennai-NOF NOTAMs; the national ENR 4.4
+  waypoints carry over). The only code change the southern data forced was the runway regex now
+  tolerating **no space** (`RWY27`, `RWY09R/27L`) as well as `RWY 27` — different NOFs format
+  runways differently; the pattern is `(?:RWY|TWY|TWYL|APN)\s*\d...`.
+
 ---
 
 ## NOTAM decoding specification (procedure ALL future NOTAMs/changes must follow)
