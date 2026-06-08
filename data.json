@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-08T09:55:32.461Z",
+ "generatedAt": "2026-06-08T14:08:16.476Z",
  "station": "VIDP",
- "metar": "METAR VIDP 080930Z 28012KT 210V320 6000 SCT035 42/17 Q0999 NOSIG",
+ "metar": "METAR VIDP 081400Z 27005KT 6000 FEW035 39/13 Q0998 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -264,6 +264,16 @@
    "traditionalMessage": ""
   },
   {
+   "notamNumber": "A1233/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/08/2026 1235",
+   "startDate": "06/08/2026 1235",
+   "endDate": "09/05/2026 1230",
+   "icaoMessage": "A1233/26 NOTAMR A0575/26\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606081235 C) 2609051230\r\nE) TXL F6 NOT AVBL FOR OPS. DRG THIS PERIOD ACFT OPS FM STAND 170 TO\r\n178 SHALL BE WITH ASSISTANCE OF FLW ME ONLY.",
+   "traditionalMessage": ""
+  },
+  {
    "notamNumber": "A1121/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -334,6 +344,36 @@
    "traditionalMessage": ""
   },
   {
+   "notamNumber": "A1227/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/08/2026 1125",
+   "startDate": "06/13/2026 1830",
+   "endDate": "06/20/2026 2330",
+   "icaoMessage": "A1227/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606131830 C) 2606202330\r\nD) 13 17 20 1830-2330\r\nE) RWY 10/28 NOT AVBL FOR OPS DUE MAINT.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1228/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/08/2026 1130",
+   "startDate": "06/12/2026 1830",
+   "endDate": "06/19/2026 2330",
+   "icaoMessage": "A1228/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606121830 C) 2606192330\r\nD) 12 15 19 1830-2330\r\nE) RWY 11L/29R NOT AVBL FOR OPS DUE MAINT.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1226/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/08/2026 1120",
+   "startDate": "06/11/2026 1830",
+   "endDate": "06/18/2026 2330",
+   "icaoMessage": "A1226/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606111830 C) 2606182330\r\nD) 11 14 16 18 1830-2330\r\nE) RWY 09/27 NOT AVBL FOR OPS DUE MAINT.",
+   "traditionalMessage": ""
+  },
+  {
    "notamNumber": "A1204/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -354,6 +394,16 @@
    "traditionalMessage": ""
   },
   {
+   "notamNumber": "A1229/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/08/2026 1140",
+   "startDate": "06/09/2026 1930",
+   "endDate": "06/11/2026 2330",
+   "icaoMessage": "A1229/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606091930 C) 2606112330\r\nD) 09 10 11 1930-2330\r\nE) PORTION OF TWY A BTN TWY LINK 2 AND TWY LINK 3 NOT AVBL FOR OPS.\r\nJUNCTION OF TWY A WITH TWY LINK 2 AND TWY LINK 3 AVBL FOR OPS.",
+   "traditionalMessage": ""
+  },
+  {
    "notamNumber": "A1173/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -361,16 +411,6 @@
    "startDate": "06/03/2026 1830",
    "endDate": "06/10/2026 2330",
    "icaoMessage": "A1173/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606031830 C) 2606102330\r\nD) 03 06 10 1830-2330\r\nE) RWY 10/28 NOT AVBL FOR OPS DUE MAINT.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A0575/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "03/12/2026 0848",
-   "startDate": "03/12/2026 0845",
-   "endDate": "06/10/2026 1230",
-   "icaoMessage": "A0575/26 NOTAMR A3200/25\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\nA) VIDP B) 2603120845 C) 2606101230\nE) TXL F6 NOT AVBL FOR OPS. DRG THIS PERIOD ACFT OPS FM STAND 170 TO\n178 SHALL BE WITH ASSISTANCE OF FLW ME ONLY.",
    "traditionalMessage": ""
   },
   {
