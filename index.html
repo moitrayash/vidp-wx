@@ -181,7 +181,7 @@ function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5
     <div>
       <h1 id="appTitle">VIDP: Feathervane</h1>
       <div class="sub">METAR &amp; NOTAMs</div>
-      <div class="proto">Research Prototype · Last fix <span id="lastFix">09 Jun 2026 0511Z</span></div>
+      <div class="proto">Research Prototype · Last fix <span id="lastFix">09 Jun 2026 0633Z</span></div>
     </div>
     <div class="clocks">
       <div class="clock"><div class="lbl">Zulu (UTC)</div><div class="t" id="zTime">--:--:--</div><div class="d" id="zDate">-</div></div>
@@ -734,7 +734,14 @@ function decodeNotamHTML(text){
 // when it was wrapped mid-sentence (did not end in . : ;) and the next line is not a field
 // marker (A)..G), Q)). Keeps real paragraph breaks and the Q/A/B/C/D/E field layout.
 function normalizeNotam(t){
-  return String(t || '').replace(/\r/g, '').replace(/([^.\n:;])\n(?![A-GQ]\)\s)(?=\S)/g, '$1 ');
+  /* FAA JSON encodes some chars as HTML entities (e.g. apostrophes as &apos;); decode them to real
+     characters here. esc() re-encodes &<> safely for HTML afterwards, so this only un-mangles display. */
+  t = String(t || '')
+    .replace(/&apos;/g, "'").replace(/&#39;/g, "'")
+    .replace(/&quot;/g, '"').replace(/&#34;/g, '"')
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&');
+  return t.replace(/\r/g, '').replace(/([^.\n:;])\n(?![A-GQ]\)\s)(?=\S)/g, '$1 ');
 }
 function notamStatusOf(n, now){
   const s = parseFaaTime(n.startDate), e = parseFaaTime(n.endDate);
