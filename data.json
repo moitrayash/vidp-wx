@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-09T16:43:44.534Z",
+ "generatedAt": "2026-06-09T19:03:03.106Z",
  "station": "VIDP",
- "metar": "METAR VIDP 091630Z 26010G20KT 4000 VCTS HZ SCT030 FEW035CB BKN090 33/14 Q1000 TEMPO 32020G40KT 1500 TSRA",
+ "metar": "METAR VIDP 091900Z 33010G20KT 3500 TS HZ SCT030 FEW035CB BKN090 35/14 Q1000 TEMPO 32020G35KT 1500 TSRA",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -474,13 +474,13 @@
    "traditionalMessage": ""
   },
   {
-   "notamNumber": "A1185/26",
+   "notamNumber": "A1248/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
-   "issueDate": "05/30/2026 0107",
-   "startDate": "05/30/2026 0107",
-   "endDate": "06/09/2026 1830",
-   "icaoMessage": "A1185/26 NOTAMN\r\nQ) VIDF/QMRXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2605300107 C) 2606091830\r\nE) EXIT SIGN BOARD OF TWY P1 FOR RWY 11L NOT AVBL DUE TECR.",
+   "issueDate": "06/09/2026 1759",
+   "startDate": "06/09/2026 1830",
+   "endDate": "06/09/2026 2330",
+   "icaoMessage": "A1248/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606091830 C) 2606092330\r\nE) PORTION OF TWY D BTN TWY E9 AND TWY F NOT AVBL FOR OPS DUE CIVIL\r\nWORK.",
    "traditionalMessage": ""
   }
  ]
