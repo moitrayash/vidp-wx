@@ -181,7 +181,7 @@ function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5
     <div>
       <h1 id="appTitle">VIDP: Feathervane</h1>
       <div class="sub">METAR &amp; NOTAMs</div>
-      <div class="proto">Research Prototype · Last fix <span id="lastFix">09 Jun 2026 0731Z</span></div>
+      <div class="proto">Research Prototype · Last fix <span id="lastFix">09 Jun 2026 0937Z</span></div>
     </div>
     <div class="clocks">
       <div class="clock"><div class="lbl">Zulu (UTC)</div><div class="t" id="zTime">--:--:--</div><div class="d" id="zDate">-</div></div>
@@ -370,7 +370,7 @@ function decodeToken(tok, idx){
   if(m=tok.match(/^VV(\d{3})$/)) return 'Vertical visibility '+(+m[1]*100)+' ft (sky obscured)';
   if(m=tok.match(/^R(\d{2}[LCR]?)\/(.+)$/)) return 'Runway '+m[1]+' visual range: '+m[2];
   if(tok==='9999') return 'Visibility 10 km or more';
-  if(m=tok.match(/^(\d{4})$/)){ const v=+m[1]; return v>=5000 ? ('Visibility '+(v/1000)+' km') : ('Visibility '+v+' m'); }
+  if(m=tok.match(/^(\d{4})$/)){ const v=+m[1]; return v>=1000 ? ('Visibility '+(v/1000)+' km') : ('Visibility '+v+' m'); }
   if(m=tok.match(/^(\d{2})SM$/)) return 'Visibility '+m[1]+' statute miles';
   const wx=decodeWeather(tok); if(wx) return wx;
   if(idx<=1 && /^[A-Z]{4}$/.test(tok)) return 'ICAO station identifier - <b>'+tok+'</b>';
@@ -686,6 +686,12 @@ function decodeNotamHTML(text){
         var k = w.toUpperCase();
         if(NSTOP[k] || w.length < 2) return w;
         if(/^(M{0,4})(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/.test(k)) return w; // bare Roman numeral = list enumerator (I, II, ... VI), not an abbreviation
+        if(w.indexOf('/') > 0){
+          var parts = w.split('/');
+          if(parts.length > 1 && parts.some(function(p){ return Dlook(p.toUpperCase()); })){
+            return parts.map(function(p){ var pk = p.toUpperCase(); var pm = Dlook(pk); return pm ? tok(p, pm, pk) : p; }).join('/');
+          }
+        }
         var key = k, mean = Dlook(k);
         if(!mean && k.length > 3 && k.charAt(k.length-1) === 'S' && Dlook(k.slice(0,-1))){ key = k.slice(0,-1); mean = Dlook(key); }
         /* digit-suffix base-strip removed: produced false positives (TRA508, GEN2, ENR4, ILS25). Real digit forms (FL/RWY/TWY/CAT/DEG) have dedicated patterns. */
@@ -888,7 +894,7 @@ var NMAP = (function(){ var m={}; for(var i=0;i<ABBR.length;i++){ var k=ABBR[i].
 var NSTOP = {TO:1,DUE:1,FOR:1,AND:1,THE:1,NOT:1,ALL:1,PER:1,END:1,TOP:1,BASE:1,MAP:1,NEW:1,OLD:1,OUT:1,USE:1,SEE:1,VIA:1,DAY:1,WAS:1,HAS:1,HAD:1,ARE:1,WILL:1,FROM:1,WITH:1,THIS:1,THAT:1,SHALL:1,ANY:1,CAN:1,NOW:1,ITS:1,OUR:1,AS:1,IF:1,NO:1,UP:1,OF:1,ON:1,IN:1,AT:1,IS:1,IT:1,BE:1,BY:1,OR:1,AN:1,AM:1,WE:1,DO:1,GO:1,SO:1,LINE:1,LONG:1,LOSS:1,WIND:1};
 /* User-stated corrections = TOP authority in the decode cascade (see DEV_LOG "Authority hierarchy").
    These override ICAO Doc 8400 / eAIP where the user gave the NOTAM-context meaning. */
-var OVR = {FM:'From', STAR:'Standard terminal arrival route', DRG:'During', WIE:'With immediate effect', EQPT:'Equipment', EST:'Estimated', CAT:'Category', AOM:'Aerodrome operating minima', EAIP:'India electronic Aeronautical Information Publication (eAIP)', TEMPO:'Temporarily', INSTL:'Installed'};
+var OVR = {FM:'From', STAR:'Standard terminal arrival route', DRG:'During', WIE:'With immediate effect', EQPT:'Equipment', EST:'Estimated', CAT:'Category', AOM:'Aerodrome operating minima', EAIP:'India electronic Aeronautical Information Publication (eAIP)', TEMPO:'Temporarily', INSTL:'Installed', ILS:'Instrument landing system', DME:'Distance measuring equipment', VOR:'VHF omnidirectional radio range', DVOR:'Doppler VHF omnidirectional radio range', DCKG:'Docking', DCKNG:'Docking'};
 /* Universal lookup: user override first, then merged ICAO->eAIP dictionary. No length whitelist. */
 /* Significant-point (waypoint) registry: eAIP India ENR 4.4 name-code designators, i.e. the five-letter
    fixes on the lo-alt and hi-alt ATS routes. A 5-letter token is labelled Waypoint ONLY if it is in this list. */
