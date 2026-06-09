@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-09T07:36:37.157Z",
+ "generatedAt": "2026-06-09T08:22:02.713Z",
  "station": "VIDP",
- "metar": "METAR VIDP 090730Z 29011KT 7000 FEW035 43/14 Q0999 NOSIG",
+ "metar": "METAR VIDP 090800Z 28010KT 7000 FEW035 43/13 Q0999 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -394,6 +394,16 @@
    "traditionalMessage": ""
   },
   {
+   "notamNumber": "A1237/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/09/2026 0812",
+   "startDate": "06/12/2026 0600",
+   "endDate": "06/12/2026 0700",
+   "icaoMessage": "A1237/26 NOTAMN\r\nQ) VIDF/QNVAS/IV/BO/AE/000/999/2834N07706E025\r\nA) VIDP B) 2606120600 C) 2606120700\r\nE) DVOR DIG 114.600MHZ NOT AVBL DUE MAINT.",
+   "traditionalMessage": ""
+  },
+  {
    "notamNumber": "A1229/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -401,6 +411,16 @@
    "startDate": "06/09/2026 1930",
    "endDate": "06/11/2026 2330",
    "icaoMessage": "A1229/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606091930 C) 2606112330\r\nD) 09 10 11 1930-2330\r\nE) PORTION OF TWY A BTN TWY LINK 2 AND TWY LINK 3 NOT AVBL FOR OPS.\r\nJUNCTION OF TWY A WITH TWY LINK 2 AND TWY LINK 3 AVBL FOR OPS.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1236/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/09/2026 0809",
+   "startDate": "06/11/2026 0600",
+   "endDate": "06/11/2026 0700",
+   "icaoMessage": "A1236/26 NOTAMN\r\nQ) VIDF/QNVAS/IV/BO/AE/000/999/2834N07706E025\r\nA) VIDP B) 2606110600 C) 2606110700\r\nE) DVOR DPN 116.100MHZ NOT AVBL DUE MAINT.",
    "traditionalMessage": ""
   },
   {
