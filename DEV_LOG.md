@@ -55,10 +55,15 @@ var CFG = {
   iata: 'DEL',                                        // IATA code (display)
   appName: 'Feathervane',                             // product name (header + gate)
   airportName: 'Indira Gandhi International Airport',  // A-line friendly name
-  fir: 'VIDF',                                         // home FIR code (Q-line)
-  firName: 'Delhi FIR'                                // home FIR friendly name (Q-line)
+  fir: 'VIDF',                                         // home FIR code (Q-line) - LOOK UP, not derivable
+  firName: 'Delhi FIR',                               // home FIR friendly name (Q-line)
+  tz: 'Asia/Kolkata',                                 // IANA tz for the local clock (all India = Asia/Kolkata)
+  tzLabel: 'IST',                                     // local-time label by the clock
+  metarIntervalMin: 30                                // expected routine METAR cadence (min) for freshness check
 };
 ```
+
+`CFG` lives at the very top of the main `<script>` (above its first use).
 
 `applyConfig()` (run at init) derives the page title, both `<h1>`s, the gate access note, and the
 footer source links (`search <ICAO>`, `ids=<ICAO>`, `(<ICAO>)`) from `CFG`. `STATION`, `NLOC`
@@ -93,6 +98,17 @@ GitHub Action at the new ICAO; (4) set the CNAME/subdomain. That's the whole por
   waypoints carry over). The only code change the southern data forced was the runway regex now
   tolerating **no space** (`RWY27`, `RWY09R/27L`) as well as `RWY 27` — different NOFs format
   runways differently; the pattern is `(?:RWY|TWY|TWYL|APN)\s*\d...`.
+- **Timezone is in `CFG` now** (`tz`/`tzLabel`). It was hardcoded `Asia/Kolkata`/`IST` in the clock,
+  header, and METAR obs-time line - correct for any Indian AD, but it would have shown Indian local
+  time for a foreign AD. CFG-driven now.
+- **METAR cadence is in `CFG`** (`metarIntervalMin`, default 30). Major airports issue routine
+  METARs every 30 min; an AD on an hourly cadence would otherwise get false "overdue" flags.
+- **Removed dead `NABBR`** - a leftover pre-universal-engine abbreviation map that had Delhi's
+  runways and bare numbers (`'27':'Runway 27'`) hardcoded. It was unused, but a landmine: wiring it
+  back would have re-broken date decoding ("27 NOV" -> "Runway 27"). Decoding uses only ABBR/NMAP/Dlook.
+- Graceful, not bugs: the A-line shows the friendly name only for `CFG.icao`, and the Q-line FIR
+  name only for `CFG.fir`; any other ICAO/FIR a NOTAM references renders as the raw code (fine).
+  Local non-ICAO abbreviations stay plain (no-guess) - correct, just undecorated.
 
 ---
 

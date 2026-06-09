@@ -181,11 +181,11 @@ function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5
     <div>
       <h1 id="appTitle">VIDP: Feathervane</h1>
       <div class="sub">METAR &amp; NOTAMs</div>
-      <div class="proto">Research Prototype · Last fix <span id="lastFix">08 Jun 2026 0717Z</span></div>
+      <div class="proto">Research Prototype · Last fix <span id="lastFix">09 Jun 2026 0511Z</span></div>
     </div>
     <div class="clocks">
       <div class="clock"><div class="lbl">Zulu (UTC)</div><div class="t" id="zTime">--:--:--</div><div class="d" id="zDate">-</div></div>
-      <div class="clock"><div class="lbl">IST</div><div class="t" id="iTime">--:--:--</div><div class="d" id="iDate">-</div></div>
+      <div class="clock"><div class="lbl" id="tzLabel">IST</div><div class="t" id="iTime">--:--:--</div><div class="d" id="iDate">-</div></div>
     </div>
   </header>
 
@@ -265,6 +265,31 @@ function agUnlock(){var v=document.getElementById('agPw').value.trim();if(v==='5
 </aside>
 
 <script>
+/* ===== AERODROME CONFIG: to deploy this app for another aerodrome, change ONLY this block. =====
+   Everything else (fetch URLs, title, header, gate, footer links, A-line name, Q-line FIR,
+   local clock + timezone, METAR cadence) derives from CFG. The decode engine is generic ICAO.
+   The waypoint registry (WPT) is the national eAIP ENR 4.4 list (India-wide); for another country
+   swap WPT and set tz/tzLabel to that country's local timezone. fir is NOT derivable from icao - look it up. */
+var CFG = {
+  icao: 'VIDP',                                       // ICAO indicator: drives METAR/NOTAM fetch, title, A-line
+  iata: 'DEL',                                        // IATA code (display)
+  appName: 'Feathervane',                             // product name (header + gate)
+  airportName: 'Indira Gandhi International Airport',  // A-line friendly name
+  fir: 'VIDF',                                         // home FIR code (Q-line) - LOOK UP; e.g. VOBL/VOHS -> VOMF
+  firName: 'Delhi FIR',                               // home FIR friendly name (Q-line)
+  tz: 'Asia/Kolkata',                                 // IANA timezone for the local clock (all India = Asia/Kolkata)
+  tzLabel: 'IST',                                     // local-time label shown by the clock
+  metarIntervalMin: 30                                // expected routine METAR cadence (min) for the freshness check
+};
+function applyConfig(){
+  var t = CFG.icao + ': ' + CFG.appName, e;
+  document.title = t;
+  if(e=document.getElementById('appTitle')) e.textContent = t;
+  if(e=document.getElementById('gateTitle')) e.textContent = CFG.appName;
+  if(e=document.getElementById('tzLabel')) e.textContent = CFG.tzLabel;
+  if(e=document.getElementById('gateNote')) e.textContent = 'Access is limited to authorized personnel associated with and employed by ' + CFG.icao + '.';
+  if(e=document.getElementById('srcLine')) e.innerHTML = 'NOTAM source: <a href="https://notams.aim.faa.gov/notamSearch/" target="_blank" rel="noopener">FAA NOTAM Search</a> (live; search ' + CFG.icao + '). METAR source: <a href="https://aviationweather.gov/data/metar/?decoded=1&ids=' + CFG.icao + '" target="_blank" rel="noopener">Aviation Weather Center (' + CFG.icao + ')</a>. Times are UTC.';
+}
 /* ---------- Live clocks (accurate to the second) ---------- */
 function fmt(d, tz){
   const t = new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(d);
@@ -273,7 +298,7 @@ function fmt(d, tz){
 }
 function tick(){
   const now = new Date();
-  const z = fmt(now,'UTC'), i = fmt(now,'Asia/Kolkata');
+  const z = fmt(now,'UTC'), i = fmt(now, CFG.tz);
   document.getElementById('zTime').textContent = z.t;
   document.getElementById('zDate').textContent = z.day;
   document.getElementById('iTime').textContent = i.t;
@@ -287,7 +312,7 @@ setInterval(tick, 250);
    METARs for VIDP are issued on a fixed cadence (routine every 30 min, plus SPECI).
    i = expected interval. We parse the METAR's own observation time (ddhhmmZ),
    compute its age live, and flag if the latest report is older than expected. */
-const METAR_INTERVAL_MIN = 30;            // i: expected METAR cadence (minutes)
+const METAR_INTERVAL_MIN = CFG.metarIntervalMin; // expected METAR cadence (minutes), from CFG
 const METAR_STALE_AFTER  = METAR_INTERVAL_MIN + 15;   // amber past this age
 const METAR_BAD_AFTER    = METAR_INTERVAL_MIN * 2 + 15; // red: a full cycle missed
 const DATA_STALE_MIN     = 20;            // warn if data.json itself is older than this
@@ -327,8 +352,8 @@ function decodeToken(tok, idx){
   let m;
   if(m=tok.match(/^(\d{2})(\d{2})(\d{2})Z$/)){
     const d = new Date(parseMetarObs(tok));
-    const ist = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',hour:'2-digit',minute:'2-digit',hour12:false}).format(d);
-    return 'Observation time - <b>'+m[2]+':'+m[3]+'Z</b> Zulu (UTC) · <b>'+ist+'</b> IST · day '+m[1]+' of the month';
+    const ist = new Intl.DateTimeFormat('en-GB',{timeZone:CFG.tz,hour:'2-digit',minute:'2-digit',hour12:false}).format(d);
+    return 'Observation time - <b>'+m[2]+':'+m[3]+'Z</b> Zulu (UTC) · <b>'+ist+'</b> '+CFG.tzLabel+' · day '+m[1]+' of the month';
   }
   if(m=tok.match(/^(\d{3}|VRB)(\d{2,3})(?:G(\d{2,3}))?(KT|MPS)$/)){
     const dir=m[1]==='VRB'?'variable direction':'from '+m[1]+'°', u=m[4]==='KT'?'kt':'m/s';
@@ -405,27 +430,6 @@ function esc(t){return (t||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':
    (the source APIs don't send CORS headers, so a browser can't hit them directly).
    data.json - the server snapshot kept fresh by GitHub Actions - is only a fallback
    if the live fetch fails, so the page never goes blank. */
-/* ===== AERODROME CONFIG: to deploy this app for another aerodrome, change ONLY this block. =====
-   Everything below (fetch URLs, title, header, gate, footer links, A-line airport name, Q-line FIR)
-   derives from CFG. The decode engine (ABBR/OVR/NPHRASE/regex) is generic ICAO and needs no change.
-   The waypoint registry (WPT) is the national eAIP ENR 4.4 list (India-wide, reusable for all Indian
-   ADs); for an AD in another country, replace the WPT data set with that country's ENR 4.4 equivalent. */
-var CFG = {
-  icao: 'VIDP',                                       // ICAO indicator: drives METAR/NOTAM fetch, title, A-line
-  iata: 'DEL',                                        // IATA code (display)
-  appName: 'Feathervane',                             // product name (header + gate)
-  airportName: 'Indira Gandhi International Airport',  // A-line friendly name
-  fir: 'VIDF',                                         // home FIR code (Q-line)
-  firName: 'Delhi FIR'                                // home FIR friendly name (Q-line)
-};
-function applyConfig(){
-  var t = CFG.icao + ': ' + CFG.appName, e;
-  document.title = t;
-  if(e=document.getElementById('appTitle')) e.textContent = t;
-  if(e=document.getElementById('gateTitle')) e.textContent = CFG.appName;
-  if(e=document.getElementById('gateNote')) e.textContent = 'Access is limited to authorized personnel associated with and employed by ' + CFG.icao + '.';
-  if(e=document.getElementById('srcLine')) e.innerHTML = 'NOTAM source: <a href="https://notams.aim.faa.gov/notamSearch/" target="_blank" rel="noopener">FAA NOTAM Search</a> (live; search ' + CFG.icao + '). METAR source: <a href="https://aviationweather.gov/data/metar/?decoded=1&ids=' + CFG.icao + '" target="_blank" rel="noopener">Aviation Weather Center (' + CFG.icao + ')</a>. Times are UTC.';
-}
 const STATION = CFG.icao;
 // CORS proxies tried in order (the source APIs don't send CORS headers). First entry is a direct
 // attempt in case a source ever allows CORS; the rest are independent free relays for redundancy.
@@ -602,11 +606,7 @@ var NPURP = { N:'Immediate attention of aircraft operators', B:'Of operational s
 var NSCOPE = { A:'Aerodrome', E:'En-route', W:'Nav warning', K:'Checklist' };
 var NFIR = {}; NFIR[CFG.fir] = CFG.firName;
 var NLOC = {}; NLOC[CFG.icao] = CFG.airportName;
-/* Common NOTAM / aeronautical abbreviations for field E */
-var NABBR = {
-RWY:'Runway',TWY:'Taxiway',APN:'Apron',AD:'Aerodrome',ACFT:'Aircraft',AVBL:'Available','U/S':'Unserviceable',UNSERVICEABLE:'Unserviceable',TECR:'Due to technical reasons',WIP:'Work in progress',OBST:'Obstacle',OBST:'Obstacle',CLSD:'Closed',CLOSED:'Closed',MAINT:'Maintenance',DUE:'Because of',FLW:'Following',WEF:'With effect from',TIL:'Until',PSN:'Position',COORD:'Coordinates',FREQ:'Frequency',NM:'Nautical miles',FT:'Feet',AMSL:'Above mean sea level',AGL:'Above ground level',ILS:'Instrument landing system',DME:'Distance measuring equipment',VOR:'VHF omnidirectional range',NDB:'Non-directional beacon',PAPI:'Precision approach path indicator',RVR:'Runway visual range',THR:'Threshold',LDG:'Landing',DEP:'Departure',ARR:'Arrival',APCH:'Approach',SID:'Standard instrument departure',STAR:'Standard terminal arrival route',AIP:'Aeronautical information publication',GP:'Glide path',LOC:'Localizer',MKR:'Marker',ELEV:'Elevation',HGT:'Height',CTOT:'Calculated take-off time',ATC:'Air traffic control',ATIS:'Automatic terminal information service',TWR:'Tower',APP:'Approach control',GND:'Ground',SFC:'Surface',UNL:'Unlimited',PERM:'Permanent',EST:'Estimated',TEMPO:'Temporary',CTN:'Caution',EXC:'Except',BTN:'Between',ADJ:'Adjacent',ABV:'Above',BLW:'Below',MAX:'Maximum',MIN:'Minimum',OPR:'Operator / operating',OPS:'Operations',PROC:'Procedure',REF:'Reference',SKED:'Scheduled',SR:'Sunrise',SS:'Sunset',DLY:'Daily',EXP:'Expected',FM:'From',TO:'To',RTE:'Route',INT:'Intersection',INTXN:'Intersection',STD:'Standard',CAT:'Category',CL:'Centre line',EDLY:'Each day',BCST:'Broadcast',CFM:'Confirm',ESTABLISH:'Establish',MOV:'Movement',PROT:'Protection',RESTR:'Restricted / restriction',SECT:'Sector',SVC:'Service',TFC:'Traffic',TKOF:'Take-off',TODA:'Take-off distance available',TORA:'Take-off run available',LDA:'Landing distance available',ASDA:'Accelerate-stop distance available',NOTAMN:'New NOTAM',NOTAMR:'Replaces a NOTAM',NOTAMC:'Cancels a NOTAM',
-'11L':'Runway 11 Left','11R':'Runway 11 Right','29L':'Runway 29 Left','29R':'Runway 29 Right','10':'Runway 10','28':'Runway 28','09':'Runway 09','27':'Runway 27'
-};
+/* (legacy NABBR map removed - decoding uses the generic ABBR/NMAP/Dlook engine) */
 /* Multi-word phrases decoded as a single underline (checked before single words) */
 var NPHRASE = {
 'E-AIP':'India electronic Aeronautical Information Publication (eAIP)','NOT AVBL':'Not available','NOT AVAILABLE':'Not available','U/S':'Unserviceable','OUT OF SERVICE':'Out of service','OUT OF SVC':'Out of service','WORK IN PROGRESS':'Work in progress','WILL BE':'Will be','NOT AUTH':'Not authorised','NOT PERM':'Not permitted'
