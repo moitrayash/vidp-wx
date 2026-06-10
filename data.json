@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-10T04:43:32.908Z",
+ "generatedAt": "2026-06-10T08:22:54.427Z",
  "station": "VIDP",
- "metar": "METAR VIDP 100430Z 25017KT 210V270 7000 NSC 36/23 Q1001 NOSIG",
+ "metar": "METAR VIDP 100800Z 28010KT 7000 FEW035 41/21 Q0999 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -311,6 +311,16 @@
    "startDate": "05/08/2026 1220",
    "endDate": "08/06/2026 1130",
    "icaoMessage": "A1015/26 NOTAMN\r\nQ) VIDF/QMXLT/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2605081220 C) 2608061130\r\nE) PORTION OF TWY M BTN TWY A AND TWY LINK 30 DOWNGRADED FOR ACFT\r\nUPTO CODE LETTER C.PORTION OF TWY LINK 30 BTN TWY K AND TWY M\r\nDOWNGRADED FOR ACFT UPTO CODE LETTER D.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1257/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/10/2026 0800",
+   "startDate": "06/10/2026 0800",
+   "endDate": "07/09/2026 1200",
+   "icaoMessage": "A1257/26 NOTAMN\r\nQ) VIDF/QFWAS/V/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606100800 C) 2607091200\r\nE) INSTRUMENTAL WIND SPEED/WIND DIRECTION OF RWY 27 MID NOT AVBL DUE\r\nCIVIL ISSUE AT SITE.",
    "traditionalMessage": ""
   },
   {
