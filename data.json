@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-10T18:37:31.114Z",
+ "generatedAt": "2026-06-10T21:13:28.505Z",
  "station": "VIDP",
- "metar": "METAR VIDP 101830Z 23005KT 4500 HZ FEW035 FEW040CB 37/20 Q0998 NOSIG",
+ "metar": "METAR VIDP 102100Z 17005KT 090V240 4500 HZ NSC 35/21 Q0997 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -491,6 +491,16 @@
    "startDate": "06/03/2026 1830",
    "endDate": "06/10/2026 2330",
    "icaoMessage": "A1173/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606031830 C) 2606102330\r\nD) 03 06 10 1830-2330\r\nE) RWY 10/28 NOT AVBL FOR OPS DUE MAINT.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1261/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/10/2026 1856",
+   "startDate": "06/10/2026 1856",
+   "endDate": "06/10/2026 2330",
+   "icaoMessage": "A1261/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606101856 C) 2606102330\r\nE) PORTION OF TWY K BTN TWY K3 AND TWY K5 NOT AVBL FOR OPS DUE CIVIL\r\nWORKS.",
    "traditionalMessage": ""
   }
  ]
