@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-09T22:47:23.258Z",
+ "generatedAt": "2026-06-10T00:01:44.123Z",
  "station": "VIDP",
- "metar": "METAR VIDP 092230Z 22006KT 3500 HZ FEW030 FEW035CB SCT090 31/18 Q0999 NOSIG",
+ "metar": "METAR VIDP 092330Z 22004KT 3500 HZ FEW035 SCT100 30/17 Q0999 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -461,26 +461,6 @@
    "startDate": "06/03/2026 1830",
    "endDate": "06/10/2026 2330",
    "icaoMessage": "A1173/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606031830 C) 2606102330\r\nD) 03 06 10 1830-2330\r\nE) RWY 10/28 NOT AVBL FOR OPS DUE MAINT.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1172/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "05/29/2026 0601",
-   "startDate": "06/02/2026 1830",
-   "endDate": "06/09/2026 2330",
-   "icaoMessage": "A1172/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606021830 C) 2606092330\r\nD) 02 04 07 09 1830-2330\r\nE) RWY 09/27 NOT AVBL FOR OPS DUE MAINT.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1248/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "06/09/2026 1759",
-   "startDate": "06/09/2026 1830",
-   "endDate": "06/09/2026 2330",
-   "icaoMessage": "A1248/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606091830 C) 2606092330\r\nE) PORTION OF TWY D BTN TWY E9 AND TWY F NOT AVBL FOR OPS DUE CIVIL\r\nWORK.",
    "traditionalMessage": ""
   }
  ]
