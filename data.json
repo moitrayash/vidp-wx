@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-13T00:20:19.914Z",
+ "generatedAt": "2026-06-13T05:02:43.638Z",
  "station": "VIDP",
- "metar": "METAR VIDP 130000Z 23008KT 4000 BR BKN030 OVC090 24/20 Q1006 NOSIG",
+ "metar": "METAR VIDP 130430Z 13006KT 6000 SCT035 BKN090 30/19 Q1007 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -451,16 +451,6 @@
    "startDate": "06/12/2026 0730",
    "endDate": "06/13/2026 1130",
    "icaoMessage": "A1269/26 NOTAMR A1258/26\r\nQ) VIDF/QMXLC/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606120730 C) 2606131130\r\nE) PORTION OF TWY D BTN TWY D3 AND TWY D4 NOT AVBL FOR OPS.\r\nJUNCTION OF TWY D3 AND TWY D4 WITH TWY D AVBL FOR OPS.\r\nTWY G1 NOT AVBL FOR OPS.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1281/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "06/12/2026 2108",
-   "startDate": "06/12/2026 2108",
-   "endDate": "06/13/2026 0430",
-   "icaoMessage": "A1281/26 NOTAMR A1272/26\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606122108 C) 2606130430\r\nE) PORTION OF TWY C BTN TWY LINK 2 AND TWY LINK 3 NOT AVBL FOR OPS.\r\nTWY LINK 2 AND TWY LINK 3 AVBL FOR OPS.",
    "traditionalMessage": ""
   }
  ]
