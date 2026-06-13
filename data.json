@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-13T05:02:43.638Z",
+ "generatedAt": "2026-06-13T08:30:32.816Z",
  "station": "VIDP",
- "metar": "METAR VIDP 130430Z 13006KT 6000 SCT035 BKN090 30/19 Q1007 NOSIG",
+ "metar": "METAR VIDP 130800Z VRB04KT 6000 FEW030 SCT090 35/19 Q1006 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -441,6 +441,16 @@
    "startDate": "06/14/2026 0600",
    "endDate": "06/14/2026 0900",
    "icaoMessage": "A1276/26 NOTAMN\r\nQ) VIDF/QFAXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606140600 C) 2606140900\r\nE) ARR/DEP AT IGI AIRPORT (VIDP) LIKELY TO BE DLA DUE FLT CLBR OF\r\nILS RWY 28.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1283/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/13/2026 0758",
+   "startDate": "06/13/2026 1930",
+   "endDate": "06/13/2026 2330",
+   "icaoMessage": "A1283/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606131930 C) 2606132330\r\nE) PORTION OF TWY A BTN TWY LINK 2 AND TWY LINK 3 NOT AVBL FOR OPS\r\nDUE CIV WORK.JUNCTION OF TWY A WITH TWY LINK 2 AND TWY LINK 3 AVBL\r\nFOR OPS.",
    "traditionalMessage": ""
   },
   {
