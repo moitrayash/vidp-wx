@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-13T23:35:06.880Z",
+ "generatedAt": "2026-06-14T01:58:28.725Z",
  "station": "VIDP",
- "metar": "METAR VIDP 132330Z 00000KT 3000 HZ SCT100 28/22 Q1004 NOSIG",
+ "metar": "METAR VIDP 140130Z 30002KT 2800 HZ FEW100 30/22 Q1004 BECMG 3000 HZ",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -381,6 +381,26 @@
    "startDate": "06/11/2026 1830",
    "endDate": "06/18/2026 2330",
    "icaoMessage": "A1226/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606111830 C) 2606182330\r\nD) 11 14 16 18 1830-2330\r\nE) RWY 09/27 NOT AVBL FOR OPS DUE MAINT.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1286/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/14/2026 0125",
+   "startDate": "06/14/2026 0125",
+   "endDate": "06/18/2026 1300",
+   "icaoMessage": "A1286/26 NOTAMN\r\nQ) VIDF/QLEXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606140125 C) 2606181300\r\nE) ALTERNATE CIRCUIT OF REH (RWY EDGE LIGHT) OF RWY 10-28 U/S.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1287/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/14/2026 0130",
+   "startDate": "06/14/2026 0130",
+   "endDate": "06/17/2026 2330",
+   "icaoMessage": "A1287/26 NOTAMN\r\nQ) VIDF/QMXXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606140130 C) 2606172330\r\nE) RETIL(RAPID EXIT TWY INDICATOR LIGHTS) OF TWY J3 FOR RWY 10 U/S.",
    "traditionalMessage": ""
   },
   {
