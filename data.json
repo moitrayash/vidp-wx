@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-15T02:00:05.601Z",
+ "generatedAt": "2026-06-15T07:31:46.833Z",
  "station": "VIDP",
- "metar": "METAR VIDP 142130Z 24006KT 4500 HZ SCT090 29/19 Q1002 NOSIG",
+ "metar": "METAR VIDP 150700Z 28007KT 240V010 5000 HZ NSC 36/18 Q1004 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -384,16 +384,6 @@
    "traditionalMessage": ""
   },
   {
-   "notamNumber": "A1287/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "06/14/2026 0130",
-   "startDate": "06/14/2026 0130",
-   "endDate": "06/17/2026 2330",
-   "icaoMessage": "A1287/26 NOTAMN\r\nQ) VIDF/QMXXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606140130 C) 2606172330\r\nE) RETIL(RAPID EXIT TWY INDICATOR LIGHTS) OF TWY J3 FOR RWY 10 U/S.",
-   "traditionalMessage": ""
-  },
-  {
    "notamNumber": "A1243/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -431,6 +421,16 @@
    "startDate": "06/06/2026 1804",
    "endDate": "06/15/2026 1230",
    "icaoMessage": "A1224/26 NOTAMN\r\nQ) VIDF/QMRXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606061804 C) 2606151230\r\nE) EXIT SIGN BOARD OF TWY R3 FOR RWY 29R NOT AVBL FOR OPS DUE TECR.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1294/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/15/2026 0540",
+   "startDate": "06/15/2026 0540",
+   "endDate": "06/15/2026 0930",
+   "icaoMessage": "A1294/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606150540 C) 2606150930\r\nE) PORTION OF TWY D BTN TWY E9 AND TWY F NOT AVBL FOR OPS DUE CIVIL\r\nWORK. JUNCTIONS OF TWY D-F IS AVBL. JUNCTION OF TWY D-E9 NOT AVBL.",
    "traditionalMessage": ""
   }
  ]
