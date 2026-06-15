@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-15T07:31:46.833Z",
+ "generatedAt": "2026-06-15T12:57:19.464Z",
  "station": "VIDP",
- "metar": "METAR VIDP 150700Z 28007KT 240V010 5000 HZ NSC 36/18 Q1004 NOSIG",
+ "metar": "METAR VIDP 151230Z 02008KT 310V040 4500 HZ SCT030 FEW035CB SCT090 32/16 Q1001 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -384,6 +384,16 @@
    "traditionalMessage": ""
   },
   {
+   "notamNumber": "A1301/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/15/2026 1235",
+   "startDate": "06/17/2026 0500",
+   "endDate": "06/17/2026 1130",
+   "icaoMessage": "A1301/26 NOTAMN\r\nQ) VIDF/QMOXX/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606170500 C) 2606171130\r\nE) FLW RESTRICTIONS SHALL APPLY DUE AERONAUTICAL GND LGT SYSTEM\r\nUPDATE.\r\n1. ALL AGL (AERONAUTICAL GND LGT) FOR RWY 11L/29R AND ASSOCIATED\r\nTAXIWAYS NOT AVBL ON REMOTE.\r\n2. ALL STOP BAR LGT FOR RWY 11L/29R NOT AVBL.\r\n3. ALL STOP BARS LGT ON TWY A AND C NOT AVBL.",
+   "traditionalMessage": ""
+  },
+  {
    "notamNumber": "A1243/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -401,36 +411,6 @@
    "startDate": "06/16/2026 0700",
    "endDate": "06/16/2026 0800",
    "icaoMessage": "A1242/26 NOTAMN\r\nQ) VIDF/QPUCH/I/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606160700 C) 2606160800\r\nE) DRG NON AVBL PERIOD OF DVOR CHI (116.800MHZ), ACFT CARRYING OUT\r\nMISSED APCH FM RWY 29R AT IGI AP (VIDP) AND REQUIRED TO HOLD AT\r\nDVOR CHI (116.800MHZ) MAY USE THE FLW FIX/WAYPOINT IN PLACE OF DVOR\r\nCHI (116.800MHZ).\r\nA. R239/26.4D (116.100MHZ DPN)\r\nB. 282051N0763959E.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1204/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "06/02/2026 1728",
-   "startDate": "06/02/2026 1728",
-   "endDate": "06/15/2026 1230",
-   "icaoMessage": "A1204/26 NOTAMN\r\nQ) VIDF/QMRXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606021728 C) 2606151230\r\nE) EXIT SIGN BOARD OF TWY P3 FOR RWY 11L NOT AVBL DUE TECR.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1224/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "06/06/2026 1804",
-   "startDate": "06/06/2026 1804",
-   "endDate": "06/15/2026 1230",
-   "icaoMessage": "A1224/26 NOTAMN\r\nQ) VIDF/QMRXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606061804 C) 2606151230\r\nE) EXIT SIGN BOARD OF TWY R3 FOR RWY 29R NOT AVBL FOR OPS DUE TECR.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1294/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "06/15/2026 0540",
-   "startDate": "06/15/2026 0540",
-   "endDate": "06/15/2026 0930",
-   "icaoMessage": "A1294/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606150540 C) 2606150930\r\nE) PORTION OF TWY D BTN TWY E9 AND TWY F NOT AVBL FOR OPS DUE CIVIL\r\nWORK. JUNCTIONS OF TWY D-F IS AVBL. JUNCTION OF TWY D-E9 NOT AVBL.",
    "traditionalMessage": ""
   }
  ]
