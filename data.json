@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-16T17:36:51.768Z",
+ "generatedAt": "2026-06-16T20:30:39.557Z",
  "station": "VIDP",
- "metar": "METAR VIDP 161730Z 25006KT 5000 HZ FEW035 SCT100 27/21 Q1006 NOSIG",
+ "metar": "METAR VIDP 162000Z 25003KT 5000 HZ FEW035 SCT100 26/20 Q1005 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -374,6 +374,16 @@
    "traditionalMessage": ""
   },
   {
+   "notamNumber": "A1306/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/16/2026 1917",
+   "startDate": "06/16/2026 1918",
+   "endDate": "06/18/2026 1230",
+   "icaoMessage": "A1306/26 NOTAMN\r\nQ) VIDF/QMXXX/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606161918 C) 2606181230\r\nE) SIGN BOARD ON TWY A AND TWY C FOR LINK 1 NOT AVBL DUE TECR.",
+   "traditionalMessage": ""
+  },
+  {
    "notamNumber": "A1301/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -391,16 +401,6 @@
    "startDate": "06/17/2026 0700",
    "endDate": "06/17/2026 0800",
    "icaoMessage": "A1243/26 NOTAMN\r\nQ) VIDF/QPUCH/I/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606170700 C) 2606170800\r\nE) DRG NON AVBL PERIOD OF DVOR SAM (117.000MHZ), ACFT CARRYING OUT\r\nMISSED APCH FM RWY 27 AT IGI AIRPORT (VIDP) AND ACFT REQUIRED TO\r\nHOLD AT SAM DVOR MAY HOLD AT FLW FIX/WAY POINT:\r\nA. R316/21D (116.100MHZ DPN)\r\nB. 284912N0764911E.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1303/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "06/16/2026 0705",
-   "startDate": "06/16/2026 0705",
-   "endDate": "06/16/2026 1830",
-   "icaoMessage": "A1303/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606160705 C) 2606161830\r\nE) PORTION OF TWY C BTN TWY LINK 2 AND TWY LINK 3 NOT AVBL FOR OPS.\r\nTWY LINK 2 AND TWY LINK 3 AVBL FOR OPS.",
    "traditionalMessage": ""
   }
  ]
