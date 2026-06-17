@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-17T10:08:29.000Z",
+ "generatedAt": "2026-06-17T13:59:54.454Z",
  "station": "VIDP",
- "metar": "METAR VIDP 171000Z 28006KT 6000 NSC 36/18 Q1004 NOSIG",
+ "metar": "METAR VIDP 171330Z 28009KT 210V300 6000 NSC 35/19 Q1002 BECMG 5000 HZ",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -324,6 +324,16 @@
    "traditionalMessage": ""
   },
   {
+   "notamNumber": "A1313/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/17/2026 1253",
+   "startDate": "06/18/2026 1830",
+   "endDate": "06/30/2026 2330",
+   "icaoMessage": "A1313/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606181830 C) 2606302330\r\nD) 18 23 26 30 1830-2330\r\nE) RWY 11L/29R NOT AVBL FOR OPS DUE MAINT.",
+   "traditionalMessage": ""
+  },
+  {
    "notamNumber": "A1120/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -344,6 +354,26 @@
    "traditionalMessage": ""
   },
   {
+   "notamNumber": "A1310/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/17/2026 1245",
+   "startDate": "06/19/2026 1830",
+   "endDate": "06/29/2026 2330",
+   "icaoMessage": "A1310/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606191830 C) 2606292330\r\nD) 19 20 22 25 27 29 1830-2330\r\nE) RWY 09/27 NOT AVBL FOR OPS DUE MAINT.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1311/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/17/2026 1247",
+   "startDate": "06/21/2026 1830",
+   "endDate": "06/28/2026 2330",
+   "icaoMessage": "A1311/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606211830 C) 2606282330\r\nD) 21 24 28 1830-2330\r\nE) RWY 10/28 NOT AVBL FOR OPS DUE MAINT.",
+   "traditionalMessage": ""
+  },
+  {
    "notamNumber": "A1227/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -351,16 +381,6 @@
    "startDate": "06/13/2026 1830",
    "endDate": "06/20/2026 2330",
    "icaoMessage": "A1227/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606131830 C) 2606202330\r\nD) 13 17 20 1830-2330\r\nE) RWY 10/28 NOT AVBL FOR OPS DUE MAINT.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1228/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "06/08/2026 1130",
-   "startDate": "06/12/2026 1830",
-   "endDate": "06/19/2026 2330",
-   "icaoMessage": "A1228/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606121830 C) 2606192330\r\nD) 12 15 19 1830-2330\r\nE) RWY 11L/29R NOT AVBL FOR OPS DUE MAINT.",
    "traditionalMessage": ""
   },
   {
@@ -381,26 +401,6 @@
    "startDate": "06/16/2026 1918",
    "endDate": "06/18/2026 1230",
    "icaoMessage": "A1306/26 NOTAMN\r\nQ) VIDF/QMXXX/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606161918 C) 2606181230\r\nE) SIGN BOARD ON TWY A AND TWY C FOR LINK 1 NOT AVBL DUE TECR.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1301/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "06/15/2026 1235",
-   "startDate": "06/17/2026 0500",
-   "endDate": "06/17/2026 1130",
-   "icaoMessage": "A1301/26 NOTAMN\r\nQ) VIDF/QMOXX/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606170500 C) 2606171130\r\nE) FLW RESTRICTIONS SHALL APPLY DUE AERONAUTICAL GND LGT SYSTEM\r\nUPDATE.\r\n1. ALL AGL (AERONAUTICAL GND LGT) FOR RWY 11L/29R AND ASSOCIATED\r\nTAXIWAYS NOT AVBL ON REMOTE.\r\n2. ALL STOP BAR LGT FOR RWY 11L/29R NOT AVBL.\r\n3. ALL STOP BARS LGT ON TWY A AND C NOT AVBL.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1307/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "06/17/2026 0605",
-   "startDate": "06/17/2026 0630",
-   "endDate": "06/17/2026 1130",
-   "icaoMessage": "A1307/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606170630 C) 2606171130\r\nE) 1. PORTION OF TWY K BTN TWY LINK 32 AND TWY J6 NOT AVBL FOR OPS.\r\n2. TWY LINK 32, LINK 30 AND TWY J6 AVBL FOR OPS.\r\n3. TWY J3 AND J5 NOT AVBL FOR OPS.\r\n4. DRG THIS PERIOD TWY M UPGRADED FOR CODE LETTER-F WITH WINGSPAN\r\nUPTO 68.4M.",
    "traditionalMessage": ""
   }
  ]
