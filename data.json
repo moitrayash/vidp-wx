@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-18T01:38:35.264Z",
+ "generatedAt": "2026-06-18T06:27:27.684Z",
  "station": "VIDP",
- "metar": "METAR VIDP 180130Z 25004KT 2500 HZ FEW100 31/23 Q1004 NOSIG",
+ "metar": "METAR VIDP 180600Z 29007KT 230V330 7000 FEW035 36/21 Q1006 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -374,16 +374,6 @@
    "traditionalMessage": ""
   },
   {
-   "notamNumber": "A1227/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "06/08/2026 1125",
-   "startDate": "06/13/2026 1830",
-   "endDate": "06/20/2026 2330",
-   "icaoMessage": "A1227/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606131830 C) 2606202330\r\nD) 13 17 20 1830-2330\r\nE) RWY 10/28 NOT AVBL FOR OPS DUE MAINT.",
-   "traditionalMessage": ""
-  },
-  {
    "notamNumber": "A1314/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -394,16 +384,6 @@
    "traditionalMessage": ""
   },
   {
-   "notamNumber": "A1226/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "06/08/2026 1120",
-   "startDate": "06/11/2026 1830",
-   "endDate": "06/18/2026 2330",
-   "icaoMessage": "A1226/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606111830 C) 2606182330\r\nD) 11 14 16 18 1830-2330\r\nE) RWY 09/27 NOT AVBL FOR OPS DUE MAINT.",
-   "traditionalMessage": ""
-  },
-  {
    "notamNumber": "A1306/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -411,6 +391,16 @@
    "startDate": "06/16/2026 1918",
    "endDate": "06/18/2026 1230",
    "icaoMessage": "A1306/26 NOTAMN\r\nQ) VIDF/QMXXX/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606161918 C) 2606181230\r\nE) SIGN BOARD ON TWY A AND TWY C FOR LINK 1 NOT AVBL DUE TECR.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1317/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/18/2026 0552",
+   "startDate": "06/18/2026 0552",
+   "endDate": "06/18/2026 0930",
+   "icaoMessage": "A1317/26 NOTAMN\r\nQ) VIDF/QMOXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606180552 C) 2606180930\r\nE) FLW RESTRICTIONS SHALL APPLY DUE AERONAUTICAL GND LGT SYSTEM\r\nUPDATE.\r\n1. ALL AGL (AERONAUTICAL GND LGT) FOR RWY 09/27, RWY 10/28 AND\r\nASSOCIATED TAXIWAYS NOT AVBL ON REMOTE.\r\n2. ALL STOP BAR LIGHTS FOR RWY 10/28 AND 09/27 NOT AVBL.\r\n3. STOPBARS ON TWY A AND C SOUTH OF TWY N AND TWY M NOT AVBL.\r\n4. STOPBARS ON TWY F3, F4 AND F5 NOT AVBL.",
    "traditionalMessage": ""
   }
  ]
