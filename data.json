@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-19T05:18:26.048Z",
+ "generatedAt": "2026-06-19T09:55:32.513Z",
  "station": "VIDP",
- "metar": "METAR VIDP 190500Z 22004KT 210V310 5000 HZ FEW040 SCT100 32/22 Q1005 NOSIG",
+ "metar": "METAR VIDP 190930Z 27007G17KT 6000 FEW040 38/20 Q1003 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -374,23 +374,13 @@
    "traditionalMessage": ""
   },
   {
-   "notamNumber": "A1321/26",
+   "notamNumber": "A1326/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
-   "issueDate": "06/18/2026 1335",
-   "startDate": "06/18/2026 1335",
-   "endDate": "06/20/2026 1330",
-   "icaoMessage": "A1321/26 NOTAMN\r\nQ) VIDF/QMRXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606181335 C) 2606201330\r\nE) EXIT SIGN BOARD OF TWY P3 FOR RWY 11L AND EXIT SIGN BOARD OF TWY\r\nR3 FOR RWY 29R NOT AVBL FOR OPS.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1314/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "06/17/2026 1741",
-   "startDate": "06/17/2026 1741",
-   "endDate": "06/19/2026 1830",
-   "icaoMessage": "A1314/26 NOTAMN\r\nQ) VIDF/QMXXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606171741 C) 2606191830\r\nE) RETIL(RAPID EXIT TWY INDICATOR LIGHTS) OF TWY R2 FOR RWY 29R U/S\r\nDUE ELECTRICAL FAULT.",
+   "issueDate": "06/19/2026 0818",
+   "startDate": "06/19/2026 0830",
+   "endDate": "06/19/2026 1330",
+   "icaoMessage": "A1326/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606190830 C) 2606191330\r\nE) PORTION OF TWY D BTN TXL F AND TXL E9 NOT AVBL FOR OPS. JUNCTION\r\nOF TXL F AND TXL E9 WITH TWY D AVBL FOR OPS.",
    "traditionalMessage": ""
   }
  ]
