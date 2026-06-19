@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-19T18:12:14.914Z",
+ "generatedAt": "2026-06-19T20:06:24.627Z",
  "station": "VIDP",
- "metar": "METAR VIDP 191800Z 27008KT 5000 HZ NSC 32/20 Q1005 NOSIG",
+ "metar": "METAR VIDP 192000Z 27008KT 4500 HZ NSC 31/20 Q1004 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -381,16 +381,6 @@
    "startDate": "06/19/2026 1830",
    "endDate": "06/19/2026 2330",
    "icaoMessage": "A1331/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606191830 C) 2606192330\r\nE) PORTION OF TWY D BTN TWY D3 AND TWY D4 NOT AVBL FOR OPS.\r\nJUNCTION OF TWY D3 AND TWY D4 WITH TWY D AVBL FOR OPS.\r\nTWY G1 NOT AVBL FOR OPS.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1330/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "06/19/2026 1335",
-   "startDate": "06/19/2026 1335",
-   "endDate": "06/19/2026 1830",
-   "icaoMessage": "A1330/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606191335 C) 2606191830\r\nE) PORTION OF TWY D BTN TXL F AND TXL E9 NOT AVBL FOR OPS. JUNCTION\r\nOF TXL F AND TXL E9 WITH TWY D AVBL FOR OPS.",
    "traditionalMessage": ""
   }
  ]
