@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-21T17:05:44.909Z",
+ "generatedAt": "2026-06-21T18:47:00.133Z",
  "station": "VIDP",
- "metar": "METAR VIDP 211700Z 26007G17KT 2500 BLDU FEW035 SCT100 29/19 Q1003 NOSIG",
+ "metar": "METAR VIDP 211830Z 25007KT 3000 HZ FEW035 BKN100 28/19 Q1003 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -371,16 +371,6 @@
    "startDate": "06/24/2026 1830",
    "endDate": "06/28/2026 2330",
    "icaoMessage": "A1342/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606241830 C) 2606282330\r\nD) 24 28 1830-2330\r\nE) RWY 10/28 NOT AVBL FOR OPS DUE MAINT.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1338/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "06/21/2026 1316",
-   "startDate": "06/21/2026 1316",
-   "endDate": "06/21/2026 1730",
-   "icaoMessage": "A1338/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606211316 C) 2606211730\r\nE) PORTION OF TWY C BTN TWY LINK 19 AND TWY P6 NOT AVBL FOR OPS DUE\r\nCIV\r\nWORK. TWY LINK 19 AVBL FOR OPS.TWY P6 AVBL ONLY FM TWY-A.",
    "traditionalMessage": ""
   }
  ]
