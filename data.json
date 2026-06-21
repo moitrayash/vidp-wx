@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-21T11:35:46.018Z",
+ "generatedAt": "2026-06-21T13:24:33.630Z",
  "station": "VIDP",
- "metar": "METAR VIDP 211130Z 23008KT 180V260 6000 FEW035 FEW040CB SCT100 38/21 Q1000 NOSIG",
+ "metar": "METAR VIDP 211300Z 24006G16KT 180V260 6000 FEW035 FEW040CB SCT100 36/21 Q1000 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -374,13 +374,23 @@
    "traditionalMessage": ""
   },
   {
-   "notamNumber": "A1336/26",
+   "notamNumber": "A1338/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
-   "issueDate": "06/21/2026 0908",
-   "startDate": "06/21/2026 0908",
-   "endDate": "06/21/2026 1300",
-   "icaoMessage": "A1336/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606210908 C) 2606211300\r\nE) PORTION OF TWY C BTN LINK 19 AND TWY P6 NOT AVBL FOR OPS DUE CIV\r\nWORK. TWY LINK 19 AVBL FOR OPS. TWY P6 AVBL ONLY FM TWY-A.",
+   "issueDate": "06/21/2026 1316",
+   "startDate": "06/21/2026 1316",
+   "endDate": "06/21/2026 1730",
+   "icaoMessage": "A1338/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606211316 C) 2606211730\r\nE) PORTION OF TWY C BTN TWY LINK 19 AND TWY P6 NOT AVBL FOR OPS DUE\r\nCIV\r\nWORK. TWY LINK 19 AVBL FOR OPS.TWY P6 AVBL ONLY FM TWY-A.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1337/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/21/2026 1135",
+   "startDate": "06/21/2026 1135",
+   "endDate": "06/21/2026 1330",
+   "icaoMessage": "A1337/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606211135 C) 2606211330\r\nE) RWY 11L/29R NOT AVBL FOR OPS DUE CIVIL WORK.",
    "traditionalMessage": ""
   }
  ]
