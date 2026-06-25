@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-25T00:16:52.873Z",
+ "generatedAt": "2026-06-25T04:37:31.497Z",
  "station": "VIDP",
- "metar": "METAR VIDP 250000Z 21003KT 4000 HZ FEW100 29/22 Q1003 NOSIG",
+ "metar": "METAR VIDP 250430Z 27003KT 6000 NSC 35/20 Q1004 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -384,23 +384,13 @@
    "traditionalMessage": ""
   },
   {
-   "notamNumber": "A1375/26",
+   "notamNumber": "A1379/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
-   "issueDate": "06/24/2026 1724",
-   "startDate": "06/24/2026 1725",
+   "issueDate": "06/25/2026 0120",
+   "startDate": "06/25/2026 0120",
    "endDate": "06/25/2026 1200",
-   "icaoMessage": "A1375/26 NOTAMN\r\nQ) VIDF/QFWAS/V/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606241725 C) 2606251200\r\nE) INSTRUMENTAL WIND SPEED/WIND DIRECTION OF RWY 29R TDZ NOT AVBL\r\nDUE TECR.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1376/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "06/24/2026 1725",
-   "startDate": "06/24/2026 1725",
-   "endDate": "06/25/2026 1200",
-   "icaoMessage": "A1376/26 NOTAMN\r\nQ) VIDF/QFTAS/I/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606241725 C) 2606251200\r\nE) INSTRUMENTAL RVR OF RWY 29R TDZ AND RWY 29R MID NOT AVBL DUE\r\nTECR.",
+   "icaoMessage": "A1379/26 NOTAMN\r\nQ) VIDF/QFTAS/I/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606250120 C) 2606251200\r\nE) INSTRUMENTAL RVR OF RWY 29R MID NOT AVBL DUE TECR.",
    "traditionalMessage": ""
   }
  ]
