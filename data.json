@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-26T22:13:21.901Z",
+ "generatedAt": "2026-06-26T23:36:43.209Z",
  "station": "VIDP",
- "metar": "METAR VIDP 262200Z 25005KT 4000 HZ SCT035 BKN100 31/22 Q1003 NOSIG",
+ "metar": "METAR VIDP 262330Z 25004KT 4000 HZ SCT035 BKN100 31/22 Q1003 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -391,16 +391,6 @@
    "startDate": "06/26/2026 1732",
    "endDate": "06/27/2026 0430",
    "icaoMessage": "A1394/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606261732 C) 2606270430\r\nE) PORTION OF TWY D BTN TWY D4 AND TWY E9 NOT AVBL FOR OPS. JUNCTION\r\nOF TWY D4 AND TWY E9 WITH TWY D AVBL FOR OPS.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1395/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "06/26/2026 1838",
-   "startDate": "06/26/2026 1838",
-   "endDate": "06/26/2026 2330",
-   "icaoMessage": "A1395/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606261838 C) 2606262330\r\nE) 1. PORTION OF TWY C BTN TWY LINK 19 AND TWY P6 NOT AVBL FOR OPS\r\nDUE CIV WORK.\r\n2. JUNCTION OF TWY C AND TWY LINK 19 AVBL FOR OPS.\r\n3.JUNCTION OF TWY C AND TWY P6 NOT AVBL FOR OPS.",
    "traditionalMessage": ""
   }
  ]
