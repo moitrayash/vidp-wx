@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-30T11:23:26.313Z",
+ "generatedAt": "2026-06-30T13:21:46.599Z",
  "station": "VIDP",
- "metar": "METAR VIDP 301100Z 08007KT 4000 HZ SCT035 FEW040CB BKN090 38/23 Q0998 TEMPO 25015G25KT 1500 TSRA",
+ "metar": "METAR VIDP 301300Z 15008KT 3500 HZ SCT035 FEW040CB BKN090 35/25 Q0998 TEMPO 25015G25KT 1500 TSRA",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -264,6 +264,16 @@
    "traditionalMessage": ""
   },
   {
+   "notamNumber": "A1419/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/30/2026 1150",
+   "startDate": "06/30/2026 1150",
+   "endDate": "09/03/2026 2330",
+   "icaoMessage": "A1419/26 NOTAMR A0958/26\r\nQ) VIDF/QMPLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606301150 C) 2609032330\r\nE) HIGH POWER ENGINE RUN-UP BAY 800 NOT AVBL FOR OPS.",
+   "traditionalMessage": ""
+  },
+  {
    "notamNumber": "A1405/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -344,6 +354,16 @@
    "traditionalMessage": ""
   },
   {
+   "notamNumber": "A1420/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/30/2026 1152",
+   "startDate": "07/01/2026 1830",
+   "endDate": "07/30/2026 2330",
+   "icaoMessage": "A1420/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607011830 C) 2607302330\r\nD) JUL 01 06 09 13 16 20 23 27 30 1830-2330\r\nE) RWY 11L/29R NOT AVBL FOR OPS DUE MAINT.",
+   "traditionalMessage": ""
+  },
+  {
    "notamNumber": "A1416/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -361,16 +381,6 @@
    "startDate": "06/10/2026 0800",
    "endDate": "07/09/2026 1200",
    "icaoMessage": "A1257/26 NOTAMN\r\nQ) VIDF/QFWAS/V/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606100800 C) 2607091200\r\nE) INSTRUMENTAL WIND SPEED/WIND DIRECTION OF RWY 27 MID NOT AVBL DUE\r\nCIVIL ISSUE AT SITE.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A0958/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "05/01/2026 0701",
-   "startDate": "05/01/2026 0701",
-   "endDate": "07/01/2026 1130",
-   "icaoMessage": "A0958/26 NOTAMN\r\nQ) VIDF/QMPLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2605010701 C) 2607011130\r\nE) HIGH POWER ENGINE RUN-UP BAY 800 NOT AVBL FOR OPS.",
    "traditionalMessage": ""
   },
   {
