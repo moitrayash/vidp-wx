@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-06-30T08:19:10.315Z",
+ "generatedAt": "2026-06-30T11:23:26.313Z",
  "station": "VIDP",
- "metar": "METAR VIDP 300800Z 29012KT 5000 HZ SCT035 BKN090 38/22 Q1000 NOSIG",
+ "metar": "METAR VIDP 301100Z 08007KT 4000 HZ SCT035 FEW040CB BKN090 38/23 Q0998 TEMPO 25015G25KT 1500 TSRA",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -331,6 +331,26 @@
    "startDate": "05/08/2026 1220",
    "endDate": "08/06/2026 1130",
    "icaoMessage": "A1015/26 NOTAMN\r\nQ) VIDF/QMXLT/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2605081220 C) 2608061130\r\nE) PORTION OF TWY M BTN TWY A AND TWY LINK 30 DOWNGRADED FOR ACFT\r\nUPTO CODE LETTER C.PORTION OF TWY LINK 30 BTN TWY K AND TWY M\r\nDOWNGRADED FOR ACFT UPTO CODE LETTER D.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1415/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/30/2026 0946",
+   "startDate": "07/02/2026 1830",
+   "endDate": "07/31/2026 2330",
+   "icaoMessage": "A1415/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607021830 C) 2607312330\r\nD) 02 03 04 08 10 12 15 17 19 22 24 26 29 31 1830-2330\r\nE) RWY 09/27 NOT AVBL FOR OPS DUE MAINT.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1416/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "06/30/2026 0949",
+   "startDate": "07/05/2026 1830",
+   "endDate": "07/28/2026 2330",
+   "icaoMessage": "A1416/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607051830 C) 2607282330\r\nD) 05 07 11 14 18 21 25 28 1830-2330\r\nE) RWY 10/28 NOT AVBL FOR OPS DUE MAINT.",
    "traditionalMessage": ""
   },
   {
