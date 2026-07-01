@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-01T04:57:54.225Z",
+ "generatedAt": "2026-07-01T08:52:20.238Z",
  "station": "VIDP",
- "metar": "METAR VIDP 010430Z 12008KT 3500 HZ SCT035 FEW040CB BKN100 31/24 Q1003 TEMPO 32015G25KT 1500 TSRA",
+ "metar": "METAR VIDP 010830Z 12008KT 4000 HZ SCT030 OVC090 32/25 Q1002 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -254,6 +254,16 @@
    "traditionalMessage": ""
   },
   {
+   "notamNumber": "A1432/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/01/2026 0737",
+   "startDate": "07/01/2026 0740",
+   "endDate": "07/01/2026 1200EST",
+   "icaoMessage": "A1432/26 NOTAMN\r\nQ) VIDF/QPFXX/IV/BO/AE/000/999/2834N07706E005\r\nA) VIDP B) 2607010740 C) 2607011200EST\r\nE) ATFM SER NOT AVBL DUE MTNL AND RAILTEL LINK U/S.",
+   "traditionalMessage": ""
+  },
+  {
    "notamNumber": "A1233/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -401,6 +411,16 @@
    "startDate": "07/01/2026 0257",
    "endDate": "07/06/2026 1800",
    "icaoMessage": "A1424/26 NOTAMN\r\nQ) VIDF/QMRXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607010257 C) 2607061800\r\nE) EXIT SIGN BOARD OF TWY K6 FOR RWY 28 NOT AVBL FOR OPS DUE TECR.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1429/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/01/2026 0647",
+   "startDate": "07/02/2026 0430",
+   "endDate": "07/04/2026 1130",
+   "icaoMessage": "A1429/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607020430 C) 2607041130\r\nE) TWY LINK 33 NOT AVBL FOR OPS.\r\nJUNCTION OF TWY LINK 33 WITH TWY K AND TXL N AVBL FOR OPS.\r\nMOVEMENT TO/FROM CARGO APRON THROUGH TWY LINK 34 ONLY.",
    "traditionalMessage": ""
   },
   {
