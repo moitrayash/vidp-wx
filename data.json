@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-01T08:52:20.238Z",
+ "generatedAt": "2026-07-01T12:08:10.249Z",
  "station": "VIDP",
- "metar": "METAR VIDP 010830Z 12008KT 4000 HZ SCT030 OVC090 32/25 Q1002 NOSIG",
+ "metar": "METAR VIDP 011200Z 09006KT 010V140 4000 HZ SCT035 SCT100 33/24 Q0999 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -254,16 +254,6 @@
    "traditionalMessage": ""
   },
   {
-   "notamNumber": "A1432/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "07/01/2026 0737",
-   "startDate": "07/01/2026 0740",
-   "endDate": "07/01/2026 1200EST",
-   "icaoMessage": "A1432/26 NOTAMN\r\nQ) VIDF/QPFXX/IV/BO/AE/000/999/2834N07706E005\r\nA) VIDP B) 2607010740 C) 2607011200EST\r\nE) ATFM SER NOT AVBL DUE MTNL AND RAILTEL LINK U/S.",
-   "traditionalMessage": ""
-  },
-  {
    "notamNumber": "A1233/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -381,6 +371,16 @@
    "startDate": "07/05/2026 1830",
    "endDate": "07/28/2026 2330",
    "icaoMessage": "A1416/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607051830 C) 2607282330\r\nD) 05 07 11 14 18 21 25 28 1830-2330\r\nE) RWY 10/28 NOT AVBL FOR OPS DUE MAINT.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1435/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/01/2026 1036",
+   "startDate": "07/01/2026 1036",
+   "endDate": "07/09/2026 1230",
+   "icaoMessage": "A1435/26 NOTAMN\r\nQ) VIDF/QMRXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607011036 C) 2607091230\r\nE) EXIT SIGN BOARD OF TWY P2 AND TWY P3 FOR RWY 11L NOT AVBL DUE\r\nTECR.",
    "traditionalMessage": ""
   },
   {
