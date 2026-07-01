@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-01T00:18:28.519Z",
+ "generatedAt": "2026-07-01T04:57:54.225Z",
  "station": "VIDP",
- "metar": "METAR VIDP 010000Z 11011KT 3000 BR SCT035 FEW040CB BKN100 29/25 Q1000 TEMPO 05020G30KT 1500 TSRA",
+ "metar": "METAR VIDP 010430Z 12008KT 3500 HZ SCT035 FEW040CB BKN100 31/24 Q1003 TEMPO 32015G25KT 1500 TSRA",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -381,6 +381,26 @@
    "startDate": "06/10/2026 0800",
    "endDate": "07/09/2026 1200",
    "icaoMessage": "A1257/26 NOTAMN\r\nQ) VIDF/QFWAS/V/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606100800 C) 2607091200\r\nE) INSTRUMENTAL WIND SPEED/WIND DIRECTION OF RWY 27 MID NOT AVBL DUE\r\nCIVIL ISSUE AT SITE.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1425/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/01/2026 0301",
+   "startDate": "07/01/2026 0301",
+   "endDate": "07/06/2026 1830",
+   "icaoMessage": "A1425/26 NOTAMN\r\nQ) VIDF/QMXXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607010301 C) 2607061830\r\nE) RETIL(RAPID EXIT TWY INDICATOR LIGHTS) OF TWY H1 FOR RWY 28 U/S\r\nDUE ELECTRICAL FAULT.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1424/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/01/2026 0257",
+   "startDate": "07/01/2026 0257",
+   "endDate": "07/06/2026 1800",
+   "icaoMessage": "A1424/26 NOTAMN\r\nQ) VIDF/QMRXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607010257 C) 2607061800\r\nE) EXIT SIGN BOARD OF TWY K6 FOR RWY 28 NOT AVBL FOR OPS DUE TECR.",
    "traditionalMessage": ""
   },
   {
