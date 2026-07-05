@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-05T07:46:46.733Z",
+ "generatedAt": "2026-07-05T09:59:06.060Z",
  "station": "VIDP",
- "metar": "METAR VIDP 050730Z 08009KT 3000 -TSRA SCT030 FEW035CB BKN090 29/26 Q0999 TEMPO 25010G20KT 1500 TSRA",
+ "metar": "METAR VIDP 050930Z 03005KT 3000 BR SCT030 FEW035CB BKN090 28/25 Q0998 TEMPO 25015G25KT 1500 TSRA",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -254,13 +254,13 @@
    "traditionalMessage": ""
   },
   {
-   "notamNumber": "A1454/26",
+   "notamNumber": "A1456/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
-   "issueDate": "07/05/2026 0642",
-   "startDate": "07/05/2026 0642",
-   "endDate": "07/05/2026 0730EST",
-   "icaoMessage": "A1454/26 NOTAMN\r\nQ) VIDF/QIGAS/I/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607050642 C) 2607050730EST\r\nE) RWY 29R GP 331.700MHZ NOT AVBL DUE EQUIPMENT.",
+   "issueDate": "07/05/2026 0940",
+   "startDate": "07/05/2026 0940",
+   "endDate": "07/05/2026 1030EST",
+   "icaoMessage": "A1456/26 NOTAMR A1455/26\r\nQ) VIDF/QIGAS/I/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607050940 C) 2607051030EST\r\nE) RWY 29R GP 331.700MHZ NOT AVBL DUE EQUIPMENT.",
    "traditionalMessage": ""
   },
   {
