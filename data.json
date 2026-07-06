@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-06T16:43:25.068Z",
+ "generatedAt": "2026-07-06T18:47:29.388Z",
  "station": "VIDP",
- "metar": "METAR VIDP 061630Z 12005KT 4500 HZ FEW100 34/26 Q0999 NOSIG",
+ "metar": "METAR VIDP 061830Z 24004KT 4500 HZ FEW100 32/26 Q1000 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -451,36 +451,6 @@
    "startDate": "07/04/2026 0205",
    "endDate": "07/07/2026 1330",
    "icaoMessage": "A1447/26 NOTAMN\r\nQ) VIDF/QMRXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607040205 C) 2607071330\r\nE) EXIT SIGN BOARD OF TWY P1 FOR RWY 11L NOT AVBL.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1425/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "07/01/2026 0301",
-   "startDate": "07/01/2026 0301",
-   "endDate": "07/06/2026 1830",
-   "icaoMessage": "A1425/26 NOTAMN\r\nQ) VIDF/QMXXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607010301 C) 2607061830\r\nE) RETIL(RAPID EXIT TWY INDICATOR LIGHTS) OF TWY H1 FOR RWY 28 U/S\r\nDUE ELECTRICAL FAULT.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1446/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "07/03/2026 2125",
-   "startDate": "07/03/2026 2125",
-   "endDate": "07/06/2026 1830",
-   "icaoMessage": "A1446/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607032125 C) 2607061830\r\nE) PORTION OF TWY D BTN TWY D3 AND TWY D4 NOT AVBL FOR OPS DUE CIV\r\nWORK.\r\nJUNCTION OF TWY D3 AND TWY D4 WITH TWY D AVBL FOR OPS.\r\nTWY G1 NOT AVBL FOR OPS DUE TRAFFIC SCENARIO.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1424/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "07/01/2026 0257",
-   "startDate": "07/01/2026 0257",
-   "endDate": "07/06/2026 1800",
-   "icaoMessage": "A1424/26 NOTAMN\r\nQ) VIDF/QMRXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607010257 C) 2607061800\r\nE) EXIT SIGN BOARD OF TWY K6 FOR RWY 28 NOT AVBL FOR OPS DUE TECR.",
    "traditionalMessage": ""
   }
  ]
