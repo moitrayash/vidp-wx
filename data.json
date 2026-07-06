@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-06T09:43:06.607Z",
+ "generatedAt": "2026-07-06T13:34:15.848Z",
  "station": "VIDP",
- "metar": "METAR VIDP 060930Z 32009KT 5000 HZ SCT035 FEW040CB BKN100 38/26 Q0998 TEMPO 14015G25KT 3000 TSRA",
+ "metar": "METAR VIDP 061330Z 18004KT 4500 HZ SCT035 FEW040CB 34/27 Q0998 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -311,6 +311,16 @@
    "startDate": "05/22/2026 1048",
    "endDate": "08/20/2026 1830",
    "icaoMessage": "A1121/26 NOTAMR A0682/26\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2605221048 C) 2608201830\r\nE) TWY T4 AND TWY S2 NOT AVBL FOR OPS.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "G0779/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/06/2026 1146",
+   "startDate": "08/06/2026 0000",
+   "endDate": "08/19/2026 2359",
+   "icaoMessage": "G0779/26 NOTAMN\r\nQ) VIDF/QPRTT/IV/BO/AE/000/999/2834N07707E005\r\nA) VIDP B) 2608060000 C) 2608192359\r\nE) TRIGGER NOTAM - AIRAC AIP SUPPLEMENT 117/2026 WEF 06 AUG 2026.\r\nRADIO COMMUNICATION FAILURE PROCEDURES (RCF).",
    "traditionalMessage": ""
   },
   {
