@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-06T01:12:03.841Z",
+ "generatedAt": "2026-07-06T05:39:18.130Z",
  "station": "VIDP",
- "metar": "METAR VIDP 060100Z 10006KT 2500 BR FEW100 29/26 Q0999 NOSIG",
+ "metar": "METAR VIDP 060530Z 14006KT 100V180 5000 HZ FEW040 SCT100 35/26 Q1001 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -371,6 +371,36 @@
    "startDate": "07/05/2026 1830",
    "endDate": "07/28/2026 2330",
    "icaoMessage": "A1416/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607051830 C) 2607282330\r\nD) 05 07 11 14 18 21 25 28 1830-2330\r\nE) RWY 10/28 NOT AVBL FOR OPS DUE MAINT.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1460/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/06/2026 0138",
+   "startDate": "07/06/2026 0138",
+   "endDate": "07/11/2026 1230",
+   "icaoMessage": "A1460/26 NOTAMN\r\nQ) VIDF/QMRXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607060138 C) 2607111230\r\nE) TWY H6 EXIT SIGN BOARD U/S DUE TECR.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1461/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/06/2026 0141",
+   "startDate": "07/06/2026 0141",
+   "endDate": "07/11/2026 1230",
+   "icaoMessage": "A1461/26 NOTAMN\r\nQ) VIDF/QMRXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607060141 C) 2607111230\r\nE) TWY P2 VACATE SIGN BOARD U/S DUE TECR.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1462/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/06/2026 0144",
+   "startDate": "07/06/2026 0144",
+   "endDate": "07/11/2026 1230",
+   "icaoMessage": "A1462/26 NOTAMN\r\nQ) VIDF/QMXXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607060144 C) 2607111230\r\nE) RETIL(RAPID EXIT TWY INDICATOR LIGHTS) OF TWY G2 FOR RWY 10 U/S\r\nDUE TECR.",
    "traditionalMessage": ""
   },
   {
