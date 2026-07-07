@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-06T23:20:49.477Z",
+ "generatedAt": "2026-07-07T01:16:51.476Z",
  "station": "VIDP",
- "metar": "METAR VIDP 062300Z 00000KT 4000 BR SCT100 31/27 Q0998 NOSIG",
+ "metar": "METAR VIDP 070100Z VRB02KT 3500 BR SCT035 SCT090 31/27 Q0999 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -414,16 +414,6 @@
    "traditionalMessage": ""
   },
   {
-   "notamNumber": "A1438/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "07/02/2026 1348",
-   "startDate": "07/02/2026 1348",
-   "endDate": "07/10/2026 1300",
-   "icaoMessage": "A1438/26 NOTAMN\r\nQ) VIDF/QMRXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607021348 C) 2607101300\r\nE) EXIT SIGN BOARD OF TWY P3 FOR RWY 11L NOT AVBL DUE TECR.",
-   "traditionalMessage": ""
-  },
-  {
    "notamNumber": "A1466/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -441,16 +431,6 @@
    "startDate": "06/10/2026 0800",
    "endDate": "07/09/2026 1200",
    "icaoMessage": "A1257/26 NOTAMN\r\nQ) VIDF/QFWAS/V/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606100800 C) 2607091200\r\nE) INSTRUMENTAL WIND SPEED/WIND DIRECTION OF RWY 27 MID NOT AVBL DUE\r\nCIVIL ISSUE AT SITE.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1447/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "07/04/2026 0205",
-   "startDate": "07/04/2026 0205",
-   "endDate": "07/07/2026 1330",
-   "icaoMessage": "A1447/26 NOTAMN\r\nQ) VIDF/QMRXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607040205 C) 2607071330\r\nE) EXIT SIGN BOARD OF TWY P1 FOR RWY 11L NOT AVBL.",
    "traditionalMessage": ""
   }
  ]
