@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-07T18:34:19.997Z",
+ "generatedAt": "2026-07-07T20:30:12.703Z",
  "station": "VIDP",
- "metar": "METAR VIDP 071830Z 24002KT 3000 BR SCT030 BKN090 27/25 Q0999 NOSIG",
+ "metar": "METAR VIDP 072000Z 16003KT 3000 BR SCT030 BKN090 27/25 Q0999 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -431,6 +431,16 @@
    "startDate": "06/10/2026 0800",
    "endDate": "07/09/2026 1200",
    "icaoMessage": "A1257/26 NOTAMN\r\nQ) VIDF/QFWAS/V/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606100800 C) 2607091200\r\nE) INSTRUMENTAL WIND SPEED/WIND DIRECTION OF RWY 27 MID NOT AVBL DUE\r\nCIVIL ISSUE AT SITE.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1476/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/07/2026 1835",
+   "startDate": "07/07/2026 1835",
+   "endDate": "07/07/2026 2330",
+   "icaoMessage": "A1476/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607071835 C) 2607072330\r\nE) PORTION OF TWY K BTN J1 AND TWY K1 NOT AVBL FOR OPS.\r\nLEFT TURN FM TWY K1 TO TWY K NOT AVBL.\r\nRIGHT TURN FM TWY J1 TO TWY K NOT AVBL.\r\nLINK 33 NOT AVBL FOR OPS.",
    "traditionalMessage": ""
   }
  ]
