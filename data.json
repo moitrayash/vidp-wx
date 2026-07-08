@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-08T15:21:52.505Z",
+ "generatedAt": "2026-07-08T16:56:46.750Z",
  "station": "VIDP",
- "metar": "METAR VIDP 081500Z 05005KT 3500 DZ FEW008 BKN020 FEW030CB BKN080 27/25 Q0998 TEMPO 11010G20KT 1500 TSRA",
+ "metar": "METAR VIDP 081630Z 34005KT 3500 DZ FEW010 SCT020 FEW030CB BKN080 27/26 Q0999 TEMPO 11010G20KT 1500 TSRA",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -431,16 +431,6 @@
    "startDate": "06/10/2026 0800",
    "endDate": "07/09/2026 1200",
    "icaoMessage": "A1257/26 NOTAMN\r\nQ) VIDF/QFWAS/V/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2606100800 C) 2607091200\r\nE) INSTRUMENTAL WIND SPEED/WIND DIRECTION OF RWY 27 MID NOT AVBL DUE\r\nCIVIL ISSUE AT SITE.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1477/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "07/08/2026 0021",
-   "startDate": "07/08/2026 0059",
-   "endDate": "07/09/2026 1030",
-   "icaoMessage": "A1477/26 NOTAMN\r\nQ) VIDF/QMXXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607080059 C) 2607091030\r\nE) NO ENTRY BAR ON TWY J2 RWY 10-28 UNSERVICEABLE.",
    "traditionalMessage": ""
   }
  ]
