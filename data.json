@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-09T08:48:10.919Z",
+ "generatedAt": "2026-07-09T11:39:49.628Z",
  "station": "VIDP",
- "metar": "METAR VIDP 090830Z 33008KT 5000 BR SCT012 BKN020 FEW030CB BKN080 28/24 Q0999 NOSIG",
+ "metar": "METAR VIDP 091130Z 32007G17KT 5000 HZ SCT020 BKN080 30/25 Q0998 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -384,6 +384,16 @@
    "traditionalMessage": ""
   },
   {
+   "notamNumber": "A1492/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/09/2026 1057",
+   "startDate": "07/13/2026 0600",
+   "endDate": "07/13/2026 0700",
+   "icaoMessage": "A1492/26 NOTAMN\r\nQ) VIDF/QNVAS/IV/BO/AE/000/999/2834N07706E025\r\nA) VIDP B) 2607130600 C) 2607130700\r\nE) DVOR DPN 116.100MHZ NOT AVBL DUE MAINT.",
+   "traditionalMessage": ""
+  },
+  {
    "notamNumber": "A1460/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -411,6 +421,16 @@
    "startDate": "07/06/2026 0144",
    "endDate": "07/11/2026 1230",
    "icaoMessage": "A1462/26 NOTAMN\r\nQ) VIDF/QMXXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607060144 C) 2607111230\r\nE) RETIL(RAPID EXIT TWY INDICATOR LIGHTS) OF TWY G2 FOR RWY 10 U/S\r\nDUE TECR.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1494/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/09/2026 1101",
+   "startDate": "07/10/2026 0600",
+   "endDate": "07/10/2026 0700",
+   "icaoMessage": "A1494/26 NOTAMN\r\nQ) VIDF/QNVAS/IV/BO/AE/000/999/2834N07706E025\r\nA) VIDP B) 2607100600 C) 2607100700\r\nE) DVOR DIG 114.600MHZ NOT AVBL DUE MAINT.",
    "traditionalMessage": ""
   },
   {
