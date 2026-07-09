@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-09T18:31:17.118Z",
+ "generatedAt": "2026-07-09T20:27:34.524Z",
  "station": "VIDP",
- "metar": "METAR VIDP 091800Z 34004KT 4000 BR SCT020 FEW030CB SCT090 28/25 Q1001 NOSIG",
+ "metar": "METAR VIDP 092000Z 32006KT 3500 BR SCT010 BKN020 BKN080 27/25 Q1000 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -391,6 +391,16 @@
    "startDate": "07/13/2026 0600",
    "endDate": "07/13/2026 0700",
    "icaoMessage": "A1492/26 NOTAMN\r\nQ) VIDF/QNVAS/IV/BO/AE/000/999/2834N07706E025\r\nA) VIDP B) 2607130600 C) 2607130700\r\nE) DVOR DPN 116.100MHZ NOT AVBL DUE MAINT.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1502/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/09/2026 2000",
+   "startDate": "07/09/2026 2000",
+   "endDate": "07/12/2026 1830",
+   "icaoMessage": "A1502/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/M/A/000/999/2834N07707E005\r\nA) VIDP B) 2607092000 C) 2607121830\r\nE) PORTION OF TWY D BTN TWY D3 AND TWY D4 NOT AVBL FOR OPS DUE CIV\r\nWORK. JUNCTION OF TWY D3 AND TWY D4 WITH TWY D AVBL FOR OPS. TWY G1\r\nNOT AVBL FOR OPS DUE TFC.",
    "traditionalMessage": ""
   },
   {
