@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-10T11:36:21.426Z",
+ "generatedAt": "2026-07-10T13:33:00.972Z",
  "station": "VIDP",
- "metar": "METAR VIDP 101130Z 02007KT 5000 HZ FEW030 SCT090 32/24 Q0998 NOSIG",
+ "metar": "METAR VIDP 101300Z 35004KT 5000 HZ FEW030 FEW035CB SCT090 32/24 Q0998 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -381,6 +381,26 @@
    "startDate": "07/05/2026 1830",
    "endDate": "07/28/2026 2330",
    "icaoMessage": "A1416/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607051830 C) 2607282330\r\nD) 05 07 11 14 18 21 25 28 1830-2330\r\nE) RWY 10/28 NOT AVBL FOR OPS DUE MAINT.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1514/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/10/2026 1310",
+   "startDate": "07/15/2026 0700",
+   "endDate": "07/15/2026 0800",
+   "icaoMessage": "A1514/26 NOTAMN\r\nQ) VIDF/QPUCH/I/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607150700 C) 2607150800\r\nE) DRG NON AVBL PERIOD OF DVOR CHI (116.800MHZ), ACFT CARRYING OUT\r\nMISSED APCH FM RWY 29R/RWY 29L AT IGI AP (VIDP) AND REQUIRED TO HOLD\r\nAT DVOR CHI (116.800MHZ) MAY USE THE FLW FIX/WAYPOINT IN PLACE OF\r\nDVOR\r\nCHI (116.800MHZ).\r\nA. R239/26.4D (116.100MHZ DPN)\r\nB. 282051N0763959E.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1513/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/10/2026 1306",
+   "startDate": "07/14/2026 0700",
+   "endDate": "07/14/2026 0800",
+   "icaoMessage": "A1513/26 NOTAMN\r\nQ) VIDF/QPUCH/I/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607140700 C) 2607140800\r\nE) DRG NON AVBL PERIOD OF DVOR SAM (117.000MHZ), ACFT CARRYING OUT\r\nMISSED APCH FM RWY 27/RWY28 AT IGI AIRPORT (VIDP) AND ACFT REQUIRED\r\nTO HOLD AT SAM DVOR MAY HOLD AT FLW FIX/WAY POINT:\r\nA. R316/21D (116.100MHZ DPN)\r\nB. 284912N0764911E.",
    "traditionalMessage": ""
   },
   {
