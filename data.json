@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-10T05:11:11.593Z",
+ "generatedAt": "2026-07-10T08:44:19.619Z",
  "station": "VIDP",
- "metar": "METAR VIDP 100500Z 30010KT 3000 BR SCT025 FEW030CB SCT090 30/26 Q1001 NOSIG",
+ "metar": "METAR VIDP 100830Z 33007KT 5000 HZ SCT030 BKN090 32/25 Q1000 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -441,26 +441,6 @@
    "startDate": "07/06/2026 0144",
    "endDate": "07/11/2026 1230",
    "icaoMessage": "A1462/26 NOTAMN\r\nQ) VIDF/QMXXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607060144 C) 2607111230\r\nE) RETIL(RAPID EXIT TWY INDICATOR LIGHTS) OF TWY G2 FOR RWY 10 U/S\r\nDUE TECR.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1494/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "07/09/2026 1101",
-   "startDate": "07/10/2026 0600",
-   "endDate": "07/10/2026 0700",
-   "icaoMessage": "A1494/26 NOTAMN\r\nQ) VIDF/QNVAS/IV/BO/AE/000/999/2834N07706E025\r\nA) VIDP B) 2607100600 C) 2607100700\r\nE) DVOR DIG 114.600MHZ NOT AVBL DUE MAINT.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1496/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "07/09/2026 1210",
-   "startDate": "07/10/2026 0600",
-   "endDate": "07/10/2026 0700",
-   "icaoMessage": "A1496/26 NOTAMN\r\nQ) VIDF/QPUCH/I/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607100600 C) 2607100700\r\nE) DRG NON AVBL PERIOD OF DVOR DIG (114.600MHZ) ACFT CARRYING MISSED\r\nAPCH FM RWY 09 SHALL ESTABLISH RDL WITH RESPECT TO DPN (116.100MHZ)\r\nDVOR INSTEAD OF DIG DVOR (114.600MHZ).",
    "traditionalMessage": ""
   }
  ]
