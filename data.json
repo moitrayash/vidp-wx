@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-10T13:33:00.972Z",
+ "generatedAt": "2026-07-10T16:01:45.730Z",
  "station": "VIDP",
- "metar": "METAR VIDP 101300Z 35004KT 5000 HZ FEW030 FEW035CB SCT090 32/24 Q0998 NOSIG",
+ "metar": "METAR VIDP 101530Z 25008KT 4500 HZ SCT035 FEW040CB BKN090 29/24 Q1000 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -384,6 +384,16 @@
    "traditionalMessage": ""
   },
   {
+   "notamNumber": "A1515/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/10/2026 1350",
+   "startDate": "07/16/2026 0730",
+   "endDate": "07/16/2026 0830",
+   "icaoMessage": "A1515/26 NOTAMN\r\nQ) VIDF/QPUCH/I/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607160730 C) 2607160830\r\nE) DRG NON AVBL PERIOD OF DVOR SKA (117.200MHZ), ACFT CARRYING OUT\r\nMISSED APCH FM RWY 11L/RWY11R/RWY29L/RWY29R AT IGI AP (VIDP) AND\r\nREQUIRED TO HOLD AT DVOR SKA (117.200MHZ) MAY USE THE FLW\r\nFIX/WAYPOINT IN PLACE OF DVOR SKA (117.200MHZ).\r\nA. R186/43D (116.100MHZ DPN)\r\nB. 275054N0770030E.",
+   "traditionalMessage": ""
+  },
+  {
    "notamNumber": "A1514/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -461,6 +471,16 @@
    "startDate": "07/06/2026 0144",
    "endDate": "07/11/2026 1230",
    "icaoMessage": "A1462/26 NOTAMN\r\nQ) VIDF/QMXXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607060144 C) 2607111230\r\nE) RETIL(RAPID EXIT TWY INDICATOR LIGHTS) OF TWY G2 FOR RWY 10 U/S\r\nDUE TECR.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1517/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/10/2026 1553",
+   "startDate": "07/10/2026 1830",
+   "endDate": "07/10/2026 2330",
+   "icaoMessage": "A1517/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607101830 C) 2607102330\r\nE) PORTION OF TWY D BTN TWY F AND TWY E9 NOT AVBL FOR OPS DUE CIV\r\nWORK.\r\nINT OF TWY F AND TWY D AND TWY E9 AND TWY D AVBL FOR OPS.",
    "traditionalMessage": ""
   }
  ]
