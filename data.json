@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-11T22:28:43.082Z",
+ "generatedAt": "2026-07-11T23:31:31.444Z",
  "station": "VIDP",
- "metar": "METAR VIDP 112200Z 24004KT 4000 HZ SCT090 30/24 Q0996 NOSIG",
+ "metar": "METAR VIDP 112300Z 24004KT 4000 HZ SCT090 30/24 Q0996 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -461,16 +461,6 @@
    "startDate": "07/11/2026 1249",
    "endDate": "07/12/2026 1200",
    "icaoMessage": "A1524/26 NOTAMN\r\nQ) VIDF/QFWAS/V/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607111249 C) 2607121200\r\nE) INSTRUMENTAL WIND SPEED/WIND DIRECTION OF RWY 28 TDZ NOT AVBL DUE\r\nTECR.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1527/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "07/11/2026 1615",
-   "startDate": "07/11/2026 1830",
-   "endDate": "07/11/2026 2330",
-   "icaoMessage": "A1527/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607111830 C) 2607112330\r\nE) PORTION OF TWY K BTN TWY J2 AND K1 NOT AVBL FOR OPS. LINK 33 NOT\r\nAVBL FOR OPS.",
    "traditionalMessage": ""
   }
  ]
