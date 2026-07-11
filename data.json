@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-11T12:02:15.220Z",
+ "generatedAt": "2026-07-11T13:49:01.627Z",
  "station": "VIDP",
- "metar": "METAR VIDP 111200Z 25007KT 5000 HZ FEW035 35/25 Q0997 NOSIG",
+ "metar": "METAR VIDP 111330Z 28005KT 4000 HZ FEW035 34/25 Q0997 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -444,33 +444,13 @@
    "traditionalMessage": ""
   },
   {
-   "notamNumber": "A1460/26",
+   "notamNumber": "A1524/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
-   "issueDate": "07/06/2026 0138",
-   "startDate": "07/06/2026 0138",
-   "endDate": "07/11/2026 1230",
-   "icaoMessage": "A1460/26 NOTAMN\r\nQ) VIDF/QMRXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607060138 C) 2607111230\r\nE) TWY H6 EXIT SIGN BOARD U/S DUE TECR.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1461/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "07/06/2026 0141",
-   "startDate": "07/06/2026 0141",
-   "endDate": "07/11/2026 1230",
-   "icaoMessage": "A1461/26 NOTAMN\r\nQ) VIDF/QMRXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607060141 C) 2607111230\r\nE) TWY P2 VACATE SIGN BOARD U/S DUE TECR.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1462/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "07/06/2026 0144",
-   "startDate": "07/06/2026 0144",
-   "endDate": "07/11/2026 1230",
-   "icaoMessage": "A1462/26 NOTAMN\r\nQ) VIDF/QMXXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607060144 C) 2607111230\r\nE) RETIL(RAPID EXIT TWY INDICATOR LIGHTS) OF TWY G2 FOR RWY 10 U/S\r\nDUE TECR.",
+   "issueDate": "07/11/2026 1249",
+   "startDate": "07/11/2026 1249",
+   "endDate": "07/12/2026 1200",
+   "icaoMessage": "A1524/26 NOTAMN\r\nQ) VIDF/QFWAS/V/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607111249 C) 2607121200\r\nE) INSTRUMENTAL WIND SPEED/WIND DIRECTION OF RWY 28 TDZ NOT AVBL DUE\r\nTECR.",
    "traditionalMessage": ""
   }
  ]
