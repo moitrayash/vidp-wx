@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-12T20:52:15.728Z",
+ "generatedAt": "2026-07-12T21:50:27.820Z",
  "station": "VIDP",
- "metar": "METAR VIDP 122030Z 27009KT 3500 HZ SCT100 31/23 Q0998 NOSIG",
+ "metar": "METAR VIDP 122130Z 26006KT 3500 HZ SCT100 31/23 Q0998 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -484,13 +484,13 @@
    "traditionalMessage": ""
   },
   {
-   "notamNumber": "A1536/26",
+   "notamNumber": "A1538/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
-   "issueDate": "07/12/2026 2039",
-   "startDate": "07/12/2026 2039",
+   "issueDate": "07/12/2026 2117",
+   "startDate": "07/12/2026 2117",
    "endDate": "07/13/2026 0030",
-   "icaoMessage": "A1536/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607122039 C) 2607130030\r\nE) 1. PORTION OF TWY C BTN TWY LINK 19 AND TWY M NOT AVBL FOR OPS\r\nDUE CIV WORK.\r\n2. JUNCTION OF TWY C AND TWY LINK 19 AVBL FOR OPS.\r\n3. JUNCTION OF TWY C AND TWY P6 NOT AVBL FOR OPS.",
+   "icaoMessage": "A1538/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607122117 C) 2607130030\r\nE) 1. PORTION OF TWY C BTN TWY LINK 19 AND TWY P6 NOT AVBL FOR OPS\r\nDUE CIV WORK.\r\n2. JUNCTION OF TWY C AND TWY LINK 19 AVBL FOR OPS.\r\n3. JUNCTION OF TWY C AND TWY P6 AVBL FOR OPS.",
    "traditionalMessage": ""
   }
  ]
