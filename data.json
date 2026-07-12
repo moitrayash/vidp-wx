@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-12T11:59:51.538Z",
+ "generatedAt": "2026-07-12T13:47:43.752Z",
  "station": "VIDP",
- "metar": "METAR VIDP 121130Z 26007KT 180V310 3500 HZ SCT030 36/24 Q0996 NOSIG",
+ "metar": "METAR VIDP 121330Z 26004KT 3500 HZ FEW030 35/24 Q0996 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -444,6 +444,16 @@
    "traditionalMessage": ""
   },
   {
+   "notamNumber": "A1534/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/12/2026 1216",
+   "startDate": "07/12/2026 1216",
+   "endDate": "07/13/2026 1200",
+   "icaoMessage": "A1534/26 NOTAMN\r\nQ) VIDF/QFWAS/V/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607121216 C) 2607131200\r\nE) INSTRUMENTAL WIND OF RWY 28 TDZ NOT AVBL DUE TECR.",
+   "traditionalMessage": ""
+  },
+  {
    "notamNumber": "A1492/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -471,16 +481,6 @@
    "startDate": "07/09/2026 2000",
    "endDate": "07/12/2026 1830",
    "icaoMessage": "A1502/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/M/A/000/999/2834N07707E005\r\nA) VIDP B) 2607092000 C) 2607121830\r\nE) PORTION OF TWY D BTN TWY D3 AND TWY D4 NOT AVBL FOR OPS DUE CIV\r\nWORK. JUNCTION OF TWY D3 AND TWY D4 WITH TWY D AVBL FOR OPS. TWY G1\r\nNOT AVBL FOR OPS DUE TFC.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1524/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "07/11/2026 1249",
-   "startDate": "07/11/2026 1249",
-   "endDate": "07/12/2026 1200",
-   "icaoMessage": "A1524/26 NOTAMN\r\nQ) VIDF/QFWAS/V/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607111249 C) 2607121200\r\nE) INSTRUMENTAL WIND SPEED/WIND DIRECTION OF RWY 28 TDZ NOT AVBL DUE\r\nTECR.",
    "traditionalMessage": ""
   }
  ]
