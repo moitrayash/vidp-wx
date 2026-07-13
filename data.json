@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-13T11:23:23.519Z",
+ "generatedAt": "2026-07-13T13:33:31.628Z",
  "station": "VIDP",
- "metar": "METAR VIDP 131100Z 26008KT 5000 HZ FEW030 SCT035 37/24 Q0997 NOSIG",
+ "metar": "METAR VIDP 131330Z 24005KT 4500 HZ SCT035 FEW040CB 36/24 Q0998 TEMPO 32020G30KT 1500 TSRA",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -424,6 +424,16 @@
    "traditionalMessage": ""
   },
   {
+   "notamNumber": "A1546/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/13/2026 1220",
+   "startDate": "07/13/2026 1220",
+   "endDate": "07/14/2026 1200",
+   "icaoMessage": "A1546/26 NOTAMN\r\nQ) VIDF/QFWAS/V/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607131220 C) 2607141200\r\nE) INSTRUMENTAL WIND OF RWY 28 TDZ NOT AVBL DUE TECR.",
+   "traditionalMessage": ""
+  },
+  {
    "notamNumber": "A1513/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -434,13 +444,13 @@
    "traditionalMessage": ""
   },
   {
-   "notamNumber": "A1534/26",
+   "notamNumber": "A1547/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
-   "issueDate": "07/12/2026 1216",
-   "startDate": "07/12/2026 1216",
-   "endDate": "07/13/2026 1200",
-   "icaoMessage": "A1534/26 NOTAMN\r\nQ) VIDF/QFWAS/V/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607121216 C) 2607131200\r\nE) INSTRUMENTAL WIND OF RWY 28 TDZ NOT AVBL DUE TECR.",
+   "issueDate": "07/13/2026 1230",
+   "startDate": "07/13/2026 1230",
+   "endDate": "07/13/2026 1530",
+   "icaoMessage": "A1547/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607131230 C) 2607131530\r\nE) ISOLATION BAY 803 AND TWY R7 NOT AVBL FOR OPS.",
    "traditionalMessage": ""
   }
  ]
