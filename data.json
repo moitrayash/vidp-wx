@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-13T22:37:46.728Z",
+ "generatedAt": "2026-07-13T23:33:55.149Z",
  "station": "VIDP",
- "metar": "METAR VIDP 132230Z 31008KT 4000 HZ SCT035 FEW040CB BKN090 31/24 Q0999 NOSIG",
+ "metar": "METAR VIDP 132300Z 34007KT 4000 HZ SCT035 FEW040CB BKN090 31/24 Q1000 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -451,16 +451,6 @@
    "startDate": "07/14/2026 0700",
    "endDate": "07/14/2026 0800",
    "icaoMessage": "A1513/26 NOTAMN\r\nQ) VIDF/QPUCH/I/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607140700 C) 2607140800\r\nE) DRG NON AVBL PERIOD OF DVOR SAM (117.000MHZ), ACFT CARRYING OUT\r\nMISSED APCH FM RWY 27/RWY28 AT IGI AIRPORT (VIDP) AND ACFT REQUIRED\r\nTO HOLD AT SAM DVOR MAY HOLD AT FLW FIX/WAY POINT:\r\nA. R316/21D (116.100MHZ DPN)\r\nB. 284912N0764911E.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1549/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "07/13/2026 1431",
-   "startDate": "07/13/2026 1431",
-   "endDate": "07/13/2026 2330",
-   "icaoMessage": "A1549/26 NOTAMN\r\nQ) VIDF/QMXXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607131431 C) 2607132330\r\nE) RETIL(RAPID EXIT TWY INDICATOR LIGHTS) OF TWY R3 FOR RWY 29R U/S.",
    "traditionalMessage": ""
   }
  ]
