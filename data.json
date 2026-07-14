@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-14T15:12:15.391Z",
+ "generatedAt": "2026-07-14T16:40:30.266Z",
  "station": "VIDP",
- "metar": "METAR VIDP 141500Z 18011KT 3500 -RA SCT035 FEW040CB BKN100 28/24 Q1001 TEMPO 27015G25KT 3000 -TSRA",
+ "metar": "METAR VIDP 141630Z 20006KT 4500 HZ SCT035 FEW040CB BKN090 29/24 Q1002 TEMPO 23010G20KT 3000 TSRA",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -381,6 +381,16 @@
    "startDate": "07/05/2026 1830",
    "endDate": "07/28/2026 2330",
    "icaoMessage": "A1416/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607051830 C) 2607282330\r\nD) 05 07 11 14 18 21 25 28 1830-2330\r\nE) RWY 10/28 NOT AVBL FOR OPS DUE MAINT.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1559/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/14/2026 1604",
+   "startDate": "07/14/2026 1605",
+   "endDate": "07/16/2026 1330",
+   "icaoMessage": "A1559/26 NOTAMN\r\nQ) VIDF/QLYAS/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607141605 C) 2607161330\r\nE) TWY EDGE LGT OF N-LINK 34 U/S DUE TECR.",
    "traditionalMessage": ""
   },
   {
