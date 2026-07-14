@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-14T22:36:16.012Z",
+ "generatedAt": "2026-07-14T23:30:36.286Z",
  "station": "VIDP",
- "metar": "METAR VIDP 142230Z 23003KT 4000 HZ SCT030 BKN090 29/23 Q1001 NOSIG",
+ "metar": "METAR VIDP 142300Z 23003KT 4000 HZ SCT030 BKN090 29/23 Q1001 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -411,26 +411,6 @@
    "startDate": "07/15/2026 0700",
    "endDate": "07/15/2026 0800",
    "icaoMessage": "A1514/26 NOTAMN\r\nQ) VIDF/QPUCH/I/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607150700 C) 2607150800\r\nE) DRG NON AVBL PERIOD OF DVOR CHI (116.800MHZ), ACFT CARRYING OUT\r\nMISSED APCH FM RWY 29R/RWY 29L AT IGI AP (VIDP) AND REQUIRED TO HOLD\r\nAT DVOR CHI (116.800MHZ) MAY USE THE FLW FIX/WAYPOINT IN PLACE OF\r\nDVOR\r\nCHI (116.800MHZ).\r\nA. R239/26.4D (116.100MHZ DPN)\r\nB. 282051N0763959E.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1560/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "07/14/2026 1757",
-   "startDate": "07/14/2026 1830",
-   "endDate": "07/14/2026 2330",
-   "icaoMessage": "A1560/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607141830 C) 2607142330\r\nE) PORTION OF TWY G BTN TWY E7 AND TWY G5 NOT AVBL FOR OPS DUE CIV\r\nWORK. JUNCTION OF TWY E7 WITH TWY G AVBL FOR OPS.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1562/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "07/14/2026 1811",
-   "startDate": "07/14/2026 1830",
-   "endDate": "07/14/2026 2330",
-   "icaoMessage": "A1562/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/BO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607141830 C) 2607142330\r\nE) PORTION OF TWY K BTN TWY J1 AND K1 NOT AVBL FOR OPS. LINK 33 NOT\r\nAVBL FOR OPS.",
    "traditionalMessage": ""
   }
  ]
