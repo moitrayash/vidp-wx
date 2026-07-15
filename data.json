@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-15T19:48:34.080Z",
+ "generatedAt": "2026-07-15T20:44:54.328Z",
  "station": "VIDP",
- "metar": "METAR VIDP 151930Z 23005KT 4500 HZ FEW035 SCT090 32/24 Q1003 NOSIG",
+ "metar": "METAR VIDP 152030Z 25007KT 4500 HZ FEW035 SCT090 31/24 Q1003 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -381,6 +381,16 @@
    "startDate": "07/05/2026 1830",
    "endDate": "07/28/2026 2330",
    "icaoMessage": "A1416/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607051830 C) 2607282330\r\nD) 05 07 11 14 18 21 25 28 1830-2330\r\nE) RWY 10/28 NOT AVBL FOR OPS DUE MAINT.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1587/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/15/2026 1953",
+   "startDate": "07/15/2026 1953",
+   "endDate": "07/18/2026 1830",
+   "icaoMessage": "A1587/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607151953 C) 2607181830\r\nE) PORTION OF TWY D BTN TWY D3 AND TWY D4 NOT AVBL FOR OPS DUE CIV\r\nWORK.\r\nJUNCTION OF TWY D3 AND TWY D4 WITH TWY D AVBL FOR OPS.\r\nTWY G1 NOT AVBL FOR OPS DUE TRAFFIC SCENARIO.",
    "traditionalMessage": ""
   },
   {
