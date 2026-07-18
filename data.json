@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-18T05:11:25.542Z",
+ "generatedAt": "2026-07-18T07:11:28.275Z",
  "station": "VIDP",
- "metar": "METAR VIDP 180500Z 27013KT 6000 SCT035 BKN100 34/22 Q1002 NOSIG",
+ "metar": "METAR VIDP 180700Z 27006G16KT 6000 FEW035 BKN100 36/23 Q1002 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -321,6 +321,16 @@
    "startDate": "08/06/2026 0000",
    "endDate": "08/19/2026 2359",
    "icaoMessage": "G0779/26 NOTAMN\r\nQ) VIDF/QPRTT/IV/BO/AE/000/999/2834N07707E005\r\nA) VIDP B) 2608060000 C) 2608192359\r\nE) TRIGGER NOTAM - AIRAC AIP SUPPLEMENT 117/2026 WEF 06 AUG 2026.\r\nRADIO COMMUNICATION FAILURE PROCEDURES (RCF).",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1610/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/18/2026 0511",
+   "startDate": "07/18/2026 0511",
+   "endDate": "08/17/2026 1230",
+   "icaoMessage": "A1610/26 NOTAMN\r\nQ) VIDF/QMPLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607180511 C) 2608171230\r\nE) PARKING STAND 261 NOT AVBL FOR OPS.",
    "traditionalMessage": ""
   },
   {
