@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-18T02:29:08.453Z",
+ "generatedAt": "2026-07-18T05:11:25.542Z",
  "station": "VIDP",
- "metar": "METAR VIDP 180200Z 27008KT 4000 HZ SCT030 BKN090 31/24 Q1002 NOSIG",
+ "metar": "METAR VIDP 180500Z 27013KT 6000 SCT035 BKN100 34/22 Q1002 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
