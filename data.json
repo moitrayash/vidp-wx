@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-19T09:20:33.422Z",
+ "generatedAt": "2026-07-19T10:52:55.135Z",
  "station": "VIDP",
- "metar": "METAR VIDP 190900Z 27005KT 5000 HZ SCT035 BKN090 35/23 Q1002 NOSIG",
+ "metar": "METAR VIDP 191030Z 29004KT 5000 HZ FEW035 SCT090 37/23 Q1000 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -391,6 +391,16 @@
    "startDate": "07/05/2026 1830",
    "endDate": "07/28/2026 2330",
    "icaoMessage": "A1416/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607051830 C) 2607282330\r\nD) 05 07 11 14 18 21 25 28 1830-2330\r\nE) RWY 10/28 NOT AVBL FOR OPS DUE MAINT.",
+   "traditionalMessage": ""
+  },
+  {
+   "notamNumber": "A1616/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/19/2026 0925",
+   "startDate": "07/19/2026 0925",
+   "endDate": "07/22/2026 1230",
+   "icaoMessage": "A1616/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607190925 C) 2607221230\r\nE) PORTION OF TWY K BTN TWY J3 AND TWY J6 NOT AVBL.\r\n1. INT OF TWY K AND TWY J6 AVBL FOR OPS.\r\n2. RIGHT TURN FROM TWY J3 ONTO TWY K AVBL FOR OPS.\r\n3. TWY J3 TO TWY A AVBL FOR OPS.\r\n4. LEFT TURN FROM TWY J3 ONTO TWY K NOT AVBL FOR OPS.",
    "traditionalMessage": ""
   },
   {
