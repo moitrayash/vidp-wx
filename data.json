@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-19T01:01:56.512Z",
+ "generatedAt": "2026-07-19T04:31:41.918Z",
  "station": "VIDP",
- "metar": "METAR VIDP 190030Z VRB02KT 4000 HZ SCT035 BKN100 32/25 Q1002 NOSIG",
+ "metar": "METAR VIDP 190400Z 27007KT 4500 HZ FEW035 BKN100 33/24 Q1003 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -411,16 +411,6 @@
    "startDate": "07/18/2026 1235",
    "endDate": "07/20/2026 1300",
    "icaoMessage": "A1611/26 NOTAMR A1606/26\r\nQ) VIDF/QLXAS/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607181235 C) 2607201300\r\nE) ALTN CIRCUIT OF TWY R1 AND TWY P2 OF 90M FOR RWY 11L-29R U/S.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1615/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "07/19/2026 0037",
-   "startDate": "07/19/2026 0037",
-   "endDate": "07/19/2026 0130",
-   "icaoMessage": "A1615/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607190037 C) 2607190130\r\nE) PORTION OF TWY K BTN TWY J3 AND TWY J5 NOT AVBL.\r\nRWY28 CROSSING FM TWY J5 TO G5 AND VICE VERSA\r\nAVBL.\r\nRIGHT TURN FM TWY J5 ON TWY K NOT AVBL.",
    "traditionalMessage": ""
   }
  ]
