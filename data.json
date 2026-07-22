@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-22T06:16:40.859Z",
+ "generatedAt": "2026-07-22T09:02:44.765Z",
  "station": "VIDP",
- "metar": "METAR VIDP 220600Z 10011KT 3500 BR SCT015 BKN025 FEW035CB BKN090 31/26 Q1003 NOSIG",
+ "metar": "METAR VIDP 220830Z 10008G18KT 5000 HZ SCT025 FEW035CB BKN090 32/25 Q1001 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -384,6 +384,16 @@
    "traditionalMessage": ""
   },
   {
+   "notamNumber": "A1632/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/22/2026 0810",
+   "startDate": "07/22/2026 0810",
+   "endDate": "07/25/2026 1230",
+   "icaoMessage": "A1632/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607220810 C) 2607251230\r\nE) PORTION OF TWY K BTN TWY J3 AND TWY J6 NOT AVBL.\r\n1. INT OF TWY K AND TWY J6 AVBL FOR OPS.\r\n2. RIGHT TURN FM TWY J3 ONTO TWY K AVBL FOR OPS.\r\n3. TWY J3 TO TWY A AVBL FOR OPS.\r\n4. LEFT TURN FM TWY J3 ONTO TWY K NOT AVBL FOR OPS.\r\n5. TWY J5 NOT AVBL.",
+   "traditionalMessage": ""
+  },
+  {
    "notamNumber": "A1624/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -391,16 +401,6 @@
    "startDate": "07/21/2026 1855",
    "endDate": "07/24/2026 1830",
    "icaoMessage": "A1624/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607211855 C) 2607241830\r\nE) PORTION OF TWY D BTN TWY D3 AND TWY D4 NOT AVBL FOR OPS DUE CIV\r\nWORK.\r\nJUNCTION OF TWY D3 AND TWY D4 WITH TWY D AVBL FOR OPS.\r\nTWY G1 NOT AVBL FOR OPS DUE TRAFFIC SCENARIO.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1616/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "07/19/2026 0925",
-   "startDate": "07/19/2026 0925",
-   "endDate": "07/22/2026 1230",
-   "icaoMessage": "A1616/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607190925 C) 2607221230\r\nE) PORTION OF TWY K BTN TWY J3 AND TWY J6 NOT AVBL.\r\n1. INT OF TWY K AND TWY J6 AVBL FOR OPS.\r\n2. RIGHT TURN FROM TWY J3 ONTO TWY K AVBL FOR OPS.\r\n3. TWY J3 TO TWY A AVBL FOR OPS.\r\n4. LEFT TURN FROM TWY J3 ONTO TWY K NOT AVBL FOR OPS.",
    "traditionalMessage": ""
   }
  ]
