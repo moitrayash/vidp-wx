@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-25T06:38:59.826Z",
+ "generatedAt": "2026-07-25T08:49:46.871Z",
  "station": "VIDP",
- "metar": "METAR VIDP 250630Z 12010KT 4000 HZ SCT025 FEW035CB BKN090 32/26 Q1003 TEMPO 14010G20KT 3000 TSRA",
+ "metar": "METAR VIDP 250830Z 11006G16KT 5000 HZ SCT030 FEW035CB BKN090 33/25 Q1002 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -364,6 +364,16 @@
    "traditionalMessage": ""
   },
   {
+   "notamNumber": "A1654/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/25/2026 0830",
+   "startDate": "07/25/2026 0830",
+   "endDate": "07/28/2026 0830",
+   "icaoMessage": "A1654/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607250830 C) 2607280830\r\nE) PORTION OF TWY K BTN TWY J2 AND TWY J6 NOT AVBL DUE CIV WORK\r\n1. INT OF TWY K AND TWY J6 AVBL FOR OPS.\r\n2. RIGHT TURN FM TWY J2 ONTO TWY K AVBL FOR OPS.\r\n3. LEFT TURN FM TWY J2 ONTO TWY K NOT AVBL FOR OPS.\r\n4. TWY J5 AND J3 NOT AVBL.\r\n5. LINK 32, TWY C, TWY M AND LINK 30 AVBL FOR OPS.",
+   "traditionalMessage": ""
+  },
+  {
    "notamNumber": "A1650/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -371,16 +381,6 @@
    "startDate": "07/24/2026 2139",
    "endDate": "07/27/2026 1830",
    "icaoMessage": "A1650/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607242139 C) 2607271830\r\nE) PORTION OF TWY D BTN TWY D3 AND TWY D4 NOT AVBL FOR OPS DUE CIV\r\nWORK.\r\nJUNCTION OF TWY D3 AND TWY D4 WITH TWY D AVBL FOR OPS.\r\nTWY G1 NOT AVBL FOR OPS DUE TRAFFIC SCENARIO.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1632/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "07/22/2026 0810",
-   "startDate": "07/22/2026 0810",
-   "endDate": "07/25/2026 1230",
-   "icaoMessage": "A1632/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607220810 C) 2607251230\r\nE) PORTION OF TWY K BTN TWY J3 AND TWY J6 NOT AVBL.\r\n1. INT OF TWY K AND TWY J6 AVBL FOR OPS.\r\n2. RIGHT TURN FM TWY J3 ONTO TWY K AVBL FOR OPS.\r\n3. TWY J3 TO TWY A AVBL FOR OPS.\r\n4. LEFT TURN FM TWY J3 ONTO TWY K NOT AVBL FOR OPS.\r\n5. TWY J5 NOT AVBL.",
    "traditionalMessage": ""
   }
  ]
