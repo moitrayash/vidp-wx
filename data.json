@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-27T07:47:49.396Z",
+ "generatedAt": "2026-07-27T10:57:29.170Z",
  "station": "VIDP",
- "metar": "METAR VIDP 270730Z 23006KT 180V280 6000 SCT030 SCT100 35/25 Q1000 NOSIG",
+ "metar": "METAR VIDP 271030Z COR 19006KT 6000 BKN030 FEW035CB BKN090 35/25 Q0998 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -332,6 +332,16 @@
    "endDate": "08/12/2026 2359",
    "icaoMessage": "V0229/26 NOTAMN \r\nQ) VIDF/QPIAU/I/BO/A/000/999/2833N07705E005 \r\nA) VIDP \r\nB) 2605132359 \r\nC) 2608122359 \r\nE) [US DOD PROCEDURAL NOTAM] INSTRUMENT APPROACH PROCEDURE NOT AUTHORIZED ILS OR LOC RWY 29L.",
    "traditionalMessage": "!VIDP V0229/26 VIDP AERODROME INSTRUMENT APPROACH PROCEDURE NOT AUTHORIZED ILS OR LOC RWY 29L. 2605132359-2608122359"
+  },
+  {
+   "notamNumber": "A1664/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/27/2026 1023",
+   "startDate": "07/27/2026 1025",
+   "endDate": "08/10/2026 1830",
+   "icaoMessage": "A1664/26 NOTAMN\r\nQ) VIDF/QMPLC/IV/NBO/A/000/999/2834N07707E999\r\nA) VIDP B) 2607271025 C) 2608101830\r\nE) PARKING STANDS B15 AND B15L NOT AVBL FOR OPS.",
+   "traditionalMessage": ""
   },
   {
    "notamNumber": "A1415/26",
