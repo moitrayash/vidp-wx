@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-26T23:11:48.678Z",
+ "generatedAt": "2026-07-27T00:15:45.755Z",
  "station": "VIDP",
- "metar": "METAR VIDP 262300Z 00000KT 4500 HZ FEW035 SCT100 30/25 Q1000 NOSIG",
+ "metar": "METAR VIDP 270000Z VRB02KT 4500 BR FEW035 SCT100 29/26 Q1000 NOSIG",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -391,16 +391,6 @@
    "startDate": "07/26/2026 1815",
    "endDate": "07/27/2026 1830",
    "icaoMessage": "A1659/26 NOTAMN\r\nQ) VIDF/QMXXX/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607261815 C) 2607271830\r\nE) RETIL(RAPID EXIT TWY INDICATOR LIGHTS) OF TWY P1 FOR RWY 11L U/S\r\nDUE TECR.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1658/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "07/26/2026 1448",
-   "startDate": "07/26/2026 1830",
-   "endDate": "07/26/2026 2330",
-   "icaoMessage": "A1658/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607261830 C) 2607262330\r\nE) PORTION OF TWY D BTN TWY F AND TWY E9 NOT AVBL FOR OPS DUE CIV\r\nWORK.\r\nJUNCTION OF TWY F WITH TWY D AND TWY E9-TWY D AVBL FOR OPS.",
    "traditionalMessage": ""
   }
  ]
