@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-28T06:15:10.745Z",
+ "generatedAt": "2026-07-28T09:09:05.882Z",
  "station": "VIDP",
- "metar": "METAR VIDP 280600Z 12009KT 3000 BR SCT025 FEW030CB OVC080 29/27 Q1000 TEMPO 32015G25KT 1500 TSRA",
+ "metar": "METAR VIDP 280900Z 10007KT 4000 -RA BKN025 FEW030CB OVC080 25/24 Q1000 TEMPO 32015G25KT 1500 TSRA",
  "notams": [
   {
    "notamNumber": "G1058/24",
@@ -384,6 +384,16 @@
    "traditionalMessage": ""
   },
   {
+   "notamNumber": "A1668/26",
+   "facilityDesignator": "VIDP",
+   "featureName": "International",
+   "issueDate": "07/28/2026 0750",
+   "startDate": "07/28/2026 0750",
+   "endDate": "07/30/2026 1230",
+   "icaoMessage": "A1668/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607280750 C) 2607301230\r\nE) PORTION OF TWY K BTN TWY J2 AND TWY J6 NOT AVBL FOR OPS.\r\nDURING THIS PERIOD FOLLOWING RESTRICTIONS SHALL APPLY:\r\n1. TWY J3, TWY J5 AND TWY M1 NOT AVBL.\r\n2. PORTION OF TWY A BTN TWY K AND TWY M NOT AVBL.\r\n3. LEFT TURN FROM TWY J2 ON TWY K NOT AVBL.\r\n4. RIGHT TURN FROM TWY J6 ON TWY K NOT AVBL.\r\n5. RIGHT TURN FROM TWY LINK 32 ON TWY K NOT AVBL.\r\n6. RIGHT TURN FROM TWY LINK 32 ON TWY C AVBL.\r\n7. LEFT TURN FROM TWY LINK 30 ON TWY K NOT AVBL.\r\n8. LEFT TURN FROM TWY LINK 30 ON TWY M AVBL.",
+   "traditionalMessage": ""
+  },
+  {
    "notamNumber": "A1416/26",
    "facilityDesignator": "VIDP",
    "featureName": "International",
@@ -391,16 +401,6 @@
    "startDate": "07/05/2026 1830",
    "endDate": "07/28/2026 2330",
    "icaoMessage": "A1416/26 NOTAMN\r\nQ) VIDF/QMRLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607051830 C) 2607282330\r\nD) 05 07 11 14 18 21 25 28 1830-2330\r\nE) RWY 10/28 NOT AVBL FOR OPS DUE MAINT.",
-   "traditionalMessage": ""
-  },
-  {
-   "notamNumber": "A1654/26",
-   "facilityDesignator": "VIDP",
-   "featureName": "International",
-   "issueDate": "07/25/2026 0830",
-   "startDate": "07/25/2026 0830",
-   "endDate": "07/28/2026 0830",
-   "icaoMessage": "A1654/26 NOTAMN\r\nQ) VIDF/QMXLC/IV/NBO/A/000/999/2834N07707E005\r\nA) VIDP B) 2607250830 C) 2607280830\r\nE) PORTION OF TWY K BTN TWY J2 AND TWY J6 NOT AVBL DUE CIV WORK\r\n1. INT OF TWY K AND TWY J6 AVBL FOR OPS.\r\n2. RIGHT TURN FM TWY J2 ONTO TWY K AVBL FOR OPS.\r\n3. LEFT TURN FM TWY J2 ONTO TWY K NOT AVBL FOR OPS.\r\n4. TWY J5 AND J3 NOT AVBL.\r\n5. LINK 32, TWY C, TWY M AND LINK 30 AVBL FOR OPS.",
    "traditionalMessage": ""
   }
  ]
