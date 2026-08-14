@@ -1,8 +1,8 @@
 {
- "generatedAt": "2026-08-14T23:03:51.997Z",
+ "generatedAt": "2026-08-14T23:04:23.378Z",
  "station": "VIDP",
  "metar": "",
- "metarError": "TypeError: fetch failed",
+ "metarError": "Error: METAR HTTP 504",
  "notams": [],
  "notamError": "Error: NOTAM HTTP 403"
 }
