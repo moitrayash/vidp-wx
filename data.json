@@ -1,7 +1,8 @@
 {
- "generatedAt": "2026-08-18T19:43:51.768Z",
+ "generatedAt": "2026-08-18T20:01:55.609Z",
  "station": "VIDP",
- "metar": "METAR VIDP 181930Z 01005KT 4000 BR SCT030 FEW035CB SCT090 29/25 Q1005 TEMPO 32010G25KT 1500 TSRA",
+ "metar": "",
+ "metarError": "Error: METAR HTTP 504",
  "notams": [],
  "notamError": "Error: NOTAM HTTP 403"
 }
