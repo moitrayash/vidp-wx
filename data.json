@@ -1,8 +1,7 @@
 {
- "generatedAt": "2026-08-20T17:49:21.978Z",
+ "generatedAt": "2026-08-20T17:49:53.908Z",
  "station": "VIDP",
- "metar": "",
- "metarError": "TypeError: fetch failed",
+ "metar": "METAR VIDP 201730Z VRB02KT 5000 HZ SCT030 SCT035 31/26 Q1004 NOSIG",
  "notams": [],
  "notamError": "Error: NOTAM HTTP 403"
 }
