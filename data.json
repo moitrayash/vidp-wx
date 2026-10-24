@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-10-23T22:22:57.597Z",
+ "generatedAt": "2026-10-24T00:50:46.208Z",
  "station": "VIDP",
- "metar": "METAR VIDP 232200Z 00000KT 3000 BR NSC 21/17 Q1011 NOSIG",
+ "metar": "METAR VIDP 240030Z 00000KT 3000 BR NSC 20/16 Q1012 NOSIG",
  "notams": [],
  "notamError": "Error: NOTAM HTTP 403"
 }
